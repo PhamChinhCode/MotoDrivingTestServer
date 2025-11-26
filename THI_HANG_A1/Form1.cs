@@ -41,7 +41,7 @@ namespace THI_HANG_A1
             xes.Add(new Moto("Xe số 3", "192.168.100.52", 123));
             xes.Add(new Moto("Xe số 4", "192.168.100.53", 123));
             fxe = new QuanLyXe(xes);
-            fxe.ShowDialog();
+            //fxe.ShowDialog();
 
             //dgvDangThi.DataSource = null;
             //dgvDangThi.Visible = false;
