@@ -27,9 +27,20 @@ namespace THI_HANG_A1
         private SqlDataAdapter da;
         private DataTable dt;
 
+
+        private List<Moto> xes;
+        private QuanLyXe fxe;
         public Form1()
         {
             InitializeComponent();
+            xes = new List<Moto>();
+            xes.Add(new Moto("Xe số 1", "192.168.51.16", 123));
+            xes.Add(new Moto("Xe số 2", "192.168.100.51", 123));
+            xes.Add(new Moto("Xe số 3", "192.168.100.52", 123));
+            xes.Add(new Moto("Xe số 4", "192.168.100.53", 123));
+            fxe = new QuanLyXe(xes);
+            fxe.ShowDialog();
+
             dgvDangThi.DataSource = null;
             dgvDangThi.Visible = false;
 
@@ -334,7 +345,9 @@ namespace THI_HANG_A1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
+
             this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
             Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
             groupBox1.BringToFront();
@@ -589,6 +602,11 @@ namespace THI_HANG_A1
                 MessageBox.Show("Lỗi giải mã JPEG2000: " + ex.Message);
                 return null;
             }
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

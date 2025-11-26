@@ -1,17 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using THI_HANG_A1.Forms;
+using THI_HANG_A1.Models;
 
-namespace THI_HANG_A1.Forms
+namespace THI_HANG_A1
 {
-    public partial class Form1 : Form
+    public partial class QuanLyXe : Form
     {
-        public Form1()
+        private List<Moto> xes;
+
+        private List<UserControl1> xecontrol;
+        public QuanLyXe(List<Moto> x)
         {
+            this.xes = x;
+            xecontrol = new List<UserControl1>();
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void QuanLyXe_Load(object sender, EventArgs e)
         {
+
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.WrapContents = false;
+
+            label1.Text = xes.Count.ToString();
+            for (int i = 0; i < xes.Count; i++)
+            {
+                xecontrol.Add(new UserControl1(xes[i]));
+                flowLayoutPanel1.Controls.Add(xecontrol[i]);
+            }
+
 
         }
     }

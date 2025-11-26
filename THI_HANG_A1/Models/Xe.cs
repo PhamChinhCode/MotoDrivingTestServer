@@ -14,8 +14,13 @@ namespace THI_HANG_A1.Models
         public string IPAdress;
         public int Port;
         public SocketHandler socketConn = new SocketHandler();
+        //public Xe(string mx, bool r)
+        //{
+        //    MaXe = mx;
+        //    DangRanh = r;
 
-        public Xe(string name, string ip, int port)
+        //}
+        public void config(string name, string ip, int port)
         {
             Name = name;
             IPAdress = ip;

@@ -15,7 +15,7 @@ namespace THI_HANG_A1.Managers
         public bool IsConnected => _client != null && _client.Connected;
 
         // Sự kiện đẩy dữ liệu ra Form
-        public event Action<string> OnDataReceived;
+        public event Action<byte[], int> OnDataReceived;
         public event Action OnDisconnected;
 
         // ================================================================
@@ -25,14 +25,21 @@ namespace THI_HANG_A1.Managers
         {
             try
             {
+                if (_client != null)
+                {
+                    Disconnect();
+                }
+                //if (!_client.Connected)
+                //{
                 _client = new TcpClient();
                 _client.Connect(ip, port);
                 _stream = _client.GetStream();
 
                 // Bắt đầu Thread nhận dữ liệu
                 StartReceiveThread();
-
+                //}
                 return true;
+
             }
             catch (Exception)
             {
@@ -103,7 +110,7 @@ namespace THI_HANG_A1.Managers
                     string msg = Encoding.UTF8.GetString(buffer, 0, len);
 
                     // Đưa dữ liệu về Form
-                    OnDataReceived?.Invoke(msg);
+                    OnDataReceived?.Invoke(buffer, len);
                 }
                 catch
                 {
