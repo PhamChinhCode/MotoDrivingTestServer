@@ -31,6 +31,7 @@ namespace THI_HANG_A1
                 xecontrol.Add(new MotoView(xes[i]));
                 flowLayoutPanel1.Controls.Add(xecontrol[i]);
             }
+            // this is stable version
 
 
         }
