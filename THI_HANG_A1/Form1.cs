@@ -347,6 +347,8 @@ namespace THI_HANG_A1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            //  dshsjhj
             // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
             this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
             // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
