@@ -1,6 +1,6 @@
 ﻿namespace THI_HANG_A1.Forms
 {
-    partial class UserControl1
+    partial class MotoView
     {
         /// <summary> 
         /// Required designer variable.

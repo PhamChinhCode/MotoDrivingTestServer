@@ -130,9 +130,19 @@
     </Compile>
     <Compile Include="Form2.cs">
       <SubType>Form</SubType>
+    <Compile Include="Forms\MotoView.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="Forms\MotoView.Designer.cs">
+      <DependentUpon>MotoView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\YardView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\YardView.Designer.cs">
+      <DependentUpon>YardView.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ExcelLoader.cs" />
     <Compile Include="Khaibao\chuanbi.cs" />
@@ -157,6 +167,14 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QuanLyXe.resx">
+      <DependentUpon>QuanLyXe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MotoView.resx">
+      <DependentUpon>MotoView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\YardView.resx">
+      <DependentUpon>YardView.cs</DependentUpon>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
