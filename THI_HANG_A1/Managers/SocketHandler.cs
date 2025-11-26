@@ -39,8 +39,9 @@ namespace THI_HANG_A1.Managers
 
                 // Bắt đầu Thread nhận dữ liệu
                 StartReceiveThread();
-
+                //}
                 return true;
+
             }
             catch (Exception)
             {
