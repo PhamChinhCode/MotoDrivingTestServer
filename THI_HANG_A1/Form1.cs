@@ -28,6 +28,8 @@ namespace THI_HANG_A1
         private readonly string cnn = THI_HANG_A1.Properties.Settings.Default.Conn;
         private SqlDataAdapter da;
         private DataTable dt;
+        private ContextMenuStrip cmsThiSinh;   // menu khi nhấp đúp vào thí sinh đang thi
+        private int _currentRowIndex = -1;     // lưu dòng đang thao tác
 
         public Form1()
         {
@@ -35,8 +37,12 @@ namespace THI_HANG_A1
             //dgvDangThi.DataSource = null;
             //dgvDangThi.Visible = false;
             GridThi();
-            dgvThi.AutoGenerateColumns=false;
-            dgvThi.DataSource =null;
+            dgvThi.AutoGenerateColumns = false;
+            dgvThi.DataSource = null;
+            TaoMenuThiSinh();
+            dgvThi.CellMouseDoubleClick += dgvThi_CellMouseDoubleClick;
+            timerCapNhatThoiGian.Interval = 1000;  // Cập nhật mỗi giây
+            timerCapNhatThoiGian.Tick += timerCapNhatThoiGian_Tick;  // Sự kiện mỗi tick
 
             // 2. Khởi tạo các manager
             audioManager = new AudioManager();
@@ -241,27 +247,51 @@ namespace THI_HANG_A1
 
         #region === TIMER CẬP NHẬT THỜI GIAN ===
 
+        // Khai báo duy nhất một hàm `timerCapNhatThoiGian_Tick`
         private void timerCapNhatThoiGian_Tick(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dgvThi.Rows)
             {
-                if (row.DataBoundItem is ThiSinh ts)
+                if (row.DataBoundItem is ThiSinhDangThi ts)
                 {
                     var cell = row.Cells["colThoiGian"];
-                    if (cell == null) continue;
 
-                    if (ts.ThoiGianBatDau != DateTime.MinValue)
+                    // Nếu thí sinh không đạt, dừng timer
+                    if (ts.DiemConLai < 80 && ts.TrangThai == "Đang thi")
                     {
-                        TimeSpan thoiGianTroiQua = DateTime.Now - ts.ThoiGianBatDau;
+                        timerCapNhatThoiGian.Stop();  // Dừng timer khi "Không đạt"
+                        cell.Value = "Thời gian dừng";
+                        continue; // Không tiếp tục cập nhật thời gian nếu không đạt
+                    }
+
+                    // Cập nhật trạng thái của thí sinh: Đạt hoặc Không đạt
+                    if (ts.DiemConLai < 80)
+                    {
+                        ts.TrangThai = "Không đạt";  // Cập nhật trạng thái khi không đạt
+                    }
+                    else
+                    {
+                        ts.TrangThai = "Đạt";  // Cập nhật trạng thái khi đạt
+                    }
+
+                    // Cập nhật thời gian nếu thí sinh đang thi và đạt điểm
+                    if (ts.GioBatDau != DateTime.MinValue && ts.DiemConLai >= 80)
+                    {
+                        TimeSpan thoiGianTroiQua = DateTime.Now - ts.GioBatDau;
                         cell.Value = thoiGianTroiQua.ToString(@"mm\:ss");
                     }
                     else
                     {
-                        cell.Value = "--:--";
+                        cell.Value = "--:--";  // Nếu chưa bắt đầu thi
                     }
                 }
             }
         }
+
+
+
+
+
 
         #endregion
 
@@ -298,7 +328,7 @@ namespace THI_HANG_A1
         }
 
         // Hàm rỗng cho designer
-        private void dgvDangThi_CellContentClick(object sender, DataGridViewCellEventArgs e) 
+        private void dgvDangThi_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
             x = new ThiSinhXml();
@@ -346,16 +376,17 @@ namespace THI_HANG_A1
         }
 
         private void Form1_Load(object sender, EventArgs e)
+
+
         {
 
-            //  dshsjhj
             // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
             this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
             // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
             //this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
             LoadComboboxKySatHach();
             Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
-            dgvThi.AutoGenerateColumns = true;
+            dgvThi.AutoGenerateColumns = false;
             dgvThi.DataSource = examManager.DanhSachDangThi;
             if (dgvThi.Columns["colThoiGian"] == null)
             {
@@ -436,30 +467,30 @@ namespace THI_HANG_A1
         {
             //try
             //{
-                using (SqlConnection conn = new SqlConnection(cnn))
-                {
-                    conn.Open();
-                    string query = "SELECT SBD,Hodem,Ten,NgaySinh,SoCCCD,HangGPLX,QUOCTICH,AnhChanDung,MaDangKy,NoiCT,KySatHach FROM ThiSinhSH order by SBD";
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                string query = "SELECT SBD,Hodem,Ten,NgaySinh,SoCCCD,HangGPLX,QUOCTICH,AnhChanDung,MaDangKy,NoiCT,KySatHach FROM ThiSinhSH order by SBD";
 
-                    da = new SqlDataAdapter(query, conn);
-                    dt = new DataTable();
-                    da.Fill(dt);
+                da = new SqlDataAdapter(query, conn);
+                dt = new DataTable();
+                da.Fill(dt);
 
-                    dgv.DataSource = dt;
-                }
+                dgv.DataSource = dt;
+            }
 
-                dgv.ReadOnly = false;
-                dgv.AllowUserToAddRows = true;
-                dgv.AllowUserToDeleteRows = true;
-                dgv.Columns[0].Width = 60;
+            dgv.ReadOnly = false;
+            dgv.AllowUserToAddRows = true;
+            dgv.AllowUserToDeleteRows = true;
+            dgv.Columns[0].Width = 60;
 
-                // Sau khi dt đã có dữ liệu -> nạp vào ExamManager
-                //NapDanhSachThiSinhTuSQLVaoExamManager();
+            // Sau khi dt đã có dữ liệu -> nạp vào ExamManager
+            //NapDanhSachThiSinhTuSQLVaoExamManager();
             //}
             //catch (Exception ex)
-           // {
+            // {
             //    MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
-           // }
+            // }
         }
 
 
@@ -522,7 +553,7 @@ namespace THI_HANG_A1
             // Vòng lặp lưu ảnh ra ổ D (Code cũ của bạn)
             foreach (ThiSinhXml r in thiSinhXmls)
             {
-               // txtTmp.Text += r.SoBaoDanh + "    " + r.HoTen + "    " + r.NgaySinh + "\r\n";
+                // txtTmp.Text += r.SoBaoDanh + "    " + r.HoTen + "    " + r.NgaySinh + "\r\n";
 
                 if (!Directory.Exists("D:\\" + r.KySatHach))
                 {
@@ -735,7 +766,7 @@ namespace THI_HANG_A1
             }
         }
 
-      
+
         private void Nap5NguoiChuanBi(List<ThiSinhXml> listXml)
         {
             // Xóa danh sách chuẩn bị cũ
@@ -832,8 +863,8 @@ namespace THI_HANG_A1
             x.NgaySinh = dgv.Rows[i].Cells[3].Value?.ToString();
             x.SoCMT = dgv.Rows[i].Cells[4].Value?.ToString();
             x.HangGPLX = dgv.Rows[i].Cells[5].Value?.ToString();
-            x.AnhChanDung = dgv.Rows[i].Cells[7].Value?.ToString();  
-           
+            x.AnhChanDung = dgv.Rows[i].Cells[7].Value?.ToString();
+
         }
 
         private void chuotphaichonxe_Click(object sender, EventArgs e)
@@ -850,137 +881,162 @@ namespace THI_HANG_A1
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog();
 
-            // Nếu người dùng không chọn xe thì không thêm
             if (frm.i == 0)
                 return;
+
+            string soXe = frm.i.ToString();
+
+            // Nếu chưa có trong từ điển thì coi như đang rảnh
+            if (!trangThaiXe.ContainsKey(soXe))
+                trangThaiXe[soXe] = TrangThaiXe.Ranh;
+
+            // ❗ Chỉ cho cấp nếu xe đang RẢNH
+            if (trangThaiXe[soXe] != TrangThaiXe.Ranh)
+            {
+                MessageBox.Show("Xe này đang được dùng cho thí sinh khác.\nVui lòng chọn xe khác.",
+                                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             // Tạo đối tượng thí sinh đang thi
             ThiSinhDangThi d = new ThiSinhDangThi()
             {
-                Xe = frm.i.ToString(),
+                Xe = soXe,
                 HoDem = x.Hodem,
                 Ten = x.Ten,
                 SoBaoDanh = x.SoBaoDanh,
                 HangGPLX = x.HangGPLX,
-
-                // Điểm theo class mới
                 DiemBanDau = 100,
                 DiemConLai = 100,
                 DiemTru = 0,
                 SoLoi = 0,
-
-                // Thời gian bắt đầu lúc được cấp xe
                 GioBatDau = DateTime.Now,
-
-                // Các bài thi
                 So8 = "CB",
                 DuongThang = "",
                 ZicZac = "",
                 GoGhe = ""
             };
 
+            // Lúc mới cấp xe, ta vẫn để trạng thái XE là Rảnh
+            // -> chỉ đến khi ấn "Chuẩn bị" mới khóa xe (Sẵn sàng)
 
-            // Thêm vào ds -> DataGridView TỰ ĐỘNG cập nhật
             ds.Add(d);
 
             dgvThi.AutoGenerateColumns = false;
-            dgvThi.DataSource = ds; // Gán chỉ 1 lần duy nhất
+            dgvThi.Refresh();      // nếu DataSource đã gán ds ở chỗ khác rồi thì chỉ cần Refresh
+            dgvThi.DataSource = ds;
+            HienThiThongTinThiSinh(d);
         }
+
 
         public void GridThi()
         {
-            // Xe
+            dgvThi.Columns.Clear();
+            dgvThi.AutoGenerateColumns = false;
+
+            // ===== CỘT XE =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Xe",
-                Width = 50,
-                DataPropertyName = "Xe"
+                DataPropertyName = "Xe",
+                Width = 50
             });
 
-            // Họ đệm
+            // ===== CỘT HỌ ĐỆM =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Họ đệm",
                 DataPropertyName = "HoDem"
             });
 
-            // Tên
+            // ===== CỘT TÊN =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Tên",
                 DataPropertyName = "Ten"
             });
 
-            // Số báo danh
+            // ===== CỘT SBD =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "SBD",
                 DataPropertyName = "SoBaoDanh"
             });
 
-            // Hạng GPLX
+            // ===== CỘT HẠNG GPLX =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Hạng",
                 DataPropertyName = "HangGPLX"
             });
 
-            // Điểm
+            // ===== CỘT ĐIỂM (dùng DiemConLai) =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Điểm",
-                DataPropertyName = "Diem"
+                DataPropertyName = "DiemConLai",   // ✔️ Sửa đúng property
+                Width = 60
             });
 
-            // Thời gian
+            // ===== CỘT THỜI GIAN (CHO TIMER) =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
+                Name = "colThoiGian", // Sử dụng Name thay vì DataPropertyName
                 HeaderText = "Thời gian",
-                DataPropertyName = "ThoiGian"
+                ReadOnly = true,
+                Width = 80
             });
+
+            // ===== BUTTON CHỐNG CHÂN =====
             var btnChongChan = new DataGridViewButtonColumn();
             btnChongChan.HeaderText = "Chống chân";
             btnChongChan.Text = "Chống chân";
             btnChongChan.UseColumnTextForButtonValue = true;
             dgvThi.Columns.Add(btnChongChan);
 
+            // ===== BUTTON ĐỔ XE =====
             var btnDoXe = new DataGridViewButtonColumn();
             btnDoXe.HeaderText = "Đổ xe";
             btnDoXe.Text = "Đổ xe";
             btnDoXe.UseColumnTextForButtonValue = true;
             dgvThi.Columns.Add(btnDoXe);
 
+            // ===== BUTTON NGOÀI HÌNH =====
             var btnNgoaiHinh = new DataGridViewButtonColumn();
             btnNgoaiHinh.HeaderText = "Ngoài hình";
             btnNgoaiHinh.Text = "Ngoài hình";
             btnNgoaiHinh.UseColumnTextForButtonValue = true;
             dgvThi.Columns.Add(btnNgoaiHinh);
 
+            // ===== CỘT SỐ 8 =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Số 8",
                 DataPropertyName = "So8"
             });
 
+            // ===== CỘT ĐƯỜNG THẲNG =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Đường thẳng",
                 DataPropertyName = "DuongThang"
             });
 
+            // ===== CỘT ZIC ZẮC =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Zic zắc",
                 DataPropertyName = "ZicZac"
             });
 
+            // ===== CỘT GỒ GHỀ =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 HeaderText = "Gồ ghề",
                 DataPropertyName = "GoGhe"
             });
-
         }
+
 
         private void dgvThi_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -1015,7 +1071,7 @@ namespace THI_HANG_A1
             // Cập nhật trạng thái
             ts.TrangThai = ts.DiemConLai >= 80 ? "Đạt" : "Không đạt";
 
-            // Cập nhật label ngay
+            // Cập nhật label ngay sau khi trừ điểm
             HienThiThongTinThiSinh(ts);
 
             // Refresh lại DataGridView
@@ -1027,8 +1083,8 @@ namespace THI_HANG_A1
             lblHoTen.Text = $"{ts.HoDem} {ts.Ten}";
             lblSBD.Text = ts.SoBaoDanh.ToString();
             lblSoLoi.Text = ts.SoLoi.ToString();
-            lblDiemTru.Text = ts.DiemTru.ToString();
-            lblDiemConLai.Text = ts.DiemConLai.ToString();
+            lblDiemTruu.Text = ts.DiemTru.ToString();  // Cập nhật điểm trừ
+            lblDiemConLai.Text = ts.DiemConLai.ToString();  // Cập nhật điểm còn lại
             lblTrangThai.Text = ts.TrangThai;
         }
 
@@ -1041,7 +1097,154 @@ namespace THI_HANG_A1
                 HienThiThongTinThiSinh(ts);
         }
 
+        private void TaoMenuThiSinh()
+        {
+            cmsThiSinh = new ContextMenuStrip();
+
+            cmsThiSinh.Items.Add("Chuẩn bị", null, mnuChuanBi_Click);
+            cmsThiSinh.Items.Add("Bắt đầu", null, mnuBatDau_Click);
+            cmsThiSinh.Items.Add("Thay đổi xe", null, mnuThayDoiXe_Click);
+            cmsThiSinh.Items.Add("Hủy", null, mnuHuy_Click);
+            cmsThiSinh.Items.Add("Trừ điểm thí sinh", null, mnuTruDiem_Click);
+            cmsThiSinh.Items.Add("Ẩn", null, mnuAn_Click);
+            cmsThiSinh.Items.Add("In biên bản", null, mnuInBienBan_Click);
+            cmsThiSinh.Items.Add("Chụp ảnh", null, mnuChupAnh_Click);
+        }
+        private void mnuHuy_Click(object sender, EventArgs e)
+        {
+            // chưa dùng
+        }
+
+        private void mnuTruDiem_Click(object sender, EventArgs e)
+        {
+            // chưa dùng
+        }
+
+        private void mnuAn_Click(object sender, EventArgs e)
+        {
+            // chưa dùng
+        }
+
+        private void mnuInBienBan_Click(object sender, EventArgs e)
+        {
+            // chưa dùng
+        }
+
+        private void mnuChupAnh_Click(object sender, EventArgs e)
+        {
+            // chưa dùng
+        }
+
+        private void dgvThi_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0) return;      // bỏ header
+            if (e.ColumnIndex < 0) return;   // bỏ cột ngoài lề
+
+            _currentRowIndex = e.RowIndex;
+
+            // Chọn cả dòng đang được double click
+            dgvThi.ClearSelection();
+            dgvThi.Rows[_currentRowIndex].Selected = true;
+
+            // Hiện menu tại vị trí chuột
+            cmsThiSinh.Show(Cursor.Position);
+        }
+
+        private void mnuChuanBi_Click(object sender, EventArgs e)
+        {
+            if (_currentRowIndex < 0) return;
+
+            // dữ liệu đang bind kiểu gì thì dùng kiểu đó
+            // ở đoạn bạn add "ds" là BindingList<ThiSinhDangThi>
+            var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
+            if (ts == null) return;
+
+            string soXe = ts.Xe;
+
+            if (string.IsNullOrWhiteSpace(soXe))
+            {
+                MessageBox.Show("Thí sinh này chưa được cấp xe.");
+                return;
+            }
+
+            // Nếu đã có trạng thái xe và xe KHÔNG rảnh => không cho chuẩn bị
+            if (trangThaiXe.TryGetValue(soXe, out var trangThaiHienTai)
+                && trangThaiHienTai != TrangThaiXe.Ranh)
+            {
+                MessageBox.Show("Xe này đang được dùng cho thí sinh khác.",
+                                "Không thể chuẩn bị", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // OK: cho xe sang trạng thái Sẵn sàng
+            trangThaiXe[soXe] = TrangThaiXe.SanSang;
+
+            // Cập nhật trạng thái thí sinh (nếu bạn có property)
+            ts.TrangThai = "Chuẩn bị thi";
+
+            dgvThi.Refresh();
+        }
+
+
+        private void mnuBatDau_Click(object sender, EventArgs e)
+        {
+            if (_currentRowIndex < 0) return;
+
+            var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
+            if (ts == null) return;
+
+            // Cập nhật thời gian bắt đầu
+            ts.GioBatDau = DateTime.Now;
+
+            // Chỉ bắt đầu timer khi thí sinh bắt đầu
+            if (!timerCapNhatThoiGian.Enabled)
+                timerCapNhatThoiGian.Start();
+
+            // Cập nhật trạng thái thí sinh
+            ts.TrangThai = "Đang thi";
+            dgvThi.Refresh();
+        }
+
+
+        private void mnuThayDoiXe_Click(object sender, EventArgs e)
+        {
+            if (_currentRowIndex < 0) return;
+
+            var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
+            if (ts == null) return;
+
+            Capxe frm = new Capxe(ts.SoBaoDanh, ts.HangGPLX);
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
+
+            if (frm.i == 0) return;
+
+            // Trả xe cũ về trạng thái "Rảnh"
+            trangThaiXe[ts.Xe] = TrangThaiXe.Ranh;
+
+            // Gán xe mới
+            ts.Xe = frm.i.ToString();
+
+            // Đánh dấu xe mới "Sẵn sàng"
+            trangThaiXe[ts.Xe] = TrangThaiXe.SanSang;
+
+            dgvThi.Refresh();
+            HienThiThongTinThiSinh(ts);
+        }
+
+        // Trạng thái xe
+        private enum TrangThaiXe
+        {
+            Ranh,      // chưa ai dùng / dùng xong
+            SanSang,   // đã chuẩn bị cho 1 thí sinh
+            DangThi    // đang thi
+        }
+
+        // Lưu trạng thái theo số xe, ví dụ "1", "2", "10"...
+        private Dictionary<string, TrangThaiXe> trangThaiXe
+            = new Dictionary<string, TrangThaiXe>();
+      
+
 
     }
-
 }
