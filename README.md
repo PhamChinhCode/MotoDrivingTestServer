@@ -32,7 +32,7 @@ Hệ thống thi sát hạch lái xe máy được xây dựng nhằm:
 Hệ thống sử dụng kiến trúc **Client–Server**:
 - Xe máy = Client  
 - Phần mềm Windows = Server
-- Thiết bị sân 2
+- Thiết bị cảm biến ống hơi
 
 ---
 
