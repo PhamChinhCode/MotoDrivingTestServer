@@ -34,5 +34,10 @@ namespace THI_HANG_A1
 
 
         }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
