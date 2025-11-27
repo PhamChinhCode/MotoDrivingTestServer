@@ -4,10 +4,10 @@ using THI_HANG_A1.Models;
 
 namespace THI_HANG_A1.Forms
 {
-    public partial class UserControl1 : UserControl
+    public partial class MotoView : UserControl
     {
         private Moto moto;
-        public UserControl1(Moto m)
+        public MotoView(Moto m)
         {
             InitializeComponent();
             moto = m;

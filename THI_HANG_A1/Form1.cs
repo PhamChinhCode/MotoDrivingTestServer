@@ -10,7 +10,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using THI_HANG_A1.Khaibao;
+using THI_HANG_A1.Forms;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 
@@ -31,18 +31,27 @@ namespace THI_HANG_A1
         private ContextMenuStrip cmsThiSinh;   // menu khi nhấp đúp vào thí sinh đang thi
         private int _currentRowIndex = -1;     // lưu dòng đang thao tác
 
+
+        private List<Moto> xes;
+        private QuanLyXe fxe;
         public Form1()
         {
             InitializeComponent();
+            xes = new List<Moto>();
+            xes.Add(new Moto("Xe số 1", "192.168.51.16", 123));
+            xes.Add(new Moto("Xe số 2", "192.168.51.220", 123));
+            xes.Add(new Moto("Xe số 3", "192.168.100.52", 123));
+            xes.Add(new Moto("Xe số 4", "192.168.100.53", 123));
+            fxe = new QuanLyXe(xes);
+            //fxe.ShowDialog();
+
+            //dgvDangThi.DataSource = null;
+            //dgvDangThi.Visible = false;
             //dgvDangThi.DataSource = null;
             //dgvDangThi.Visible = false;
             GridThi();
-            dgvThi.AutoGenerateColumns = false;
-            dgvThi.DataSource = null;
-            TaoMenuThiSinh();
-            dgvThi.CellMouseDoubleClick += dgvThi_CellMouseDoubleClick;
-            timerCapNhatThoiGian.Interval = 1000;  // Cập nhật mỗi giây
-            timerCapNhatThoiGian.Tick += timerCapNhatThoiGian_Tick;  // Sự kiện mỗi tick
+            dgvThi.AutoGenerateColumns=false;
+            dgvThi.DataSource =null;
 
             // 2. Khởi tạo các manager
             audioManager = new AudioManager();
@@ -380,6 +389,7 @@ namespace THI_HANG_A1
 
         {
 
+            //  dshsjhj
             // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
             this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
             // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU

@@ -128,6 +128,24 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MotoView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\MotoView.Designer.cs">
+      <DependentUpon>MotoView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\QuanLyXe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QuanLyXe.Designer.cs">
+      <DependentUpon>QuanLyXe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\YardView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\YardView.Designer.cs">
+      <DependentUpon>YardView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,12 +160,14 @@
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Managers\ExamDataManager.cs" />
     <Compile Include="Managers\SerialManager.cs" />
+    <Compile Include="Managers\SocketHandler.cs" />
     <Compile Include="MCDV2A1DataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MCDV2A1DataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Models\LoiViPham.cs" />
+    <Compile Include="Models\Moto.cs" />
     <Compile Include="Models\ThiSinh.cs" />
     <Compile Include="Models\ThiSinhDangThi.cs" />
     <Compile Include="Models\ThiSinhXml.cs" />
@@ -157,8 +177,14 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MotoView.resx">
+      <DependentUpon>MotoView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QuanLyXe.resx">
+      <DependentUpon>QuanLyXe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\YardView.resx">
+      <DependentUpon>YardView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
