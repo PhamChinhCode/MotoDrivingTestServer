@@ -16,6 +16,7 @@ namespace THI_HANG_A1
         public Capxe()
         {
             InitializeComponent();
+
         }
         public Capxe(int Sodb, string hang)
         {

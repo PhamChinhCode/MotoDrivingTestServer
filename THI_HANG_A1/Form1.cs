@@ -1156,6 +1156,8 @@ namespace THI_HANG_A1
             dgvThi.ClearSelection();
             dgvThi.Rows[_currentRowIndex].Selected = true;
 
+            if (cmsThiSinh == null)
+                TaoMenuThiSinh();
             // Hiện menu tại vị trí chuột
             cmsThiSinh.Show(Cursor.Position);
         }
