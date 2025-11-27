@@ -1243,8 +1243,8 @@ namespace THI_HANG_A1
         // Lưu trạng thái theo số xe, ví dụ "1", "2", "10"...
         private Dictionary<string, TrangThaiXe> trangThaiXe
             = new Dictionary<string, TrangThaiXe>();
-      
 
+        
 
     }
 }
