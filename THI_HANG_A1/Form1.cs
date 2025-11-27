@@ -361,22 +361,22 @@ namespace THI_HANG_A1
         private void Form1_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
-            this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
-            // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
-            //this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
-            LoadComboboxKySatHach();
-            Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
-            dgvThi.AutoGenerateColumns = true;
-            dgvThi.DataSource = examManager.DanhSachDangThi;
-            if (dgvThi.Columns["colThoiGian"] == null)
-            {
-                dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-                {
-                    Name = "colThoiGian",
-                    HeaderText = "Thời gian",
-                    ReadOnly = true
-                });
-            }
+            //this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
+            //// GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
+            ////this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
+            //LoadComboboxKySatHach();
+            //Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
+            //dgvThi.AutoGenerateColumns = true;
+            //dgvThi.DataSource = examManager.DanhSachDangThi;
+            //if (dgvThi.Columns["colThoiGian"] == null)
+            //{
+            //    dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            //    {
+            //        Name = "colThoiGian",
+            //        HeaderText = "Thời gian",
+            //        ReadOnly = true
+            //    });
+            //}
         }
 
         /// <summary>
@@ -1052,7 +1052,31 @@ namespace THI_HANG_A1
                 HienThiThongTinThiSinh(ts);
         }
 
+        private void mởToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
+            this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
+            // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
+            //this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
+            LoadComboboxKySatHach();
+            Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
+            dgvThi.AutoGenerateColumns = true;
+            dgvThi.DataSource = examManager.DanhSachDangThi;
+            if (dgvThi.Columns["colThoiGian"] == null)
+            {
+                dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+                {
+                    Name = "colThoiGian",
+                    HeaderText = "Thời gian",
+                    ReadOnly = true
+                });
+            }
+        }
 
+        private void kiểmTraKếtNốiXeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fxe.ShowDialog();
+        }
     }
 
 }
