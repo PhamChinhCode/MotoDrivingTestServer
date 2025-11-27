@@ -51,9 +51,9 @@ namespace THI_HANG_A1
             //dgvDangThi.DataSource = null;
             //dgvDangThi.Visible = false;
             GridThi();
-            dgvThi.AutoGenerateColumns=false;
-            dgvThi.DataSource =null;
-            dgvThi.CellMouseDown += dgvThi_CellMouseDown;
+            dgvThi.AutoGenerateColumns = false;
+            dgvThi.DataSource = null;
+            dgvThi.AllowUserToAddRows = false;// ✔ Không cho tự thêm dòng trống
 
             // 2. Khởi tạo các manager
             audioManager = new AudioManager();
@@ -256,6 +256,8 @@ namespace THI_HANG_A1
         //}
 
         //#endregion
+
+        #endregion
 
         #region === TIMER CẬP NHẬT THỜI GIAN ===
 
@@ -1495,6 +1497,8 @@ namespace THI_HANG_A1
 
 
         public enum TrangThaiTS
+        // mới thêm
+        private void dgvThi_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             None,
             DaCapXe,
