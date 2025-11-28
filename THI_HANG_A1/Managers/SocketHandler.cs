@@ -28,20 +28,31 @@ namespace THI_HANG_A1.Managers
         {
             try
             {
-                if (_client != null)
+                if (_client == null)
                 {
-                    Disconnect();
+                    _client = new TcpClient();
                 }
-                //if (!_client.Connected)
-                //{
-                _client = new TcpClient();
-                _client.Connect(ip, port);
-                _stream = _client.GetStream();
+                if (!_client.Connected)
+                {
+                    _client.Connect(ip, port);
+                    if (_client.Connected)
+                    {
+                        _stream = _client.GetStream();
 
-                // Bắt đầu Thread nhận dữ liệu
-                StartReceiveThread();
-                //}
-                return true;
+                        // Bắt đầu Thread nhận dữ liệu
+                        StartReceiveThread();
+                        //}
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
 
             }
             catch (Exception)
@@ -140,6 +151,8 @@ namespace THI_HANG_A1.Managers
 
         public const byte KEY_NULL = 0xff;
 
+        public const byte IMAGE_KEY = 0x90;
+
 
         // Status
         public const byte STATUS_KEY = 0xc0;
@@ -151,6 +164,8 @@ namespace THI_HANG_A1.Managers
         public const byte STATUS_CONTEST2 = 0xc5;   // bài đường thẳng
         public const byte STATUS_CONTEST3 = 0xc6;   // bài ziczac
         public const byte STATUS_CONTEST4 = 0xc7;   // bài gồ gề
+
+
 
         // Control command
         public const byte CONTROL_KEY = 0xA0;
@@ -180,10 +195,11 @@ namespace THI_HANG_A1.Managers
     }
     public class FrameCnvert
     {
-        byte[] frame;
-        int len;
-        byte key;
-        UInt32 value;
+        private byte[] frame;
+        private int len;
+        public byte key { get; set; }
+        public UInt32 value { get; set; }
+        public byte type { get; set; }
         public FrameCnvert() { }
         public FrameCnvert(byte[] data) { }
         public void setFrame(byte[] data, int l)
@@ -199,29 +215,13 @@ namespace THI_HANG_A1.Managers
         {
             if (frame == null) return;
             if (frame[0] != ConstantKeys.BYTE_START) return;
-            if (frame[2] != ConstantKeys.BYTE_GET && frame[3] != ConstantKeys.BYTE_SET) return;
+            if (frame[2] != ConstantKeys.BYTE_GET && frame[2] != ConstantKeys.BYTE_SET) return;
 
             key = frame[1];
+            type = frame[2];
             value = ((UInt32)frame[4] << 24) | ((UInt32)frame[5] << 16) | ((UInt32)frame[6] << 8) | (UInt32)frame[7];
         }
-        public byte getKey()
-        {
-            return key;
-        }
-        public UInt32 getValue()
-        {
-            return value;
-        }
-        public void setValue(UInt32 value)
-        {
-            this.value = value;
-        }
-        public void setKey(byte key, byte type)
-        {
-            this.key = key;
-
-        }
-        private void encode()
+        public void encode()
         {
             frame[0] = ConstantKeys.BYTE_START;
             frame[1] = key;
