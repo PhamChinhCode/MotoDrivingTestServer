@@ -16,6 +16,7 @@ using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 
+
 namespace THI_HANG_A1
 {
     // Form1 GIỜ ĐÂY CHỈ LÀM NHIỆM VỤ GIAO DIỆN VÀ ĐIỀU PHỐI
@@ -32,7 +33,7 @@ namespace THI_HANG_A1
         private DataTable dt;
         private ContextMenuStrip cmsThiSinh;   // menu khi nhấp đúp vào thí sinh đang thi
         private int _currentRowIndex = -1;     // lưu dòng đang thao tác
-
+        private List<San> sanList = new List<San>();
 
         private List<Moto> xes;
         private QuanLyXe fxe;
@@ -50,11 +51,14 @@ namespace THI_HANG_A1
         }
 
 
+        private QLiSan fsan;
         public Form1()
         {
             InitializeComponent();
             TaoDuLieuMotoDemo();
             fxe = new QuanLyXe(xes);
+            sanList = new List<San>();
+            sanList.Add(new San("San 1", "172.172.0.209", 123));
             //fxe.ShowDialog();
             xes[0].Connect();
 

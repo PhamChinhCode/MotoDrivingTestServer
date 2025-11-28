@@ -12,6 +12,7 @@ namespace THI_HANG_A1.Managers
         private Thread _receiveThread;
         public string IPAddress { get; set; }
         public int IPPort { get; set; }
+        public event Action<byte[], int> OnDataReceivedBytes;
 
 
         public bool IsConnected => _client != null && _client.Connected;
@@ -117,6 +118,8 @@ namespace THI_HANG_A1.Managers
 
                     // Đưa dữ liệu về Form
                     OnDataReceived?.Invoke(buffer, len);
+                    OnDataReceivedBytes?.Invoke(buffer, len);
+
                 }
                 catch
                 {
@@ -180,13 +183,14 @@ namespace THI_HANG_A1.Managers
         byte[] frame;
         int len;
         byte key;
-        byte value;
+        UInt32 value;
         public FrameCnvert() { }
         public FrameCnvert(byte[] data) { }
         public void setFrame(byte[] data, int l)
         {
             frame = data;
-            this.len = l; value = ConstantKeys.KEY_NULL;
+            this.len = l;
+            value = ConstantKeys.KEY_NULL;
             key = ConstantKeys.KEY_NULL;
             convert();
 
@@ -194,15 +198,35 @@ namespace THI_HANG_A1.Managers
         private void convert()
         {
             if (frame == null) return;
-            //if (frame[0] != ConstantKeys.)
+            if (frame[0] != ConstantKeys.BYTE_START) return;
+            if (frame[2] != ConstantKeys.BYTE_GET && frame[3] != ConstantKeys.BYTE_SET) return;
+
+            key = frame[1];
+            value = ((UInt32)frame[4] << 24) | ((UInt32)frame[5] << 16) | ((UInt32)frame[6] << 8) | (UInt32)frame[7];
         }
         public byte getKey()
         {
             return key;
         }
-        public byte getValue()
+        public UInt32 getValue()
         {
             return value;
+        }
+        public void setValue(UInt32 value)
+        {
+            this.value = value;
+        }
+        public void setKey(byte key, byte type)
+        {
+            this.key = key;
+
+        }
+        private void encode()
+        {
+            frame[0] = ConstantKeys.BYTE_START;
+            frame[1] = key;
+            frame[2] = ConstantKeys.BYTE_GET;
+
         }
     }
 }

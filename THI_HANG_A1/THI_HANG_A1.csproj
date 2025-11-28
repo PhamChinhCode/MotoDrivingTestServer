@@ -134,6 +134,12 @@
     <Compile Include="Forms\MotoView.Designer.cs">
       <DependentUpon>MotoView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\QLisan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QLisan.Designer.cs">
+      <DependentUpon>QLisan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\QuanLyXe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +178,7 @@
     <Compile Include="Models\ChiTietLoi.cs" />
     <Compile Include="Models\LoiViPham.cs" />
     <Compile Include="Models\Moto.cs" />
+    <Compile Include="Models\San.cs" />
     <Compile Include="Models\ThiSinh.cs" />
     <Compile Include="Models\ThiSinhDangThi.cs" />
     <Compile Include="Models\ThiSinhXml.cs" />
@@ -191,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MotoView.resx">
       <DependentUpon>MotoView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QLisan.resx">
+      <DependentUpon>QLisan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\QuanLyXe.resx">
       <DependentUpon>QuanLyXe.cs</DependentUpon>
@@ -229,6 +239,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\cac-di-vong-so-8-khong-cham-vach-1.jpg" />
   </ItemGroup>
   <ItemGroup>
