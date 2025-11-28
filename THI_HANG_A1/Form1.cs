@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using THI_HANG_A1.Forms;
+using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 using System.Drawing;
@@ -35,14 +37,24 @@ namespace THI_HANG_A1
 
         private List<Moto> xes;
         private QuanLyXe fxe;
+
+        private void TaoDuLieuMotoDemo()
+        {
+            xes = new List<Moto>()
+            {
+                new Moto() { Id = 1, Name = "Xe 01", Ip = "172.172.0.196", Port = 21, Status = 0xC1 },
+                new Moto() { Id = 2, Name = "Xe 02", Ip = "192.168.1.11", Port = 5000, Status = 0xC3 },
+                new Moto() { Id = 3, Name = "Xe 03", Ip = "192.168.1.12", Port = 5000, Status = 0xC2 },
+                new Moto() { Id = 4, Name = "Xe 04", Ip = "192.168.1.13", Port = 5000, Status = 0x00 },
+                new Moto() { Id = 5, Name = "Xe 05", Ip = "192.168.1.14", Port = 5000, Status = 0xC1 }
+            };
+        }
+
+
         public Form1()
         {
             InitializeComponent();
-            xes = new List<Moto>();
-            xes.Add(new Moto("Xe số 1", "192.168.51.16", 123));
-            xes.Add(new Moto("Xe số 2", "192.168.51.220", 123));
-            xes.Add(new Moto("Xe số 3", "192.168.100.52", 123));
-            xes.Add(new Moto("Xe số 4", "192.168.100.53", 123));
+            TaoDuLieuMotoDemo();
             fxe = new QuanLyXe(xes);
             //fxe.ShowDialog();
 
@@ -53,7 +65,7 @@ namespace THI_HANG_A1
             GridThi();
             dgvThi.AutoGenerateColumns = false;
             dgvThi.DataSource = null;
-            dgvThi.AllowUserToAddRows = false;// ✔ Không cho tự thêm dòng trống
+            dgvThi.CellMouseDown += dgvThi_CellMouseDown;
 
             // 2. Khởi tạo các manager
             audioManager = new AudioManager();
@@ -76,16 +88,17 @@ namespace THI_HANG_A1
         /// </summary>
         private void KhoiTaoGiaoDienVaDuLieu()
         {
-            dgvchitietloi.AutoGenerateColumns = true; // Bạn đã tạo tay
 
             dgvKetQuaChung.AutoGenerateColumns = false;
             dgvNhatKyLoi.AutoGenerateColumns = false;
-
-            dgvchitietloi.DataSource = examManager.DanhSachChuanBiThi;
             dgvThi.DataSource = examManager.DanhSachDangThi;
             dgvKetQuaChung.DataSource = examManager.DanhSachKetQuaChung;
             dgvNhatKyLoi.DataSource = examManager.DanhSachLoiViPham;
 
+            dgvchitietloi.AutoGenerateColumns = true;
+            dgvchitietloi.DataSource = dsChiTietLoi;
+
+            dgvchitietloi.Columns["ThoiGian"].DefaultCellStyle.Format = "HH:mm:ss";
             this.dgvNhatKyLoi.CellFormatting += dgvNhatKyLoi_CellFormatting;
             CapNhatDanhSachXeRanhUI();
             examManager.OnDataChanged += (s, e) => CapNhatDanhSachXeRanhUI();
@@ -257,8 +270,16 @@ namespace THI_HANG_A1
 
         //#endregion
 
-        #endregion
+        //private void btnQuaVongSo8_Click(object sender, EventArgs e)
+        //{
+        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
+        //        examManager.QuaVongSo8(ts);
+        //    else
+        //        MessageBox.Show("Vui lòng chọn thí sinh trong bảng 'ĐANG THI'.",
+        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //}
 
+        //#endregion
         #region === TIMER CẬP NHẬT THỜI GIAN ===
 
         // Khai báo duy nhất một hàm `timerCapNhatThoiGian_Tick`
@@ -386,11 +407,7 @@ namespace THI_HANG_A1
         }
 
         private void Form1_Load(object sender, EventArgs e)
-
-
         {
-
-            //  dshsjhj
             // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
             this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
             // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
@@ -875,7 +892,6 @@ namespace THI_HANG_A1
             x.SoCMT = dgv.Rows[i].Cells[4].Value?.ToString();
             x.HangGPLX = dgv.Rows[i].Cells[5].Value?.ToString();
             x.AnhChanDung = dgv.Rows[i].Cells[7].Value?.ToString();
-
         }
 
         // Dùng BindingList để DataGridView tự update
@@ -898,6 +914,12 @@ namespace THI_HANG_A1
                 // Trường hợp click vào dòng trống cuối cùng (new row)
                 return;
             }
+            // Mở form cấp xe
+            Capxe frm = new Capxe(xes, x.SoBaoDanh, x.HangGPLX);
+            frm.StartPosition = FormStartPosition.CenterParent;
+            DialogResult result = frm.ShowDialog();
+
+            if (result != DialogResult.OK || frm.XeDuocChon == null)
 
             int sbd = 0;
             string hang = "";
@@ -919,6 +941,27 @@ namespace THI_HANG_A1
                 return;
             }
 
+            Moto xeChon = frm.XeDuocChon;
+            string soXe = xeChon.Name;
+            int sbd = 0;
+            string hang = "";
+            string hoDem = "";
+            string ten = "";
+
+            try
+            {
+                // Lấy dữ liệu theo tên cột trong SQL (An toàn tuyệt đối)
+                // Đảm bảo trong câu lệnh SQL SELECT có các cột này: SBD, HangGPLX, Hodem
+                sbd = Convert.ToInt32(drv["SBD"]);
+                hang = drv["HangGPLX"].ToString();
+                hoDem = drv["Hodem"].ToString();
+                ten = drv["Ten"].ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Dữ liệu thí sinh thiếu hoặc lỗi: " + ex.Message);
+                return;
+            }
             // 3. Mở form cấp xe
             Capxe frm = new Capxe(sbd, hang);
             frm.StartPosition = FormStartPosition.CenterParent;
@@ -943,6 +986,7 @@ namespace THI_HANG_A1
             ThiSinhDangThi d = new ThiSinhDangThi()
             {
                 Xe = soXe,
+                XeObj = xeChon,
                 HoDem = hoDem,
                 Ten = ten,
                 SoBaoDanh = sbd,
@@ -963,6 +1007,23 @@ namespace THI_HANG_A1
                 ZicZac = "",
                 GoGhe = ""
             };
+            // 7. Tạo SESSION trong database
+            int sessionId = CreateSession(sbd, Convert.ToInt32(d.XeObj.Id)); // hoặc DeviceID của xe
+
+            // 8. Gán SessionID vào đối tượng thí sinh
+            d.SessionID = sessionId;
+
+            xeChon.Connect();
+
+            // ===== GẮN SỰ KIỆN STATUS XE → CẬP NHẬT BÀI THI =====
+            xeChon.OnChanged += () =>
+            {
+                MessageBox.Show($"xe chon status {xeChon.Status}");
+                BaiThiHelper.CapNhatBaiThiHienTai(d, xeChon.Status);
+
+                dgvThi.Invoke(new Action(() => dgvThi.Refresh()));
+            };
+
 
             // 6. Cập nhật vào danh sách và Grid
             ds.Add(d);
@@ -1149,26 +1210,36 @@ namespace THI_HANG_A1
                 if (!timerCapNhatThoiGian.Enabled)
                     timerCapNhatThoiGian.Start();
             }
-            switch (cot)
-            {
-                case "Chống chân":
-                    ts.SoLoi += 1;
-                    ts.DiemTru += 5;
-                    ts.DiemConLai -= 5;
-                    break;
 
-                case "Đổ xe":
-                    ts.SoLoi += 1;
-                    ts.DiemTru += 25;
-                    ts.DiemConLai -= 25;
-                    break;
+            //===============================
+            //   DÙNG MAP ĐỂ LẤY LỖI
+            //===============================
+            var err = FaultDefinitions.FaultMap[cot];
+            int faultId = err.faultId;
+            int diemTru = err.diemTru;
+            int baiThiId = err.baiThiId; // nếu bạn có xác định bài hiện tại thì thay bằng ts.BaiHienTaiID
 
-                case "Ngoài hình":
-                    ts.SoLoi += 1;
-                    ts.DiemTru += 25;
-                    ts.DiemConLai -= 25;
-                    break;
-            }
+            //===============================
+            //  CẬP NHẬT ĐIỂM
+            //===============================
+            ts.SoLoi++;
+            ts.DiemTru += diemTru;
+            ts.DiemConLai -= diemTru;
+
+            //===============================
+            //  LƯU LỖI VÀO DATABASE
+            //===============================
+            InsertErrorToDatabase(
+                ts.SoBaoDanh,
+                ts.SessionID,
+                $"{ts.HoDem} {ts.Ten}",
+                ts.Xe,
+                cot,            // Sự kiện giống header text
+                diemTru,
+                "Giám khảo ghi lỗi",
+                faultId,
+                baiThiId
+            );
 
             if (ts.DiemConLai < 80)
                 ts.TrangThai = "Không đạt";
@@ -1370,6 +1441,8 @@ namespace THI_HANG_A1
 
             // Cho xe sang trạng thái Sẵn sàng
             trangThaiXe[soXe] = TrangThaiXe.SanSang;
+            //InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+            //    "Chuẩn bị thi", 0, "Thí sinh chuẩn bị xe");
 
             // Cập nhật trạng thái thí sinh:
             // Sau khi ấn Chuẩn bị: ô vuông không màu, chưa tích
@@ -1396,6 +1469,8 @@ namespace THI_HANG_A1
             {
                 trangThaiXe[ts.Xe] = TrangThaiXe.DangThi;
             }
+            //InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+            //    "Bắt đầu thi", 0, "Thí sinh bắt đầu bài thi");
 
             // Bật timer nếu chưa chạy
             if (!timerCapNhatThoiGian.Enabled)
@@ -1464,17 +1539,17 @@ namespace THI_HANG_A1
             var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
             if (ts == null) return;
 
-            Capxe frm = new Capxe(ts.SoBaoDanh, ts.HangGPLX);
+            Capxe frm = new Capxe(xes ,ts.SoBaoDanh, ts.HangGPLX);
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog();
 
-            if (frm.i == 0) return;
+            Moto xeChon = frm.XeDuocChon;
 
             // Trả xe cũ về trạng thái "Rảnh"
             trangThaiXe[ts.Xe] = TrangThaiXe.Ranh;
 
             // Gán xe mới
-            ts.Xe = frm.i.ToString();
+            ts.Xe = xeChon.Name;
 
             // Đánh dấu xe mới "Sẵn sàng"
             trangThaiXe[ts.Xe] = TrangThaiXe.SanSang;
@@ -1483,7 +1558,6 @@ namespace THI_HANG_A1
             HienThiThongTinThiSinh(ts);
         }
 
-        // Trạng thái xe
         private enum TrangThaiXe
         {
             Ranh,      // chưa ai dùng / dùng xong
@@ -1495,10 +1569,8 @@ namespace THI_HANG_A1
         private Dictionary<string, TrangThaiXe> trangThaiXe
             = new Dictionary<string, TrangThaiXe>();
 
-
+        // Trạng thái xe
         public enum TrangThaiTS
-        // mới thêm
-        private void dgvThi_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             None,
             DaCapXe,
@@ -1529,5 +1601,106 @@ namespace THI_HANG_A1
                 default: return TrangThaiTS.None;
             }
         }
+        private BindingList<ChiTietLoi> dsChiTietLoi = new BindingList<ChiTietLoi>();
+
+        //private void InsertErrorToDatabase(int sbd, string ten, string xe, string suKien, int diemTru, string chiTiet)
+        //{
+        //    string sql = @"INSERT INTO ChiTietLoi (SoBaoDanh, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet)
+        //   VALUES (@SBD, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet)";
+
+        //    using (SqlConnection conn = new SqlConnection(cnn))
+        //    {
+        //        conn.Open();
+        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@SBD", sbd);
+        //            cmd.Parameters.AddWithValue("@Ten", ten);
+        //            cmd.Parameters.AddWithValue("@Xe", xe);
+        //            cmd.Parameters.AddWithValue("@SuKien", suKien);
+        //            cmd.Parameters.AddWithValue("@DiemTru", diemTru);
+        //            cmd.Parameters.AddWithValue("@ChiTiet", chiTiet);
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+
+        //    // Thêm vào dgv
+        //    dsChiTietLoi.Add(new ChiTietLoi()
+        //    {
+        //        ThoiGian = DateTime.Now,
+        //        SuKien = suKien,
+        //        DiemTru = diemTru,
+        //        ChiTiet = chiTiet
+        //    });
+        //}
+
+        int CreateSession(int sbd, int deviceId)
+        {
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+
+                string sql = @"
+                    INSERT INTO Sessions (SBD, DeviceID, StartTime, Duration, Time, Mark)
+                    OUTPUT INSERTED.ID
+                    VALUES (@SBD, @DeviceID, GETDATE(), 80, 0, 100)";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SBD", sbd);
+                    cmd.Parameters.AddWithValue("@DeviceID", deviceId);
+
+                    int sessionId = (int)cmd.ExecuteScalar();
+                    return sessionId;
+                }
+            }
+        }
+
+
+        private void InsertErrorToDatabase(
+    long sbd,
+    int sessionId,
+    string ten,
+    string xe,
+    string suKien,
+    int diemTru,
+    string chiTiet,
+    int? faultId = null,
+    int? baiThiId = null)
+        {
+            string sql = @"
+    INSERT INTO ChiTietLoi 
+    (SoBaoDanh, SessionID, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet, FaultID, BaiThiID)
+    VALUES 
+    (@SBD, @SessionID, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet, @FaultID, @BaiThiID)";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SBD", sbd);
+                    cmd.Parameters.AddWithValue("@SessionID", sessionId);
+                    cmd.Parameters.AddWithValue("@Ten", ten ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Xe", xe ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@SuKien", suKien);
+                    cmd.Parameters.AddWithValue("@DiemTru", diemTru);
+                    cmd.Parameters.AddWithValue("@ChiTiet", chiTiet ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FaultID", faultId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@BaiThiID", baiThiId ?? (object)DBNull.Value);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            // Thêm vào DataGridView / ObservableCollection
+            dsChiTietLoi.Add(new ChiTietLoi()
+            {
+                ThoiGian = DateTime.Now,
+                SuKien = suKien,
+                DiemTru = diemTru,
+                ChiTiet = chiTiet,
+            });
+        }
+
     }
 }
