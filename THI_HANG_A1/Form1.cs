@@ -14,6 +14,7 @@ using THI_HANG_A1.Forms;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 
+
 namespace THI_HANG_A1
 {
     // Form1 GIỜ ĐÂY CHỈ LÀM NHIỆM VỤ GIAO DIỆN VÀ ĐIỀU PHỐI
@@ -28,19 +29,22 @@ namespace THI_HANG_A1
         private readonly string cnn = THI_HANG_A1.Properties.Settings.Default.Conn;
         private SqlDataAdapter da;
         private DataTable dt;
-
+        private List<San> sanList = new List<San>();
 
         private List<Moto> xes;
         private QuanLyXe fxe;
+        private QLiSan fsan;
         public Form1()
         {
             InitializeComponent();
             xes = new List<Moto>();
-            xes.Add(new Moto("Xe số 1", "192.168.51.16", 123));
-            xes.Add(new Moto("Xe số 2", "192.168.51.220", 123));
+            xes.Add(new Moto("Xe số 1", "172.172.0.209", 123));
+            xes.Add(new Moto("Xe số 2", "192.168.51.87", 123));
             xes.Add(new Moto("Xe số 3", "192.168.100.52", 123));
             xes.Add(new Moto("Xe số 4", "192.168.100.53", 123));
             fxe = new QuanLyXe(xes);
+            sanList = new List<San>();
+            sanList.Add(new San("San 1", "172.172.0.209", 123));
             //fxe.ShowDialog();
 
             //dgvDangThi.DataSource = null;
@@ -1072,11 +1076,33 @@ namespace THI_HANG_A1
                 });
             }
         }
-
         private void kiểmTraKếtNốiXeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fxe.ShowDialog();
         }
+
+        private void kếtNốiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            fsan = new QLiSan(sanList);
+            fsan.Show();
+
+        }
+
+        private void splitContainer_Thi_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 
 }
+//28/11/2025

@@ -134,6 +134,12 @@
     <Compile Include="Forms\MotoView.Designer.cs">
       <DependentUpon>MotoView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\QLisan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QLisan.Designer.cs">
+      <DependentUpon>QLisan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\QuanLyXe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,17 +174,26 @@
     </Compile>
     <Compile Include="Models\LoiViPham.cs" />
     <Compile Include="Models\Moto.cs" />
+    <Compile Include="Models\San.cs" />
     <Compile Include="Models\ThiSinh.cs" />
     <Compile Include="Models\ThiSinhDangThi.cs" />
     <Compile Include="Models\ThiSinhXml.cs" />
     <Compile Include="Models\Xe.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MotoView.resx">
       <DependentUpon>MotoView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QLisan.resx">
+      <DependentUpon>QLisan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\QuanLyXe.resx">
       <DependentUpon>QuanLyXe.cs</DependentUpon>
@@ -208,20 +223,15 @@
       <DependentUpon>MCDV2A1DataSet.xsd</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\cac-di-vong-so-8-khong-cham-vach-1.jpg" />
   </ItemGroup>
   <ItemGroup>

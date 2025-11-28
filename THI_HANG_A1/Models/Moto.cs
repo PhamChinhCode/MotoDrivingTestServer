@@ -56,10 +56,17 @@ namespace THI_HANG_A1.Models
         }
         public void Connect()
         {
-            socketConn.Connect(Ip, Port);
+            bool ok = socketConn.Connect(Ip, Port);
+
+            if (!ok)
+            {
+                Mes = "Không thể kết nối tới ESP32";
+                return;
+            }
 
             socketConn.OnDataReceived += SocketDataHandler;
         }
+
         private void SocketDataHandler(byte[] buffer, int len)
         {
             byte mid = buffer[3];
@@ -67,8 +74,8 @@ namespace THI_HANG_A1.Models
             byte mtype = buffer[2];
             UInt32 mvalue = ((UInt32)buffer[4] << 24) | ((UInt32)buffer[5] << 16) | ((UInt32)buffer[6] << 8) | ((UInt32)buffer[7]);
 
-
-
+            Mes = Convert.ToString( mid);
+            
 
             //Mes = msg;
             // 🔥 Ví dụ ESP32 gửi: "MES=1"

@@ -12,6 +12,7 @@ namespace THI_HANG_A1.Managers
         private Thread _receiveThread;
         public string IPAddress { get; set; }
         public int IPPort { get; set; }
+        public event Action<byte[], int> OnDataReceivedBytes;
 
 
         public bool IsConnected => _client != null && _client.Connected;
@@ -117,6 +118,8 @@ namespace THI_HANG_A1.Managers
 
                     // Đưa dữ liệu về Form
                     OnDataReceived?.Invoke(buffer, len);
+                    OnDataReceivedBytes?.Invoke(buffer, len);
+
                 }
                 catch
                 {
