@@ -57,6 +57,7 @@ namespace THI_HANG_A1
             TaoDuLieuMotoDemo();
             fxe = new QuanLyXe(xes);
             //fxe.ShowDialog();
+            xes[0].Connect();
 
             //dgvDangThi.DataSource = null;
             //dgvDangThi.Visible = false;
@@ -906,42 +907,24 @@ namespace THI_HANG_A1
                 return;
             }
 
-            // 2. Lấy dữ liệu AN TOÀN từ DataRowView
-            // (Cách này tốt hơn dùng currentRow.Cells[] vì tránh được lỗi khi click vào lề bảng)
+            // 2. Lấy dữ liệu từ DataRowView
             DataRowView drv = dgv.CurrentRow.DataBoundItem as DataRowView;
             if (drv == null)
-            {
-                // Trường hợp click vào dòng trống cuối cùng (new row)
                 return;
-            }
-            // Mở form cấp xe
+
+            // 3. Mở form cấp xe
             Capxe frm = new Capxe(xes, x.SoBaoDanh, x.HangGPLX);
             frm.StartPosition = FormStartPosition.CenterParent;
+
             DialogResult result = frm.ShowDialog();
-
             if (result != DialogResult.OK || frm.XeDuocChon == null)
-
-            int sbd = 0;
-            string hang = "";
-            string hoDem = "";
-            string ten = "";
-
-            try
-            {
-                // Lấy dữ liệu theo tên cột trong SQL (An toàn tuyệt đối)
-                // Đảm bảo trong câu lệnh SQL SELECT có các cột này: SBD, HangGPLX, Hodem, Ten
-                sbd = Convert.ToInt32(drv["SBD"]);
-                hang = drv["HangGPLX"].ToString();
-                hoDem = drv["Hodem"].ToString();
-                ten = drv["Ten"].ToString();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Dữ liệu thí sinh thiếu hoặc lỗi: " + ex.Message);
                 return;
-            }
 
             Moto xeChon = frm.XeDuocChon;
+
+
+            //xeChon.Connect();
+
             string soXe = xeChon.Name;
             int sbd = 0;
             string hang = "";
@@ -950,8 +933,6 @@ namespace THI_HANG_A1
 
             try
             {
-                // Lấy dữ liệu theo tên cột trong SQL (An toàn tuyệt đối)
-                // Đảm bảo trong câu lệnh SQL SELECT có các cột này: SBD, HangGPLX, Hodem
                 sbd = Convert.ToInt32(drv["SBD"]);
                 hang = drv["HangGPLX"].ToString();
                 hoDem = drv["Hodem"].ToString();
@@ -962,14 +943,6 @@ namespace THI_HANG_A1
                 MessageBox.Show("Dữ liệu thí sinh thiếu hoặc lỗi: " + ex.Message);
                 return;
             }
-            // 3. Mở form cấp xe
-            Capxe frm = new Capxe(sbd, hang);
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.ShowDialog();
-
-            // 4. Xử lý sau khi chọn xe từ Form Capxe
-            if (frm.i == 0) return; // Người dùng ấn Bỏ qua hoặc tắt form
-            string soXe = frm.i.ToString();
 
             // Kiểm tra trạng thái xe trong từ điển
             if (!trangThaiXe.ContainsKey(soXe))
@@ -1013,7 +986,7 @@ namespace THI_HANG_A1
             // 8. Gán SessionID vào đối tượng thí sinh
             d.SessionID = sessionId;
 
-            xeChon.Connect();
+            //xeChon.Connect();
 
             // ===== GẮN SỰ KIỆN STATUS XE → CẬP NHẬT BÀI THI =====
             xeChon.OnChanged += () =>

@@ -177,7 +177,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1340, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1340, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -199,7 +199,7 @@
             this.thoátToolStripMenuItem,
             this.đăngNhậpToolStripMenuItem});
             this.khóaThiToolStripMenuItem.Name = "khóaThiToolStripMenuItem";
-            this.khóaThiToolStripMenuItem.Size = new System.Drawing.Size(78, 26);
+            this.khóaThiToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.khóaThiToolStripMenuItem.Text = "Khóa thi";
             // 
             // tạoMớiToolStripMenuItem
@@ -301,7 +301,7 @@
             this.thanhCôngCụToolStripMenuItem,
             this.thanhTrạngTháiToolStripMenuItem});
             this.hiểnThịToolStripMenuItem.Name = "hiểnThịToolStripMenuItem";
-            this.hiểnThịToolStripMenuItem.Size = new System.Drawing.Size(75, 26);
+            this.hiểnThịToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.hiểnThịToolStripMenuItem.Text = "Hiển thị";
             // 
             // thanhCôngCụToolStripMenuItem
@@ -321,7 +321,7 @@
             this.cônggCụToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tùyChọnToolStripMenuItem});
             this.cônggCụToolStripMenuItem.Name = "cônggCụToolStripMenuItem";
-            this.cônggCụToolStripMenuItem.Size = new System.Drawing.Size(77, 26);
+            this.cônggCụToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.cônggCụToolStripMenuItem.Text = "Công cụ";
             // 
             // tùyChọnToolStripMenuItem
@@ -335,7 +335,7 @@
             this.giớiThiệuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.giớiThiệuChươngTrìnhToolStripMenuItem});
             this.giớiThiệuToolStripMenuItem.Name = "giớiThiệuToolStripMenuItem";
-            this.giớiThiệuToolStripMenuItem.Size = new System.Drawing.Size(90, 26);
+            this.giớiThiệuToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.giớiThiệuToolStripMenuItem.Text = "Giới Thiệu";
             // 
             // giớiThiệuChươngTrìnhToolStripMenuItem
@@ -349,7 +349,7 @@
             this.kếtNốiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.kiểmTraKếtNốiXeToolStripMenuItem});
             this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
-            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(70, 26);
+            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.kếtNốiToolStripMenuItem.Text = "Kết nối";
             // 
             // kiểmTraKếtNốiXeToolStripMenuItem
@@ -389,7 +389,7 @@
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(59, 28);
+            this.toolStripButton2.Size = new System.Drawing.Size(51, 24);
             this.toolStripButton2.Text = "Xóa";
             // 
             // toolStripButton3
@@ -397,39 +397,39 @@
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(92, 28);
+            this.toolStripButton3.Size = new System.Drawing.Size(79, 24);
             this.toolStripButton3.Text = "Cập nhật";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // btnBatDau
             // 
             this.btnBatDau.Image = ((System.Drawing.Image)(resources.GetObject("btnBatDau.Image")));
             this.btnBatDau.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnBatDau.Name = "btnBatDau";
-            this.btnBatDau.Size = new System.Drawing.Size(84, 28);
+            this.btnBatDau.Size = new System.Drawing.Size(71, 24);
             this.btnBatDau.Text = "Bắt đầu";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // toolStripButton9
             // 
             this.toolStripButton9.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton9.Image")));
             this.toolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton9.Name = "toolStripButton9";
-            this.toolStripButton9.Size = new System.Drawing.Size(132, 28);
+            this.toolStripButton9.Size = new System.Drawing.Size(109, 24);
             this.toolStripButton9.Text = "Tìm SBD đã thi";
             // 
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 27);
             // 
             // splitContainer1
             // 
@@ -447,7 +447,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1340, 623);
+            this.splitContainer1.Size = new System.Drawing.Size(1340, 627);
             this.splitContainer1.SplitterDistance = 302;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -461,7 +461,7 @@
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersWidth = 51;
             this.dgv.RowTemplate.Height = 24;
-            this.dgv.Size = new System.Drawing.Size(302, 339);
+            this.dgv.Size = new System.Drawing.Size(302, 343);
             this.dgv.TabIndex = 3;
             this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
             this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
@@ -475,7 +475,7 @@
             this.xoathisinhToolStripMenuItem,
             this.capnhatketquaToolStripMenuItem});
             this.chuotphaichonxe.Name = "chuotphaichonxe";
-            this.chuotphaichonxe.Size = new System.Drawing.Size(230, 100);
+            this.chuotphaichonxe.Size = new System.Drawing.Size(198, 92);
             // 
             // capxeToolStripMenuItem
             // 
@@ -507,7 +507,7 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pictureBox1.Image = global::THI_HANG_A1.Properties.Resources.cac_di_vong_so_8_khong_cham_vach_1;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 399);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 403);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(302, 224);
@@ -569,7 +569,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1034, 623);
+            this.tabControl1.Size = new System.Drawing.Size(1034, 627);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -579,7 +579,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage1.Size = new System.Drawing.Size(1026, 594);
+            this.tabPage1.Size = new System.Drawing.Size(1026, 601);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Thi Sát Hạch";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -615,8 +615,8 @@
             this.splitContainer_Thi.Panel2.Controls.Add(this.lblDiemTru);
             this.splitContainer_Thi.Panel2.Controls.Add(this.dgvchitietloi);
             this.splitContainer_Thi.Panel2.Controls.Add(this.txtSerialLog);
-            this.splitContainer_Thi.Size = new System.Drawing.Size(1020, 590);
-            this.splitContainer_Thi.SplitterDistance = 209;
+            this.splitContainer_Thi.Size = new System.Drawing.Size(1020, 597);
+            this.splitContainer_Thi.SplitterDistance = 211;
             this.splitContainer_Thi.TabIndex = 1;
             // 
             // dgvThi
@@ -631,7 +631,7 @@
             this.dgvThi.Name = "dgvThi";
             this.dgvThi.RowHeadersWidth = 51;
             this.dgvThi.RowTemplate.Height = 24;
-            this.dgvThi.Size = new System.Drawing.Size(1007, 171);
+            this.dgvThi.Size = new System.Drawing.Size(1007, 173);
             this.dgvThi.TabIndex = 2;
             this.dgvThi.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvThi_CellContentClick);
             // 
@@ -799,7 +799,7 @@
             this.dgvchitietloi.Name = "dgvchitietloi";
             this.dgvchitietloi.RowHeadersWidth = 51;
             this.dgvchitietloi.RowTemplate.Height = 24;
-            this.dgvchitietloi.Size = new System.Drawing.Size(585, 169);
+            this.dgvchitietloi.Size = new System.Drawing.Size(529, 293);
             this.dgvchitietloi.TabIndex = 100;
             // 
             // txtSerialLog
@@ -808,13 +808,13 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSerialLog.BackColor = System.Drawing.Color.LightGray;
-            this.txtSerialLog.Location = new System.Drawing.Point(594, 203);
+            this.txtSerialLog.Location = new System.Drawing.Point(540, 84);
             this.txtSerialLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSerialLog.Multiline = true;
             this.txtSerialLog.Name = "txtSerialLog";
             this.txtSerialLog.ReadOnly = true;
             this.txtSerialLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtSerialLog.Size = new System.Drawing.Size(424, 169);
+            this.txtSerialLog.Size = new System.Drawing.Size(478, 293);
             this.txtSerialLog.TabIndex = 99;
             this.txtSerialLog.Text = "--- LOG GIAO TIẾP SERIAL/SOCKET ---";
             // 
