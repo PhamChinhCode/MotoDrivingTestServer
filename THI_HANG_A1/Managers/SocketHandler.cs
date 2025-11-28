@@ -131,7 +131,7 @@ namespace THI_HANG_A1.Managers
     }
     public static class ConstantKeys
     {
-        public const int HEADER_LENGTH = 9; // 9 byte Header (từ START đến CRC)
+        public const int HEADER_LENGTH = 10; // 9 byte Header (từ START đến CRC)
         public const byte BYTE_START = 0x30;
         public const byte BYTE_STOP = 0x31;
         public const byte BYTE_SET = 0x32;
