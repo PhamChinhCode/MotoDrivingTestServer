@@ -125,7 +125,7 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "label3";
             // 
-            // UserControl1
+            // MotoView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -140,8 +140,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox1);
-            this.Name = "UserControl1";
-            this.Size = new System.Drawing.Size(548, 103);
+            this.Name = "MotoView";
+            this.Size = new System.Drawing.Size(612, 113);
             this.Load += new System.EventHandler(this.UserControl1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
