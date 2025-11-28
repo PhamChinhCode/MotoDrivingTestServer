@@ -181,7 +181,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(1340, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
+            //this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // khóaThiToolStripMenuItem
             // 
@@ -355,7 +355,7 @@
             this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
             this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
             this.kếtNốiToolStripMenuItem.Text = "Kết nối";
-            this.kếtNốiToolStripMenuItem.Click += new System.EventHandler(this.kếtNốiToolStripMenuItem_Click);
+            //this.kếtNốiToolStripMenuItem.Click += new System.EventHandler(this.kếtNốiToolStripMenuItem_Click);
             // 
             // kiểmTraKếtNốiXeToolStripMenuItem
             // 
@@ -369,7 +369,7 @@
             this.kiemtraketnoisan.Name = "kiemtraketnoisan";
             this.kiemtraketnoisan.Size = new System.Drawing.Size(223, 26);
             this.kiemtraketnoisan.Text = "Kiểm tra kết nối sân";
-            this.kiemtraketnoisan.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            //this.kiemtraketnoisan.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStrip1
             // 
