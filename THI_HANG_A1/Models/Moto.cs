@@ -6,7 +6,9 @@ namespace THI_HANG_A1.Models
     public class Moto
     {
         public event Action OnChanged;
+        public int Id { get; set; }
         public string Name { set; get; }
+        
         public string Ip { set; get; }
         public int Port { set; get; }
         private int encoderCount;
@@ -21,6 +23,13 @@ namespace THI_HANG_A1.Models
         {
             get => hall;
             set { hall = value; OnChanged?.Invoke(); }
+        }
+
+        private byte status;
+        public byte Status
+        {
+            get => status;
+            set { status = value; OnChanged?.Invoke(); }
         }
 
         private bool signalLeft;
@@ -54,6 +63,13 @@ namespace THI_HANG_A1.Models
             Port = port;
             socketConn = new SocketHandler();
         }
+
+        public Moto()
+        {
+
+            socketConn = new SocketHandler();
+        }
+
         public void Connect()
         {
             socketConn.Connect(Ip, Port);
@@ -62,6 +78,7 @@ namespace THI_HANG_A1.Models
         }
         private void SocketDataHandler(byte[] buffer, int len)
         {
+            Status = buffer[0];
             byte mid = buffer[3];
             byte mkey = buffer[1];
             byte mtype = buffer[2];

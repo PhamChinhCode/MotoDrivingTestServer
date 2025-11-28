@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore project Settings.settings file
+THI_HANG_A1/Properties/Settings.settings

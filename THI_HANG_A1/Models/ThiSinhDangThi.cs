@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace THI_HANG_A1.Models
 {
-    internal class ThiSinhDangThi
+    public class ThiSinhDangThi
     {
+        public bool? DaKiemTraXe { get; set; }   // null: vừa cấp xe, false: đã chuẩn bị, true: đã kiểm tra xong
+
+        public string TrangThai { get; set; }   // Đã cấp xe / Chuẩn bị thi / Đang thi / Đạt / Không đạt
         public string HoDem { get; set; }
         public string Ten { get; set; }
         public int SoBaoDanh { get; set; }
@@ -15,9 +18,10 @@ namespace THI_HANG_A1.Models
 
         // --- Xe được phân ---
         public string Xe { get; set; } = "";
+        public Moto XeObj { get; set; }
 
         // --- Trạng thái bài thi ---
-        public string TrangThai { get; set; } = "Chưa bắt đầu";
+        //public string TrangThai { get; set; } = "Chưa bắt đầu";
         public DateTime GioBatDau { get; set; }
         public DateTime GioKetThuc { get; set; }
 
@@ -32,6 +36,9 @@ namespace THI_HANG_A1.Models
         public string DuongThang { get; set; } = "";
         public string ZicZac { get; set; } = "";
         public string GoGhe { get; set; } = "";
+
+        public int SessionID { get; set; }
+        public int BaiThiHienTaiID { get; set; }
 
         // --- Lịch sử lỗi ---
         public List<LoiChiTiet> NhatKyLoi { get; set; } = new List<LoiChiTiet>();
