@@ -60,7 +60,7 @@ namespace THI_HANG_A1
             sanList = new List<San>();
             sanList.Add(new San("San 1", "172.172.0.209", 123));
             //fxe.ShowDialog();
-            xes[0].Connect();
+            //xes[0].Connect();
 
             //dgvDangThi.DataSource = null;
             //dgvDangThi.Visible = false;
