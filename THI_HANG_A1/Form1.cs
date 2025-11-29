@@ -42,11 +42,11 @@ namespace THI_HANG_A1
         {
             xes = new List<Moto>()
             {
-                new Moto() { Id = 1, Name = "Xe 01", Ip = "172.172.0.196", Port = 21, Status = 0xC1 },
-                new Moto() { Id = 2, Name = "Xe 02", Ip = "192.168.1.11", Port = 5000, Status = 0xC3 },
-                new Moto() { Id = 3, Name = "Xe 03", Ip = "192.168.1.12", Port = 5000, Status = 0xC2 },
-                new Moto() { Id = 4, Name = "Xe 04", Ip = "192.168.1.13", Port = 5000, Status = 0x00 },
-                new Moto() { Id = 5, Name = "Xe 05", Ip = "192.168.1.14", Port = 5000, Status = 0xC1 }
+                new Moto() { Id = 1, Name = "Xe 01", Ip = "172.172.0.196", Port = 21, Status = ConstantKeys.STATUS_FREE },
+                new Moto() { Id = 2, Name = "Xe 02", Ip = "192.168.1.11", Port = 5000, Status = ConstantKeys.STATUS_FREE },
+                new Moto() { Id = 3, Name = "Xe 03", Ip = "192.168.1.12", Port = 5000, Status = ConstantKeys.STATUS_READY },
+                new Moto() { Id = 4, Name = "Xe 04", Ip = "192.168.1.13", Port = 5000, Status = ConstantKeys.STATUS_TESTING },
+                new Moto() { Id = 5, Name = "Xe 05", Ip = "192.168.1.14", Port = 5000, Status = ConstantKeys.STATUS_READY }
             };
         }
 
@@ -101,12 +101,28 @@ namespace THI_HANG_A1
 
             dgvchitietloi.AutoGenerateColumns = true;
             dgvchitietloi.DataSource = dsChiTietLoi;
+            SetHeaderChiTietLoi();
 
             dgvchitietloi.Columns["ThoiGian"].DefaultCellStyle.Format = "HH:mm:ss";
             this.dgvNhatKyLoi.CellFormatting += dgvNhatKyLoi_CellFormatting;
             CapNhatDanhSachXeRanhUI();
             examManager.OnDataChanged += (s, e) => CapNhatDanhSachXeRanhUI();
         }
+        private void SetHeaderChiTietLoi()
+        {
+            if (dgvchitietloi.Columns["ThoiGian"] != null)
+                dgvchitietloi.Columns["ThoiGian"].HeaderText = "Thời gian";
+
+            if (dgvchitietloi.Columns["SuKien"] != null)
+                dgvchitietloi.Columns["SuKien"].HeaderText = "Sự kiện";
+
+            if (dgvchitietloi.Columns["DiemTru"] != null)
+                dgvchitietloi.Columns["DiemTru"].HeaderText = "Điểm trừ";
+
+            if (dgvchitietloi.Columns["ChiTiet"] != null)
+                dgvchitietloi.Columns["ChiTiet"].HeaderText = "Chi tiết lỗi";
+        }
+
         /// <summary>
         /// Cập nhật ComboBox xe rảnh từ dữ liệu trong ExamManager
         /// 
@@ -412,89 +428,28 @@ namespace THI_HANG_A1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'mCDV2A1DataSet2.DBKySatHach' table. You can move, or remove it, as needed.
-            //this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
-            //// GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
-            ////this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
-            //LoadComboboxKySatHach();
-            //Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
-            //dgvThi.AutoGenerateColumns = false;
-            //dgvThi.DataSource = examManager.DanhSachDangThi;
-            //if (dgvThi.Columns["colThoiGian"] == null)
-            //{
-            //    dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            //    {
-            //        Name = "colThoiGian",
-            //        HeaderText = "Thời gian",
-            //        ReadOnly = true
-            //    });
-            //}
+            LoadInitData();
         }
-
-        /// <summary>
-        /// Chuyển dữ liệu từ dt (SQL) -> List&lt;ThiSinh&gt; -> ExamDataManager
-        /// </summary>
-        //private void NapDanhSachThiSinhTuSQLVaoExamManager()
-        //{
-        //    if (dt == null || dt.Rows.Count == 0)
-        //        return;
-
-        //    var danhSach = new List<ThiSinh>();
-
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        var ts = new ThiSinh
-        //        {
-        //            SBD = row["IDCardNo"]?.ToString(),  // dùng IDCardNo làm SBD
-        //            HoTen = row["Name"]?.ToString(),
-        //            KetquaLT = row["Traloidung"]?.ToString(),
-        //            CCCD = row["IDCardNo"]?.ToString()
-        //        };
-
-
-        //        var dobRaw = row["DateOfBirth"]?.ToString()?.Trim();
-        //        DateTime ns;
-
-        //        string[] formats =
-        //        {
-        //            "dd/MM/yyyy",
-        //            "d/M/yyyy",
-        //            "dd-MM-yyyy",
-        //            "d-M-yyyy",
-        //            "dd.MM.yyyy",
-        //            "d.M.yyyy",
-
-        //        };
-
-        //        if (!string.IsNullOrEmpty(dobRaw) &&
-        //            DateTime.TryParseExact(
-        //                dobRaw,
-        //                formats,
-        //                CultureInfo.InvariantCulture,
-        //                DateTimeStyles.None,
-        //                out ns))
-        //        {
-        //            ts.NgaySinh = ns;
-        //        }
-        //        else
-        //        {
-
-        //            if (DateTime.TryParse(dobRaw, new CultureInfo("vi-VN"), DateTimeStyles.None, out ns))
-        //                ts.NgaySinh = ns;
-        //        }
-
-        //        //  THÊM THÍ SINH VÀO DANH SÁCH
-        //        danhSach.Add(ts);
-        //    }
-
-        //    //  CHỈ GỌI NẠP 1 LẦN SAU KHI ĐÃ LẤY ĐỦ DANH SÁCH
-        //    examManager.NapDuLieuMoi(danhSach);
-        //}
-
-        /// <summary>
-        /// Đọc danh sách thí sinh thi lý thuyết từ SQL, gán vào dgv
-        /// và nạp vào ExamDataManager
-        /// </summary>
+        private void LoadInitData()
+        {
+            this.dBKySatHachTableAdapter.Fill(this.mCDV2A1DataSet2.DBKySatHach);
+            // GIỮ NGUYÊN ĐOẠN NÀY NHƯ BẠN YÊU CẦU
+            //this.examineesTableAdapter.Fill(this.mCDV2A1DataSet.Examinees);
+            LoadComboboxKySatHach();
+            Loaf();                     // đọc từ SQL vào dgv + nạp vào ExamDataManager
+            dgvThi.AutoGenerateColumns = false;
+            dgvThi.DataSource = examManager.DanhSachDangThi;
+            if (dgvThi.Columns["colThoiGian"] == null)
+            {
+                dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+                {
+                    Name = "colThoiGian",
+                    HeaderText = "Thời gian",
+                    ReadOnly = true
+                });
+            }
+            BaiThiHelper.LoadBaiThi();
+        }
         public void Loaf()
         {
             //try
@@ -924,9 +879,7 @@ namespace THI_HANG_A1
                 return;
 
             Moto xeChon = frm.XeDuocChon;
-
-
-            //xeChon.Connect();
+            xeChon.Status = ConstantKeys.STATUS_READY;
 
             string soXe = xeChon.Name;
             int sbd = 0;
@@ -1193,7 +1146,8 @@ namespace THI_HANG_A1
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.faultId;
             int diemTru = err.diemTru;
-            int baiThiId = err.baiThiId; // nếu bạn có xác định bài hiện tại thì thay bằng ts.BaiHienTaiID
+            string moTa = err.moTa;
+            int baiThiId = ts.BaiThiHienTaiID;
 
             //===============================
             //  CẬP NHẬT ĐIỂM
@@ -1212,7 +1166,7 @@ namespace THI_HANG_A1
                 ts.Xe,
                 cot,            // Sự kiện giống header text
                 diemTru,
-                "Giám khảo ghi lỗi",
+                moTa,
                 faultId,
                 baiThiId
             );
@@ -1417,8 +1371,22 @@ namespace THI_HANG_A1
 
             // Cho xe sang trạng thái Sẵn sàng
             trangThaiXe[soXe] = TrangThaiXe.SanSang;
-            //InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
-            //    "Chuẩn bị thi", 0, "Thí sinh chuẩn bị xe");
+            string cot = "Chuẩn bị";  // tên hành động
+
+            var err = FaultDefinitions.FaultMap[cot];
+            int faultId = err.faultId;
+            int diemTru = err.diemTru;
+            
+            InsertErrorToDatabase(
+                ts.SoBaoDanh,
+                ts.SessionID,
+                $"{ts.HoDem} {ts.Ten}",
+                ts.Xe,
+                cot,
+                diemTru,
+                "Chuẩn bị",
+                faultId
+            );
 
             // Cập nhật trạng thái thí sinh:
             // Sau khi ấn Chuẩn bị: ô vuông không màu, chưa tích
@@ -1445,8 +1413,23 @@ namespace THI_HANG_A1
             {
                 trangThaiXe[ts.Xe] = TrangThaiXe.DangThi;
             }
-            //InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
-            //    "Bắt đầu thi", 0, "Thí sinh bắt đầu bài thi");
+
+            string cot = "Bắt đầu";
+
+            var err = FaultDefinitions.FaultMap[cot];
+            int faultId = err.faultId;
+            int diemTru = err.diemTru;
+
+            InsertErrorToDatabase(
+                ts.SoBaoDanh,
+                ts.SessionID,
+                $"{ts.HoDem} {ts.Ten}",
+                ts.Xe,
+                cot,
+                diemTru,
+                "Bắt đầu",
+                faultId
+            );
 
             // Bật timer nếu chưa chạy
             if (!timerCapNhatThoiGian.Enabled)
@@ -1590,35 +1573,6 @@ namespace THI_HANG_A1
             fsan.Show();
         }
 
-        //private void InsertErrorToDatabase(int sbd, string ten, string xe, string suKien, int diemTru, string chiTiet)
-        //{
-        //    string sql = @"INSERT INTO ChiTietLoi (SoBaoDanh, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet)
-        //   VALUES (@SBD, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet)";
-
-        //    using (SqlConnection conn = new SqlConnection(cnn))
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
-        //        {
-        //            cmd.Parameters.AddWithValue("@SBD", sbd);
-        //            cmd.Parameters.AddWithValue("@Ten", ten);
-        //            cmd.Parameters.AddWithValue("@Xe", xe);
-        //            cmd.Parameters.AddWithValue("@SuKien", suKien);
-        //            cmd.Parameters.AddWithValue("@DiemTru", diemTru);
-        //            cmd.Parameters.AddWithValue("@ChiTiet", chiTiet);
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-
-        //    // Thêm vào dgv
-        //    dsChiTietLoi.Add(new ChiTietLoi()
-        //    {
-        //        ThoiGian = DateTime.Now,
-        //        SuKien = suKien,
-        //        DiemTru = diemTru,
-        //        ChiTiet = chiTiet
-        //    });
-        //}
 
         int CreateSession(int sbd, int deviceId)
         {
@@ -1644,36 +1598,36 @@ namespace THI_HANG_A1
 
 
         private void InsertErrorToDatabase(
-    long sbd,
-    int sessionId,
-    string ten,
-    string xe,
-    string suKien,
-    int diemTru,
-    string chiTiet,
-    int? faultId = null,
-    int? baiThiId = null)
+            long sbd,
+            int sessionId,
+            string ten,
+            string xe,
+            string suKien,
+            int diemTru,
+            string chiTiet,
+            int? faultId = null,
+            int? baiThiId = null)
         {
             string sql = @"
-    INSERT INTO ChiTietLoi 
-    (SoBaoDanh, SessionID, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet, FaultID, BaiThiID)
-    VALUES 
-    (@SBD, @SessionID, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet, @FaultID, @BaiThiID)";
+                INSERT INTO ChiTietLoi 
+                (SoBaoDanh, SessionID, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet, FaultID, BaiThiID)
+                VALUES 
+                (@SBD, @SessionID, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet, @FaultID, @BaiThiID)";
 
             using (SqlConnection conn = new SqlConnection(cnn))
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@SBD", sbd);
-                    cmd.Parameters.AddWithValue("@SessionID", sessionId);
-                    cmd.Parameters.AddWithValue("@Ten", ten ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Xe", xe ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@SuKien", suKien);
-                    cmd.Parameters.AddWithValue("@DiemTru", diemTru);
-                    cmd.Parameters.AddWithValue("@ChiTiet", chiTiet ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@FaultID", faultId ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@BaiThiID", baiThiId ?? (object)DBNull.Value);
+                    cmd.Parameters.Add("@SBD", SqlDbType.BigInt).Value = sbd;
+                    cmd.Parameters.Add("@SessionID", SqlDbType.Int).Value = sessionId;
+                    cmd.Parameters.Add("@Ten", SqlDbType.NVarChar, 100).Value = (object)ten ?? DBNull.Value;
+                    cmd.Parameters.Add("@Xe", SqlDbType.NVarChar, 20).Value = (object)xe ?? DBNull.Value;
+                    cmd.Parameters.Add("@SuKien", SqlDbType.NVarChar, 100).Value = suKien;
+                    cmd.Parameters.Add("@DiemTru", SqlDbType.Int).Value = diemTru;
+                    cmd.Parameters.Add("@ChiTiet", SqlDbType.NVarChar, 255).Value = (object)chiTiet ?? DBNull.Value;
+                    cmd.Parameters.Add("@FaultID", SqlDbType.Int).Value = (object)faultId ?? DBNull.Value;
+                    cmd.Parameters.Add("@BaiThiID", SqlDbType.Int).Value = (object)baiThiId ?? DBNull.Value;
 
                     cmd.ExecuteNonQuery();
                 }

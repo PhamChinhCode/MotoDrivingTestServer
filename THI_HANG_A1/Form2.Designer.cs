@@ -104,6 +104,7 @@
             // btndongy
             // 
             this.btndongy.BackColor = System.Drawing.Color.SteelBlue;
+            this.btndongy.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btndongy.FlatAppearance.BorderSize = 0;
             this.btndongy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btndongy.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
@@ -120,6 +121,7 @@
             // btnboqua
             // 
             this.btnboqua.BackColor = System.Drawing.Color.LightGray;
+            this.btnboqua.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnboqua.FlatAppearance.BorderSize = 0;
             this.btnboqua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnboqua.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -140,7 +142,7 @@
             this.tableXe.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.98795F));
             this.tableXe.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.01205F));
             this.tableXe.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 89F));
-            this.tableXe.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 95F));
+            this.tableXe.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
             this.tableXe.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableXe.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableXe.Location = new System.Drawing.Point(0, 0);
