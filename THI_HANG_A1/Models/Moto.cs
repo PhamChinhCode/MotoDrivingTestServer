@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -7,11 +9,14 @@ namespace THI_HANG_A1.Models
     public class Moto
     {
         public event Action OnChanged;
+
         public byte Id { get; set; }
         public string Name { set; get; }
 
         public string Ip { set; get; }
         public int Port { set; get; }
+
+        public Bitmap image { set; get; }
         private bool connected;
         public bool Connected
         {
@@ -99,9 +104,39 @@ namespace THI_HANG_A1.Models
                 return;
             }
             Connected = ok;
-
+            socketConn.OnDataReceivedImage += onRecvImage;
+            socketConn.OnDataReceivedCommand += onRecvCommand;
             socketConn.OnDataReceived += SocketDataHandler;
             socketConn.OnDisconnected += disConnectHandler;
+        }
+        private void onRecvImage(byte[] array)
+        {
+            image = ByteArrayToBitmap(array);
+
+        }
+        public Bitmap ByteArrayToBitmap(byte[] bytes)
+        {
+            using (var ms = new MemoryStream(bytes))
+            {
+                return new Bitmap(ms);
+            }
+        }
+        private void onRecvCommand(Command cmd)
+        {
+            log.Add(new LogMoto(cmd.key, cmd.type, cmd.value, DateTime.Now));
+            switch (cmd.key)
+            {
+                case ConstantKeys.ERROR_KEY:
+                    ErrorId = (byte)cmd.value;
+                    break;
+                case ConstantKeys.STATUS_KEY:
+                    Status = (byte)cmd.value;
+                    break;
+                case ConstantKeys.IMAGE_KEY:
+                    break;
+
+            }
+
         }
         private void disConnectHandler()
         {

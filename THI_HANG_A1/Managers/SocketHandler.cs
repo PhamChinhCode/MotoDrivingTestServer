@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -12,7 +14,8 @@ namespace THI_HANG_A1.Managers
         private Thread _receiveThread;
         public string IPAddress { get; set; }
         public int IPPort { get; set; }
-        public event Action<byte[], int> OnDataReceivedBytes;
+        public event Action<Command> OnDataReceivedCommand;
+        public event Action<byte[]> OnDataReceivedImage;
 
 
         public bool IsConnected => _client != null && _client.Connected;
@@ -112,24 +115,45 @@ namespace THI_HANG_A1.Managers
         private void ReceiveLoop()
         {
             byte[] buffer = new byte[1024];
+            Command cmd = new Command();
 
             while (true)
             {
                 try
                 {
-                    int len = _stream.Read(buffer, 0, buffer.Length);
+                    //int len = _stream.Read(buffer, 0, buffer.Length);
+                    int data = _stream.ReadByte();
 
-                    if (len <= 0)
+                    if (data <= 0)
                     {
                         Disconnect();
                         return;
                     }
+                    if (data != ConstantKeys.BYTE_START) return;
+                    buffer = ReadExact(_stream, 9);
+                    if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
+                    cmd.key = buffer[0];
+                    cmd.type = buffer[1];
+                    cmd.value = (UInt32)buffer[3] << 24 | (UInt32)buffer[4] << 16 | (UInt32)buffer[5] << 8 | (UInt32)buffer[7];
+                    if (buffer[8] == ConstantKeys.BYTE_PAYLOAD && buffer[0] == ConstantKeys.IMAGE_KEY)
+                    {
+                        byte[] image = new byte[cmd.value];
+                        buffer = ReadExact(_stream, (int)cmd.value);
 
-                    string msg = Encoding.UTF8.GetString(buffer, 0, len);
+                        if (_stream.ReadByte() != ConstantKeys.BYTE_STOP) return;
 
-                    // Đưa dữ liệu về Form
-                    OnDataReceived?.Invoke(buffer, len);
-                    OnDataReceivedBytes?.Invoke(buffer, len);
+                        Bitmap bmp = ByteArrayToBitmap(image);
+                        OnDataReceivedImage?.Invoke(image);
+
+                    }
+                    OnDataReceivedCommand?.Invoke(cmd);
+
+
+                    //string msg = Encoding.UTF8.GetString(buffer, 0, len);
+
+                    //// Đưa dữ liệu về Form
+                    //OnDataReceived?.Invoke(buffer, len);
+                    //OnDataReceivedBytes?.Invoke(buffer, len);
 
                 }
                 catch
@@ -139,6 +163,34 @@ namespace THI_HANG_A1.Managers
                 }
             }
         }
+        private byte[] ReadExact(NetworkStream stream, int size)
+        {
+            byte[] buf = new byte[size];
+            int offset = 0;
+
+            while (offset < size)
+            {
+                int n = stream.Read(buf, offset, size - offset);
+                if (n <= 0) throw new Exception("Disconnected");
+                offset += n;
+            }
+            return buf;
+
+        }
+        private Bitmap ByteArrayToBitmap(byte[] bytes)
+        {
+            using (var ms = new MemoryStream(bytes))
+            {
+                return new Bitmap(ms);
+            }
+        }
+
+    }
+    public struct Command
+    {
+        public byte key;
+        public UInt32 value;
+        public byte type;
     }
     public static class ConstantKeys
     {
