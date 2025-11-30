@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 using THI_HANG_A1.Models;
@@ -10,51 +11,77 @@ namespace THI_HANG_A1.Helpers
 {
     public static class BaiThiHelper
     {
-        private static readonly Dictionary<byte, int> _map = new Dictionary<byte, int>();
-        private static bool _isLoaded = false;
+        private static readonly Dictionary<byte, (int Id, string Name)> _map
+                                = new Dictionary<byte, (int, string)>();
+        private static bool _loaded = false;
 
         private static string cnn = THI_HANG_A1.Properties.Settings.Default.Conn;
 
         // GỌI 1 LẦN KHI CHẠY PHẦN MỀM
         public static void LoadBaiThi()
         {
-            if (_isLoaded) return;
+            if (_loaded) return;
 
             using (SqlConnection conn = new SqlConnection(cnn))
             {
                 conn.Open();
-                string sql = "SELECT StatusCode, ID FROM BaiThi";
+                string sql = "SELECT StatusCode, ID, TenBai FROM BaiThi";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 using (SqlDataReader rd = cmd.ExecuteReader())
                 {
                     while (rd.Read())
                     {
-                        byte st = Convert.ToByte(rd["StatusCode"]);
+                        byte status = Convert.ToByte(rd["StatusCode"]);
                         int id = Convert.ToInt32(rd["ID"]);
+                        string name = rd["TenBai"].ToString();
 
-                        if (!_map.ContainsKey(st))
-                            _map.Add(st, id);
+                        if (!_map.ContainsKey(status))
+                            _map.Add(status, (id, name));
                     }
                 }
             }
 
-            _isLoaded = true;
+            _loaded = true;
         }
 
         // TRA BÀI THI → KHÔNG BAO GIỜ TRUY VẤN DB
-        public static int GetBaiThiId(byte status)
+        public static int GetId(byte status)
         {
-            return _map.TryGetValue(status, out int id) ? id : 0;
+            return _map.TryGetValue(status, out var info) ? info.Id : 0;
+        }
+
+        public static string GetName(byte statusCode)
+            => _map.TryGetValue(statusCode, out var info) ? info.Name : "Không xác định";
+
+        public static string GetNameByBaiThiId(int baiThiId)
+        {
+            foreach (var kv in _map)
+            {
+                if (kv.Value.Id == baiThiId)
+                    return kv.Value.Name;
+            }
+
+            return "Không xác định";
         }
 
         public static void CapNhatBaiThiHienTai(ThiSinhDangThi ts, byte status)
         {
-            int baiThiId = GetBaiThiId(status);
+            int baiThiId = GetId(status);
 
             if (baiThiId > 0)
                 ts.BaiThiHienTaiID = baiThiId;
         }
+
+        public static bool IsInValidContest(byte st)
+        {
+            return st == 193 || st == 194 || st == 196 || st == 197 || st == 198 || st == 199;
+        }
+        public static bool IsInValidContest1_4(byte st)
+        {
+            return st == 196 || st == 197 || st == 198 || st == 199;
+        }
+
     }
 
 }

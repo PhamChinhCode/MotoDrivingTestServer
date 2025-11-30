@@ -134,6 +134,8 @@
             this.examineesBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.mcdV2A1DataSet1 = new THI_HANG_A1.MCDV2A1DataSet();
             this.dBKySatHachTableAdapter = new THI_HANG_A1.MCDV2A1DataSetTableAdapters.DBKySatHachTableAdapter();
+            this.panelOverlay = new System.Windows.Forms.Panel();
+            this.picLoadingg = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -164,6 +166,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mcdV2A1DataSet1)).BeginInit();
+            this.panelOverlay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -357,14 +361,14 @@
             // kiểmTraKếtNốiXeToolStripMenuItem
             // 
             this.kiểmTraKếtNốiXeToolStripMenuItem.Name = "kiểmTraKếtNốiXeToolStripMenuItem";
-            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.kiểmTraKếtNốiXeToolStripMenuItem.Text = "Kiểm tra kết nối xe";
             this.kiểmTraKếtNốiXeToolStripMenuItem.Click += new System.EventHandler(this.kiểmTraKếtNốiXeToolStripMenuItem_Click);
             // 
             // kiemtraketnoisan
             // 
             this.kiemtraketnoisan.Name = "kiemtraketnoisan";
-            this.kiemtraketnoisan.Size = new System.Drawing.Size(180, 22);
+            this.kiemtraketnoisan.Size = new System.Drawing.Size(178, 22);
             this.kiemtraketnoisan.Text = "Kiểm tra kết nối sân";
             this.kiemtraketnoisan.Click += new System.EventHandler(this.kiemtraketnoisan_Click);
             // 
@@ -450,6 +454,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.panelOverlay);
             this.splitContainer1.Panel1.Controls.Add(this.dgv);
             this.splitContainer1.Panel1.Controls.Add(this.pictureBox1);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
@@ -542,7 +547,7 @@
             this.comboBox1.DataSource = this.BSkysathach;
             this.comboBox1.DisplayMember = "TenKSH";
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(141, 17);
+            this.comboBox1.Location = new System.Drawing.Point(103, 18);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(183, 21);
@@ -1081,6 +1086,24 @@
             // 
             this.dBKySatHachTableAdapter.ClearBeforeFill = true;
             // 
+            // panelOverlay
+            // 
+            this.panelOverlay.Controls.Add(this.picLoadingg);
+            this.panelOverlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelOverlay.Location = new System.Drawing.Point(0, 60);
+            this.panelOverlay.Name = "panelOverlay";
+            this.panelOverlay.Size = new System.Drawing.Size(302, 343);
+            this.panelOverlay.TabIndex = 4;
+            // 
+            // picLoadingg
+            // 
+            this.picLoadingg.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picLoadingg.Location = new System.Drawing.Point(0, 0);
+            this.picLoadingg.Name = "picLoadingg";
+            this.picLoadingg.Size = new System.Drawing.Size(302, 343);
+            this.picLoadingg.TabIndex = 0;
+            this.picLoadingg.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1129,6 +1152,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mcdV2A1DataSet1)).EndInit();
+            this.panelOverlay.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1235,5 +1260,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem kiemtraketnoisan;
+        private System.Windows.Forms.Panel panelOverlay;
+        private System.Windows.Forms.PictureBox picLoadingg;
     }
 }

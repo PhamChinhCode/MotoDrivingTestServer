@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -71,9 +72,6 @@ namespace THI_HANG_A1.Models
         //private FrameCnvert frameConvertor;
         public List<LogMoto> log { get; set; } = new List<LogMoto>();
 
-
-
-
         public Moto(string name, string ip, int port)
         {
             Name = name;
@@ -125,7 +123,6 @@ namespace THI_HANG_A1.Models
         }
         private void SocketDataHandler(byte[] buffer, int len)
         {
-            //Status = buffer[0];
             //byte mid = buffer[3];
             //byte mkey = buffer[1];
             //byte mtype = buffer[2];

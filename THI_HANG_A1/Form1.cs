@@ -15,6 +15,7 @@ using THI_HANG_A1.Forms;
 using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
+using System.Threading.Tasks;
 
 
 namespace THI_HANG_A1
@@ -38,34 +39,43 @@ namespace THI_HANG_A1
         private List<Moto> xes;
         private QuanLyXe fxe;
 
-        private void TaoDuLieuMotoDemo()
+        private void LoadMotoFromDatabase()
         {
-            xes = new List<Moto>()
-            {
-                new Moto() { Id = 1, Name = "Xe 01", Ip = "172.172.0.196", Port = 21, Status = ConstantKeys.STATUS_FREE },
-                new Moto() { Id = 2, Name = "Xe 02", Ip = "192.168.1.11", Port = 5000, Status = ConstantKeys.STATUS_FREE },
-                new Moto() { Id = 3, Name = "Xe 03", Ip = "192.168.1.12", Port = 5000, Status = ConstantKeys.STATUS_READY },
-                new Moto() { Id = 4, Name = "Xe 04", Ip = "192.168.1.13", Port = 5000, Status = ConstantKeys.STATUS_TESTING },
-                new Moto() { Id = 5, Name = "Xe 05", Ip = "192.168.1.14", Port = 5000, Status = ConstantKeys.STATUS_READY }
-            };
-        }
+            xes = new List<Moto>();
 
+            string sql = "SELECT ID, Name, IPAddress FROM Devices ORDER BY ID";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                using (SqlDataReader rd = cmd.ExecuteReader())
+                {
+                    while (rd.Read())
+                    {
+                        xes.Add(new Moto()
+                        {
+                            Id = Convert.ToByte(rd["ID"]),
+                            Name = rd["Name"].ToString(),
+                            Ip = rd["IPAddress"].ToString(),
+                            Port = 123
+                        });
+                    }
+                }
+            }
+        }
 
         private QLiSan fsan;
         public Form1()
         {
             InitializeComponent();
-            TaoDuLieuMotoDemo();
+            LoadMotoFromDatabase();
             fxe = new QuanLyXe(xes);
             sanList = new List<San>();
-            sanList.Add(new San("San 1", "172.172.0.209", 123));
+            sanList.Add(new San("San 1", "192.168.137.87", 123));
             //fxe.ShowDialog();
-            //xes[0].Connect();
+            xes[0].Connect();
 
-            //dgvDangThi.DataSource = null;
-            //dgvDangThi.Visible = false;
-            //dgvDangThi.DataSource = null;
-            //dgvDangThi.Visible = false;
             GridThi();
             dgvThi.AutoGenerateColumns = false;
             dgvThi.DataSource = null;
@@ -110,17 +120,33 @@ namespace THI_HANG_A1
         }
         private void SetHeaderChiTietLoi()
         {
+            dgvchitietloi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+
             if (dgvchitietloi.Columns["ThoiGian"] != null)
+            {
                 dgvchitietloi.Columns["ThoiGian"].HeaderText = "Thời gian";
+                dgvchitietloi.Columns["ThoiGian"].Width = 110;
+                dgvchitietloi.Columns["ThoiGian"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
 
             if (dgvchitietloi.Columns["SuKien"] != null)
+            {
                 dgvchitietloi.Columns["SuKien"].HeaderText = "Sự kiện";
+                dgvchitietloi.Columns["SuKien"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
 
             if (dgvchitietloi.Columns["DiemTru"] != null)
+            {
                 dgvchitietloi.Columns["DiemTru"].HeaderText = "Điểm trừ";
+                dgvchitietloi.Columns["DiemTru"].Width = 80; 
+                dgvchitietloi.Columns["DiemTru"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
 
             if (dgvchitietloi.Columns["ChiTiet"] != null)
+            {
                 dgvchitietloi.Columns["ChiTiet"].HeaderText = "Chi tiết lỗi";
+                dgvchitietloi.Columns["ChiTiet"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
         }
 
         /// <summary>
@@ -307,7 +333,7 @@ namespace THI_HANG_A1
         {
             foreach (DataGridViewRow row in dgvThi.Rows)
             {
-                if (row.DataBoundItem is ThiSinhDangThi ts)
+                if (row.DataBoundItem is ThiSinhDangThi ts) 
                 {
                     var cell = row.Cells["colThoiGian"];
 
@@ -449,7 +475,43 @@ namespace THI_HANG_A1
                 });
             }
             BaiThiHelper.LoadBaiThi();
+            FaultDefinitions.LoadFaults();
+
+            LoadingComponent();
         }
+        private void LoadingComponent()
+        {
+            // Làm mờ nền
+            panelOverlay.BackColor = Color.FromArgb(120, 0, 0, 0);
+            panelOverlay.Dock = DockStyle.Fill;
+            panelOverlay.Visible = false;
+
+            // Giữ nguyên kích thước ảnh gốc
+            picLoadingg.Image = Properties.Resources.Loading_icon;
+            picLoadingg.SizeMode = PictureBoxSizeMode.AutoSize;
+
+            // Nền trắng nếu panel lớn hơn ảnh
+            picLoadingg.BackColor = Color.White;
+
+            // Đặt ảnh vào một Panel con để dễ căn giữa
+            picLoadingg.Parent = panelOverlay;
+
+            // Căn giữa ảnh
+            picLoadingg.Location = new Point(
+                (panelOverlay.Width - picLoadingg.Width) / 2,
+                (panelOverlay.Height - picLoadingg.Height) / 2
+            );
+
+            // Xử lý khi panel overlay thay đổi kích thước
+            panelOverlay.Resize += (s, e) =>
+            {
+                picLoadingg.Location = new Point(
+                    (panelOverlay.Width - picLoadingg.Width) / 2,
+                    (panelOverlay.Height - picLoadingg.Height) / 2
+                );
+            };
+        }
+
         public void Loaf()
         {
             //try
@@ -518,7 +580,7 @@ namespace THI_HANG_A1
 
             return danhSach;
         }
-        private void InputXML_Click(object sender, EventArgs e)
+        private async void InputXML_Click(object sender, EventArgs e)
         {
             string filePath = "";
             using (OpenFileDialog dlg = new OpenFileDialog())
@@ -527,39 +589,49 @@ namespace THI_HANG_A1
                 dlg.Title = "Chọn file thí sinh đuôi XML";
 
                 if (dlg.ShowDialog() == DialogResult.OK)
-                {
                     filePath = dlg.FileName;
-                }
-                else return;
+                else
+                    return;
             }
 
-            List<ThiSinhXml> thiSinhXmls = new List<ThiSinhXml>();
-            thiSinhXmls = LoadThiSinh(filePath);
-            //txtTmp.Text = ""; // Reset log
 
-            // Vòng lặp lưu ảnh ra ổ D (Code cũ của bạn)
-            foreach (ThiSinhXml r in thiSinhXmls)
+            panelOverlay.Visible = true;
+            panelOverlay.BringToFront();
+
+            List<ThiSinhXml> thiSinhXmls = null;
+
+            try
             {
-                // txtTmp.Text += r.SoBaoDanh + "    " + r.HoTen + "    " + r.NgaySinh + "\r\n";
 
-                if (!Directory.Exists("D:\\" + r.KySatHach))
+                thiSinhXmls = await Task.Run(() =>
                 {
-                    Directory.CreateDirectory("D:\\" + r.KySatHach);
-                }
-                string file = "D:\\" + r.KySatHach + $"\\anh_{r.SoBaoDanh}.jpg";
-                BitmapImage img = AnhImage(r.AnhChanDung);
-                SaveBitmapImage(img, file);
+                    return LoadThiSinh(filePath);
+                });
+
+
+                await Task.Run(() =>
+                {
+                    foreach (ThiSinhXml r in thiSinhXmls)
+                    {
+                        string folder = "D:\\" + r.KySatHach;
+                        if (!Directory.Exists(folder))
+                            Directory.CreateDirectory(folder);
+
+                        string file = folder + $"\\anh_{r.SoBaoDanh}.jpg";
+
+                        BitmapImage img = AnhImage(r.AnhChanDung);
+                        SaveBitmapImage(img, file);
+                    }
+                });
+
+
+                XuLyLuuVaHienThi(thiSinhXmls);
             }
+            finally
+            {
 
-            // 1. Lưu Kỳ sát hạch vào bảng sát hạch
-            // 2. Lưu DS thí sinh vào bảng ThiSinhSH
-            // 3. Load danh sách thí sinh thi theo 1 kỳ sát hạch vào bảng bên trái 
-            // 4. Ds chuẩn bị có 5 thí sinh.
-
-            // Gọi hàm xử lý trọn gói 4 đầu việc trên:
-            XuLyLuuVaHienThi(thiSinhXmls);
-
-            // =======================================================================
+                panelOverlay.Visible = false;
+            }
         }
         public void SaveBitmapImage(BitmapImage image, string filePath)
         {
@@ -879,7 +951,6 @@ namespace THI_HANG_A1
                 return;
 
             Moto xeChon = frm.XeDuocChon;
-            xeChon.Status = ConstantKeys.STATUS_READY;
 
             string soXe = xeChon.Name;
             int sbd = 0;
@@ -934,25 +1005,101 @@ namespace THI_HANG_A1
                 So8 = "CB",
                 DuongThang = "",
                 ZicZac = "",
-                GoGhe = ""
+                GoGhe = "",
+                BaiThiHienTaiID = 0
             };
             // 7. Tạo SESSION trong database
-            int sessionId = CreateSession(sbd, Convert.ToInt32(d.XeObj.Id)); // hoặc DeviceID của xe
+            int sessionId = CreateSession(sbd, Convert.ToInt32(d.XeObj.Id));
 
             // 8. Gán SessionID vào đối tượng thí sinh
             d.SessionID = sessionId;
 
-            //xeChon.Connect();
+            int lastStatus = -1;
+            int lastError = 0;
 
-            // ===== GẮN SỰ KIỆN STATUS XE → CẬP NHẬT BÀI THI =====
+            // ==========================
+            //  GẮN SỰ KIỆN THAY ĐỔI TỪ XE
+            // ==========================
             xeChon.OnChanged += () =>
             {
-                MessageBox.Show($"xe chon status {xeChon.Status}");
-                BaiThiHelper.CapNhatBaiThiHienTai(d, xeChon.Status);
+                byte st = xeChon.Status;
+                byte errId = xeChon.ErrorId;
 
-                dgvThi.Invoke(new Action(() => dgvThi.Refresh()));
+                // Cập nhật bài thi hiện tại
+                BaiThiHelper.CapNhatBaiThiHienTai(d, st);
+
+                // ---------------------------
+                //  BỎ QUA STATUS KHÔNG HỢP LỆ
+                // ---------------------------
+                if (!BaiThiHelper.IsInValidContest(st))
+                    return;
+
+                // ---------------------------
+                //  XỬ LÝ STATUS – CHỈ LOG KHI ĐỔI BÀI
+                // ---------------------------
+                if (st != lastStatus && BaiThiHelper.IsInValidContest1_4(st))
+                {
+                    string tenBaiThi = BaiThiHelper.GetName(st);
+
+                    InsertErrorToDatabase(
+                        d.SoBaoDanh,
+                        d.SessionID,
+                        $"{d.HoDem} {d.Ten}",
+                        d.Xe,
+                        $"Vào bài thi: {tenBaiThi}",
+                        0,
+                        $"Bắt đầu bài thi {tenBaiThi}",
+                        null,
+                        d.BaiThiHienTaiID
+                    );
+                    lastStatus = st;
+                    lastError = 0;          // reset lỗi khi chuyển bài
+                }
+
+                // ---------------------------
+                //  XỬ LÝ ERROR – CHỈ LOG 1 LẦN DUY NHẤT
+                // ---------------------------
+                if (errId != 0)
+                {
+                    if (errId != lastError && FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var err))
+                    {
+                        lastError = errId; // ghi nhớ lỗi vừa log
+
+                        string baiThiMoTa = BaiThiHelper.GetName(st);
+                        string chiTietLoi = $"{err.moTa} – Tại bài: {baiThiMoTa}";
+
+                        int? baiThiId = d.BaiThiHienTaiID == 0 ? (int?)null : d.BaiThiHienTaiID;
+
+                        InsertErrorToDatabase(
+                            d.SoBaoDanh,
+                            d.SessionID,
+                            $"{d.HoDem} {d.Ten}",
+                            d.Xe,
+                            err.moTa,
+                            err.diemTru,
+                            chiTietLoi,
+                            err.id,
+                            baiThiId
+                        );
+
+                        // Cập nhật điểm
+                        d.SoLoi++;
+                        d.DiemTru += err.diemTru;
+                        d.DiemConLai -= err.diemTru;
+
+                        xeChon.sendCommand(ConstantKeys.MARK_KEY, ConstantKeys.BYTE_SET, (byte)d.DiemConLai);
+
+                        SafeUI(() => HienThiThongTinThiSinh(d));
+                    }
+                }
+                else
+                {
+                    // Nếu lỗi trở về 0 → reset lỗi cho phép log lỗi mới
+                    lastError = 0;
+                }
+
+                SafeUI(() => dgvThi.Refresh());
             };
-
 
             // 6. Cập nhật vào danh sách và Grid
             ds.Add(d);
@@ -1092,7 +1239,9 @@ namespace THI_HANG_A1
             dgvThi.DefaultCellStyle.SelectionForeColor = Color.Black;
             dgvThi.AllowUserToResizeRows = false;
             dgvThi.AllowUserToResizeColumns = false;
+
         }
+
 
         private void dgvThi_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -1111,6 +1260,12 @@ namespace THI_HANG_A1
             if (!laCotLoi)
             {
                 HienThiThongTinThiSinh(ts);
+                return;
+            }
+            if (ts.BaiThiHienTaiID <= 0)
+            {
+                MessageBox.Show("Chưa vào bài thi nên không thể ghi lỗi!",
+                                "Chưa vào bài", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1143,11 +1298,13 @@ namespace THI_HANG_A1
             //===============================
             //   DÙNG MAP ĐỂ LẤY LỖI
             //===============================
-            var err = FaultDefinitions.FaultMap[cot];
-            int faultId = err.faultId;
+            string fullName = FaultDefinitions.FaultUIMap[cot];
+            var err = FaultDefinitions.FaultMap[fullName];
+            int faultId = err.id;
             int diemTru = err.diemTru;
-            string moTa = err.moTa;
             int baiThiId = ts.BaiThiHienTaiID;
+            string baiThiMoTa = BaiThiHelper.GetNameByBaiThiId(baiThiId);
+            string chiTietLoi = $"{err.moTa} – Tại vị trí: {baiThiMoTa}";
 
             //===============================
             //  CẬP NHẬT ĐIỂM
@@ -1164,9 +1321,9 @@ namespace THI_HANG_A1
                 ts.SessionID,
                 $"{ts.HoDem} {ts.Ten}",
                 ts.Xe,
-                cot,            // Sự kiện giống header text
+                err.moTa,
                 diemTru,
-                moTa,
+                chiTietLoi,
                 faultId,
                 baiThiId
             );
@@ -1374,7 +1531,7 @@ namespace THI_HANG_A1
             string cot = "Chuẩn bị";  // tên hành động
 
             var err = FaultDefinitions.FaultMap[cot];
-            int faultId = err.faultId;
+            int faultId = err.id;
             int diemTru = err.diemTru;
             
             InsertErrorToDatabase(
@@ -1384,8 +1541,7 @@ namespace THI_HANG_A1
                 ts.Xe,
                 cot,
                 diemTru,
-                "Chuẩn bị",
-                faultId
+                "Chuẩn bị"
             );
 
             // Cập nhật trạng thái thí sinh:
@@ -1414,10 +1570,14 @@ namespace THI_HANG_A1
                 trangThaiXe[ts.Xe] = TrangThaiXe.DangThi;
             }
 
+            Moto moto = xes.FirstOrDefault(m => m.Id == ts.XeObj.Id);
+
+            moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
+
             string cot = "Bắt đầu";
 
             var err = FaultDefinitions.FaultMap[cot];
-            int faultId = err.faultId;
+            int faultId = err.id;
             int diemTru = err.diemTru;
 
             InsertErrorToDatabase(
@@ -1427,9 +1587,9 @@ namespace THI_HANG_A1
                 ts.Xe,
                 cot,
                 diemTru,
-                "Bắt đầu",
-                faultId
+                "Bắt đầu"
             );
+
 
             // Bật timer nếu chưa chạy
             if (!timerCapNhatThoiGian.Enabled)
@@ -1634,13 +1794,24 @@ namespace THI_HANG_A1
             }
 
             // Thêm vào DataGridView / ObservableCollection
-            dsChiTietLoi.Add(new ChiTietLoi()
+            SafeUI(() =>
             {
-                ThoiGian = DateTime.Now,
-                SuKien = suKien,
-                DiemTru = diemTru,
-                ChiTiet = chiTiet,
+                dsChiTietLoi.Add(new ChiTietLoi()
+                {
+                    ThoiGian = DateTime.Now,
+                    SuKien = suKien,
+                    DiemTru = diemTru,
+                    ChiTiet = chiTiet,
+                });
             });
+        }
+
+        private void SafeUI(Action action)
+        {
+            if (this.InvokeRequired)
+                this.Invoke(action);
+            else
+                action();
         }
 
     }
