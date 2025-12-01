@@ -61,6 +61,7 @@
             this.giớiThiệuChươngTrìnhToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kếtNốiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kiểmTraKếtNốiXeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kiemtraketnoisan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -133,6 +134,8 @@
             this.examineesBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.mcdV2A1DataSet1 = new THI_HANG_A1.MCDV2A1DataSet();
             this.dBKySatHachTableAdapter = new THI_HANG_A1.MCDV2A1DataSetTableAdapters.DBKySatHachTableAdapter();
+            this.panelOverlay = new System.Windows.Forms.Panel();
+            this.picLoadingg = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -163,6 +166,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mcdV2A1DataSet1)).BeginInit();
+            this.panelOverlay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -347,7 +352,8 @@
             // kếtNốiToolStripMenuItem
             // 
             this.kếtNốiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.kiểmTraKếtNốiXeToolStripMenuItem});
+            this.kiểmTraKếtNốiXeToolStripMenuItem,
+            this.kiemtraketnoisan});
             this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
             this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.kếtNốiToolStripMenuItem.Text = "Kết nối";
@@ -355,8 +361,16 @@
             // kiểmTraKếtNốiXeToolStripMenuItem
             // 
             this.kiểmTraKếtNốiXeToolStripMenuItem.Name = "kiểmTraKếtNốiXeToolStripMenuItem";
-            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.kiểmTraKếtNốiXeToolStripMenuItem.Text = "Kiểm tra kết nối xe";
+            this.kiểmTraKếtNốiXeToolStripMenuItem.Click += new System.EventHandler(this.kiểmTraKếtNốiXeToolStripMenuItem_Click);
+            // 
+            // kiemtraketnoisan
+            // 
+            this.kiemtraketnoisan.Name = "kiemtraketnoisan";
+            this.kiemtraketnoisan.Size = new System.Drawing.Size(178, 22);
+            this.kiemtraketnoisan.Text = "Kiểm tra kết nối sân";
+            this.kiemtraketnoisan.Click += new System.EventHandler(this.kiemtraketnoisan_Click);
             // 
             // toolStrip1
             // 
@@ -435,11 +449,12 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 51);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.panelOverlay);
             this.splitContainer1.Panel1.Controls.Add(this.dgv);
             this.splitContainer1.Panel1.Controls.Add(this.pictureBox1);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
@@ -522,7 +537,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(302, 60);
             this.panel1.TabIndex = 1;
@@ -532,10 +547,10 @@
             this.comboBox1.DataSource = this.BSkysathach;
             this.comboBox1.DisplayMember = "TenKSH";
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(106, 14);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBox1.Location = new System.Drawing.Point(103, 18);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(138, 21);
+            this.comboBox1.Size = new System.Drawing.Size(183, 21);
             this.comboBox1.TabIndex = 4;
             this.comboBox1.ValueMember = "KySatHach";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -554,8 +569,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(11, 15);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(15, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 17);
             this.label1.TabIndex = 0;
@@ -566,7 +580,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1034, 627);
@@ -576,7 +590,7 @@
             // 
             this.tabPage1.Controls.Add(this.splitContainer_Thi);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Size = new System.Drawing.Size(1026, 601);
@@ -626,8 +640,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvThi.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvThi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvThi.Location = new System.Drawing.Point(6, 20);
-            this.dgvThi.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvThi.Location = new System.Drawing.Point(8, 25);
+            this.dgvThi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvThi.Name = "dgvThi";
             this.dgvThi.RowHeadersWidth = 51;
             this.dgvThi.RowTemplate.Height = 24;
@@ -639,8 +653,7 @@
             // 
             this.lblDangThi.AutoSize = true;
             this.lblDangThi.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDangThi.Location = new System.Drawing.Point(3, 3);
-            this.lblDangThi.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDangThi.Location = new System.Drawing.Point(4, 4);
             this.lblDangThi.Name = "lblDangThi";
             this.lblDangThi.Size = new System.Drawing.Size(82, 17);
             this.lblDangThi.TabIndex = 1;
@@ -855,8 +868,8 @@
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvKetQuaChung.DefaultCellStyle = dataGridViewCellStyle12;
             this.dgvKetQuaChung.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvKetQuaChung.Location = new System.Drawing.Point(2, 2);
-            this.dgvKetQuaChung.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvKetQuaChung.Location = new System.Drawing.Point(3, 2);
+            this.dgvKetQuaChung.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvKetQuaChung.Name = "dgvKetQuaChung";
             this.dgvKetQuaChung.ReadOnly = true;
             this.dgvKetQuaChung.RowHeadersWidth = 51;
@@ -952,8 +965,8 @@
             this.colLoi_ThoiGian,
             this.colLoi_ChiTiet});
             this.dgvNhatKyLoi.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvNhatKyLoi.Location = new System.Drawing.Point(2, 2);
-            this.dgvNhatKyLoi.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvNhatKyLoi.Location = new System.Drawing.Point(3, 2);
+            this.dgvNhatKyLoi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvNhatKyLoi.Name = "dgvNhatKyLoi";
             this.dgvNhatKyLoi.ReadOnly = true;
             this.dgvNhatKyLoi.RowHeadersWidth = 51;
@@ -1073,6 +1086,24 @@
             // 
             this.dBKySatHachTableAdapter.ClearBeforeFill = true;
             // 
+            // panelOverlay
+            // 
+            this.panelOverlay.Controls.Add(this.picLoadingg);
+            this.panelOverlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelOverlay.Location = new System.Drawing.Point(0, 60);
+            this.panelOverlay.Name = "panelOverlay";
+            this.panelOverlay.Size = new System.Drawing.Size(302, 343);
+            this.panelOverlay.TabIndex = 4;
+            // 
+            // picLoadingg
+            // 
+            this.picLoadingg.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picLoadingg.Location = new System.Drawing.Point(0, 0);
+            this.picLoadingg.Name = "picLoadingg";
+            this.picLoadingg.Size = new System.Drawing.Size(302, 343);
+            this.picLoadingg.TabIndex = 0;
+            this.picLoadingg.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1081,7 +1112,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "QLSHA1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -1121,6 +1152,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mcdV2A1DataSet1)).EndInit();
+            this.panelOverlay.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1226,5 +1259,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem kiemtraketnoisan;
+        private System.Windows.Forms.Panel panelOverlay;
+        private System.Windows.Forms.PictureBox picLoadingg;
     }
 }

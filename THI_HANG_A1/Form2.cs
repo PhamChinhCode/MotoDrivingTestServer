@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using THI_HANG_A1.Helpers;
+using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 
 namespace THI_HANG_A1
@@ -83,6 +84,7 @@ namespace THI_HANG_A1
                 btn.BackColor = MotoHelper.GetMotoColor(moto);
                 btn.Dock = DockStyle.Fill;
                 btn.Margin = new Padding(5);
+                btn.Cursor = Cursors.Hand;
 
                 btn.FlatStyle = FlatStyle.Flat;
                 btn.FlatAppearance.BorderSize = 1;
@@ -123,9 +125,9 @@ namespace THI_HANG_A1
             Button btn = sender as Button;
             Moto moto = btn.Tag as Moto;
 
-            if (moto.Status != 0xc1)
+            if (moto.Status != ConstantKeys.STATUS_FREE)
             {
-                MessageBox.Show($"Xe {moto.Name} đang không sẵn sàng.\nKhông thể cấp xe!",
+                MessageBox.Show($"{moto.Name} đang không sẵn sàng.\nKhông thể cấp xe!",
                                 "Không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }

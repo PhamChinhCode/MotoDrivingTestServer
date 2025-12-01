@@ -12,6 +12,7 @@ namespace THI_HANG_A1.Managers
         private Thread _receiveThread;
         public string IPAddress { get; set; }
         public int IPPort { get; set; }
+        public event Action<byte[], int> OnDataReceivedBytes;
 
 
         public bool IsConnected => _client != null && _client.Connected;
@@ -27,20 +28,31 @@ namespace THI_HANG_A1.Managers
         {
             try
             {
-                if (_client != null)
+                if (_client == null)
                 {
-                    Disconnect();
+                    _client = new TcpClient();
                 }
-                //if (!_client.Connected)
-                //{
-                _client = new TcpClient();
-                _client.Connect(ip, port);
-                _stream = _client.GetStream();
+                if (!_client.Connected)
+                {
+                    _client.Connect(ip, port);
+                    if (_client.Connected)
+                    {
+                        _stream = _client.GetStream();
 
-                // Bắt đầu Thread nhận dữ liệu
-                StartReceiveThread();
-                //}
-                return true;
+                        // Bắt đầu Thread nhận dữ liệu
+                        StartReceiveThread();
+                        //}
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
 
             }
             catch (Exception)
@@ -117,6 +129,8 @@ namespace THI_HANG_A1.Managers
 
                     // Đưa dữ liệu về Form
                     OnDataReceived?.Invoke(buffer, len);
+                    OnDataReceivedBytes?.Invoke(buffer, len);
+
                 }
                 catch
                 {
@@ -128,7 +142,7 @@ namespace THI_HANG_A1.Managers
     }
     public static class ConstantKeys
     {
-        public const int HEADER_LENGTH = 9; // 9 byte Header (từ START đến CRC)
+        public const int HEADER_LENGTH = 10; // 9 byte Header (từ START đến CRC)
         public const byte BYTE_START = 0x30;
         public const byte BYTE_STOP = 0x31;
         public const byte BYTE_SET = 0x32;
@@ -136,6 +150,8 @@ namespace THI_HANG_A1.Managers
         public const byte BYTE_PAYLOAD = 0x34;
 
         public const byte KEY_NULL = 0xff;
+
+        public const byte IMAGE_KEY = 0x90;
 
 
         // Status
@@ -149,12 +165,15 @@ namespace THI_HANG_A1.Managers
         public const byte STATUS_CONTEST3 = 0xc6;   // bài ziczac
         public const byte STATUS_CONTEST4 = 0xc7;   // bài gồ gề
 
+
+
         // Control command
         public const byte CONTROL_KEY = 0xA0;
 
         public const byte CONTROL_START = 0xA1;     // bắt đầu thi
         public const byte CONTROL_STOP = 0xA2;      // dừng bài thi
         public const byte CONTROL_READY = 0xA3;     // sẵn sàng thi
+        public const byte MARK_KEY = 0xB0;     // điểm còn lại
 
         // Error
         public const byte ERROR_KEY = 0xE0;
@@ -177,16 +196,18 @@ namespace THI_HANG_A1.Managers
     }
     public class FrameCnvert
     {
-        byte[] frame;
-        int len;
-        byte key;
-        byte value;
+        private byte[] frame;
+        private int len;
+        public byte key { get; set; }
+        public UInt32 value { get; set; }
+        public byte type { get; set; }
         public FrameCnvert() { }
         public FrameCnvert(byte[] data) { }
         public void setFrame(byte[] data, int l)
         {
             frame = data;
-            this.len = l; value = ConstantKeys.KEY_NULL;
+            this.len = l;
+            value = ConstantKeys.KEY_NULL;
             key = ConstantKeys.KEY_NULL;
             convert();
 
@@ -194,15 +215,19 @@ namespace THI_HANG_A1.Managers
         private void convert()
         {
             if (frame == null) return;
-            //if (frame[0] != ConstantKeys.)
+            if (frame[0] != ConstantKeys.BYTE_START) return;
+            if (frame[2] != ConstantKeys.BYTE_GET && frame[2] != ConstantKeys.BYTE_SET) return;
+
+            key = frame[1];
+            type = frame[2];
+            value = ((UInt32)frame[4] << 24) | ((UInt32)frame[5] << 16) | ((UInt32)frame[6] << 8) | (UInt32)frame[7];
         }
-        public byte getKey()
+        public void encode()
         {
-            return key;
-        }
-        public byte getValue()
-        {
-            return value;
+            frame[0] = ConstantKeys.BYTE_START;
+            frame[1] = key;
+            frame[2] = ConstantKeys.BYTE_GET;
+
         }
     }
 }
