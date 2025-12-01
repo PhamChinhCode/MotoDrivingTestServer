@@ -1118,136 +1118,6 @@ namespace THI_HANG_A1
         }
 
 
-        public void GridThi()
-        {
-            dgvThi.Columns.Clear();
-            dgvThi.AutoGenerateColumns = false;
-
-            // ===== CỘT TRẠNG THÁI XE (CheckBox 3 trạng thái) =====
-            var colTrangThai = new DataGridViewTextBoxColumn()
-            {
-                Name = "colTrangThaiXe",
-                HeaderText = "",
-                Width = 40,
-                DataPropertyName = "DaKiemTraXe", // Vẫn giữ binding để lấy dữ liệu nếu cần
-                ReadOnly = true // Không cho người dùng gõ chữ vào
-            };
-            dgvThi.Columns.Add(colTrangThai);
-
-            // ===== CỘT XE =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Xe",
-                DataPropertyName = "Xe",
-                Width = 50
-            });
-
-            // ===== CỘT HỌ ĐỆM =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Họ đệm",
-                DataPropertyName = "HoDem"
-            });
-
-            // ===== CỘT TÊN =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Tên",
-                DataPropertyName = "Ten"
-            });
-
-            // ===== CỘT SBD =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "SBD",
-                DataPropertyName = "SoBaoDanh"
-            });
-
-            // ===== CỘT HẠNG GPLX =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Hạng",
-                DataPropertyName = "HangGPLX"
-            });
-
-            // ===== CỘT ĐIỂM (dùng DiemConLai) =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Điểm",
-                DataPropertyName = "DiemConLai",
-                Width = 60
-            });
-
-            // ===== CỘT THỜI GIAN (CHO TIMER) =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                Name = "colThoiGian",
-                HeaderText = "Thời gian",
-                ReadOnly = true,
-                Width = 80
-            });
-
-            // ===== BUTTON CHỐNG CHÂN =====
-            var btnChongChan = new DataGridViewButtonColumn();
-            btnChongChan.HeaderText = "Chống chân";
-            btnChongChan.Text = "Chống chân";
-            btnChongChan.UseColumnTextForButtonValue = true;
-            dgvThi.Columns.Add(btnChongChan);
-
-            // ===== BUTTON ĐỔ XE =====
-            var btnDoXe = new DataGridViewButtonColumn();
-            btnDoXe.HeaderText = "Đổ xe";
-            btnDoXe.Text = "Đổ xe";
-            btnDoXe.UseColumnTextForButtonValue = true;
-            dgvThi.Columns.Add(btnDoXe);
-
-            // ===== BUTTON NGOÀI HÌNH =====
-            var btnNgoaiHinh = new DataGridViewButtonColumn();
-            btnNgoaiHinh.HeaderText = "Ngoài hình";
-            btnNgoaiHinh.Text = "Ngoài hình";
-            btnNgoaiHinh.UseColumnTextForButtonValue = true;
-            dgvThi.Columns.Add(btnNgoaiHinh);
-
-            // ===== CỘT SỐ 8 =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Số 8",
-                DataPropertyName = "So8"
-            });
-
-            // ===== CỘT ĐƯỜNG THẲNG =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Đường thẳng",
-                DataPropertyName = "DuongThang"
-            });
-
-            // ===== CỘT ZIC ZẮC =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Zic zắc",
-                DataPropertyName = "ZicZac"
-            });
-
-            // ===== CỘT GỒ GHỀ =====
-            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
-            {
-                HeaderText = "Gồ ghề",
-                DataPropertyName = "GoGhe"
-            });
-
-            // Gỡ handler cũ (nếu có) để tránh gắn nhiều lần
-            dgvThi.CellPainting += dgvThi_CellPainting; // Thêm dòng này
-
-            dgvThi.ReadOnly = true;
-            dgvThi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvThi.DefaultCellStyle.SelectionBackColor = Color.White;
-            dgvThi.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvThi.AllowUserToResizeRows = false;
-            dgvThi.AllowUserToResizeColumns = false;
-
-        }
-
 
         private void dgvThi_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -2006,6 +1876,136 @@ namespace THI_HANG_A1
             f.ShowDialog();
         }
 
+
+        public void GridThi()
+        {
+            dgvThi.Columns.Clear();
+            dgvThi.AutoGenerateColumns = false;
+
+            // ===== CỘT TRẠNG THÁI XE (CheckBox 3 trạng thái) =====
+            var colTrangThai = new DataGridViewTextBoxColumn()
+            {
+                Name = "colTrangThaiXe",
+                HeaderText = "",
+                Width = 40,
+                DataPropertyName = "DaKiemTraXe", // Vẫn giữ binding để lấy dữ liệu nếu cần
+                ReadOnly = true // Không cho người dùng gõ chữ vào
+            };
+            dgvThi.Columns.Add(colTrangThai);
+
+            // ===== CỘT XE =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Xe",
+                DataPropertyName = "Xe",
+                Width = 50
+            });
+
+            // ===== CỘT HỌ ĐỆM =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Họ đệm",
+                DataPropertyName = "HoDem"
+            });
+
+            // ===== CỘT TÊN =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Tên",
+                DataPropertyName = "Ten"
+            });
+
+            // ===== CỘT SBD =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "SBD",
+                DataPropertyName = "SoBaoDanh"
+            });
+
+            // ===== CỘT HẠNG GPLX =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Hạng",
+                DataPropertyName = "HangGPLX"
+            });
+
+            // ===== CỘT ĐIỂM (dùng DiemConLai) =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Điểm",
+                DataPropertyName = "DiemConLai",
+                Width = 60
+            });
+
+            // ===== CỘT THỜI GIAN (CHO TIMER) =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                Name = "colThoiGian",
+                HeaderText = "Thời gian",
+                ReadOnly = true,
+                Width = 80
+            });
+
+            // ===== BUTTON CHỐNG CHÂN =====
+            var btnChongChan = new DataGridViewButtonColumn();
+            btnChongChan.HeaderText = "Chống chân";
+            btnChongChan.Text = "Chống chân";
+            btnChongChan.UseColumnTextForButtonValue = true;
+            dgvThi.Columns.Add(btnChongChan);
+
+            // ===== BUTTON ĐỔ XE =====
+            var btnDoXe = new DataGridViewButtonColumn();
+            btnDoXe.HeaderText = "Đổ xe";
+            btnDoXe.Text = "Đổ xe";
+            btnDoXe.UseColumnTextForButtonValue = true;
+            dgvThi.Columns.Add(btnDoXe);
+
+            // ===== BUTTON NGOÀI HÌNH =====
+            var btnNgoaiHinh = new DataGridViewButtonColumn();
+            btnNgoaiHinh.HeaderText = "Ngoài hình";
+            btnNgoaiHinh.Text = "Ngoài hình";
+            btnNgoaiHinh.UseColumnTextForButtonValue = true;
+            dgvThi.Columns.Add(btnNgoaiHinh);
+
+            // ===== CỘT SỐ 8 =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Số 8",
+                DataPropertyName = "So8"
+            });
+
+            // ===== CỘT ĐƯỜNG THẲNG =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Đường thẳng",
+                DataPropertyName = "DuongThang"
+            });
+
+            // ===== CỘT ZIC ZẮC =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Zic zắc",
+                DataPropertyName = "ZicZac"
+            });
+
+            // ===== CỘT GỒ GHỀ =====
+            dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                HeaderText = "Gồ ghề",
+                DataPropertyName = "GoGhe"
+            });
+
+            // Gỡ handler cũ (nếu có) để tránh gắn nhiều lần
+            dgvThi.CellPainting += dgvThi_CellPainting; // Thêm dòng này
+
+            dgvThi.ReadOnly = true;
+            dgvThi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvThi.DefaultCellStyle.SelectionBackColor = Color.White;
+            dgvThi.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvThi.AllowUserToResizeRows = false;
+            dgvThi.AllowUserToResizeColumns = false;
+
+        }
 
         private void btnFindDangThi_Click(object sender, EventArgs e)
         {

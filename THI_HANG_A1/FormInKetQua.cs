@@ -32,8 +32,8 @@ namespace THI_HANG_A1
         }
         private void LoadData()
         {
-            _thongTin = LoadThongTinThiSinhPrint(_sessionId); // 1 dòng duy nhất
-            _chiTietLoi = LoadChiTietLoi(_sessionId);         // nhiều dòng
+            _thongTin = LoadThongTinThiSinhPrint(_sessionId);
+            _chiTietLoi = LoadChiTietLoi(_sessionId);  
 
             if (_thongTin.Rows.Count == 0)
             {
@@ -48,6 +48,18 @@ namespace THI_HANG_A1
         private void BindInfo()
         {
             DataRow r = _thongTin.Rows[0];
+
+            // ẢNH CHÂN DUNG
+            string path = r["AnhChanDung"].ToString();
+
+            if (File.Exists(path))
+            {
+                picAnhChanDung.Image = System.Drawing.Image.FromFile(path);
+            }
+            else
+            {
+                picAnhChanDung.Image = null;
+            }
 
             // Thông tin thí sinh
             lblHoTen.Text = r["HoTen"].ToString();
@@ -156,6 +168,7 @@ namespace THI_HANG_A1
                     TS.HoDem + ' ' + TS.Ten AS HoTen,
                     TS.HangGPLX,
                     TS.NgaySinh,
+	                TS.AnhChanDung,
                     TS.SoCCCD,
                     KSH.TenKSH,
                     KSH.NgayThi,
@@ -319,10 +332,19 @@ namespace THI_HANG_A1
             tblChiTietLoi.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tblChiTietLoi.Dock = DockStyle.Top;
 
-            flowMain.HorizontalScroll.Visible = false;
             flowMain.HorizontalScroll.Maximum = 0;
-            flowMain.AutoScroll = false;
             flowMain.AutoScroll = true;
+            flowMain.HorizontalScroll.Maximum = 0;
+            flowMain.HorizontalScroll.Visible = false;
+
+            flowMain.VerticalScroll.Maximum = 0;
+            flowMain.VerticalScroll.Visible = false;
+
+            flowMain.Scroll += (s, e) =>
+            {
+                flowMain.HorizontalScroll.Visible = false;
+                flowMain.VerticalScroll.Visible = false;
+            };
         }
     }
 }
