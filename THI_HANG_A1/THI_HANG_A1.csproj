@@ -128,6 +128,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3.Designer.cs">
+      <DependentUpon>Form3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MotoView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -166,6 +172,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MCDV2A1DataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChiTietLoi.cs" />
     <Compile Include="Models\LoiViPham.cs" />
     <Compile Include="Models\Moto.cs" />
     <Compile Include="Models\ThiSinh.cs" />
@@ -176,6 +183,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3.resx">
+      <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MotoView.resx">
       <DependentUpon>MotoView.cs</DependentUpon>

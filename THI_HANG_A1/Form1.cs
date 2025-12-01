@@ -76,16 +76,25 @@ namespace THI_HANG_A1
         /// </summary>
         private void KhoiTaoGiaoDienVaDuLieu()
         {
-            dgvchitietloi.AutoGenerateColumns = true; // Bạn đã tạo tay
+            
 
             dgvKetQuaChung.AutoGenerateColumns = false;
             dgvNhatKyLoi.AutoGenerateColumns = false;
 
-            dgvchitietloi.DataSource = examManager.DanhSachChuanBiThi;
+           
             dgvThi.DataSource = examManager.DanhSachDangThi;
             dgvKetQuaChung.DataSource = examManager.DanhSachKetQuaChung;
             dgvNhatKyLoi.DataSource = examManager.DanhSachLoiViPham;
 
+            dgvchitietloi.AutoGenerateColumns = true;
+            dgvchitietloi.DataSource = dsChiTietLoi;
+
+            dgvchitietloi.Columns["ThoiGian"].Width = 120;
+            dgvchitietloi.Columns["SuKien"].Width = 150;
+            dgvchitietloi.Columns["DiemTru"].Width = 80;
+            dgvchitietloi.Columns["ChiTiet"].Width = 250;
+
+            dgvchitietloi.Columns["ThoiGian"].DefaultCellStyle.Format = "HH:mm:ss";
             this.dgvNhatKyLoi.CellFormatting += dgvNhatKyLoi_CellFormatting;
             CapNhatDanhSachXeRanhUI();
             examManager.OnDataChanged += (s, e) => CapNhatDanhSachXeRanhUI();
@@ -983,7 +992,7 @@ namespace THI_HANG_A1
             {
                 Name = "colTrangThaiXe",
                 HeaderText = "",
-                Width = 40,
+                Width = 20,
                 DataPropertyName = "DaKiemTraXe", // Vẫn giữ binding để lấy dữ liệu nếu cần
                 ReadOnly = true // Không cho người dùng gõ chữ vào
             };
@@ -1150,22 +1159,23 @@ namespace THI_HANG_A1
             switch (cot)
             {
                 case "Chống chân":
-                    ts.SoLoi += 1;
-                    ts.DiemTru += 5;
-                    ts.DiemConLai -= 5;
+                    ts.SoLoi++; ts.DiemTru += 5; ts.DiemConLai -= 5;
+                    InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+                                          "Chống chân", 5, "Lỗi chống chân");
                     break;
 
                 case "Đổ xe":
-                    ts.SoLoi += 1;
-                    ts.DiemTru += 25;
-                    ts.DiemConLai -= 25;
+                    ts.SoLoi++; ts.DiemTru += 25; ts.DiemConLai -= 25;
+                    InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+                                          "Đổ xe", 25, "Lỗi ngã/đổ xe");
                     break;
 
                 case "Ngoài hình":
-                    ts.SoLoi += 1;
-                    ts.DiemTru += 25;
-                    ts.DiemConLai -= 25;
+                    ts.SoLoi++; ts.DiemTru += 25; ts.DiemConLai -= 25;
+                    InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+                                          "Ngoài hình", 25, "Lỗi chạy ngoài hình");
                     break;
+
             }
 
             if (ts.DiemConLai < 80)
@@ -1193,7 +1203,7 @@ namespace THI_HANG_A1
             }
             // Vẽ nền trắng cho ô (xóa các nội dung cũ)
             e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
-
+            
             if (ts == null)
             {
                 e.Handled = true;
@@ -1368,6 +1378,9 @@ namespace THI_HANG_A1
 
             // Cho xe sang trạng thái Sẵn sàng
             trangThaiXe[soXe] = TrangThaiXe.SanSang;
+            InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+                      "Chuẩn bị thi", 0, "Thí sinh chuẩn bị xe");
+
 
             // Cập nhật trạng thái thí sinh:
             // Sau khi ấn Chuẩn bị: ô vuông không màu, chưa tích
@@ -1383,8 +1396,6 @@ namespace THI_HANG_A1
             var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
             if (ts == null) return;
 
-            // --- [SỬA QUAN TRỌNG TẠI ĐÂY] ---
-            // Bây giờ mới kích hoạt giờ
             ts.GioBatDau = DateTime.Now;
             ts.TrangThai = "Đang thi";
             // --------------------------------
@@ -1394,6 +1405,8 @@ namespace THI_HANG_A1
             {
                 trangThaiXe[ts.Xe] = TrangThaiXe.DangThi;
             }
+            InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+                      "Bắt đầu thi", 0, "Thí sinh bắt đầu bài thi");
 
             // Bật timer nếu chưa chạy
             if (!timerCapNhatThoiGian.Enabled)
@@ -1525,5 +1538,52 @@ namespace THI_HANG_A1
                 default: return TrangThaiTS.None;
             }
         }
+
+        private void quảnLýXeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Tạo mới Form3
+            Form3 formQuanLy = new Form3();
+
+            // Cách 1: Mở dạng hộp thoại (Khuyên dùng)
+            // (Bắt buộc phải đóng Form3 thì mới bấm được Form1 => Tránh lỗi mở nhiều cái)
+            formQuanLy.ShowDialog();
+
+            // Cách 2: Mở song song (Nếu bạn muốn vừa xem Form1 vừa xem Form3)
+            // formQuanLy.Show();
+        }
+
+        private BindingList<ChiTietLoi> dsChiTietLoi = new BindingList<ChiTietLoi>();
+        
+        private void InsertErrorToDatabase(int sbd, string ten, string xe, string suKien, int diemTru, string chiTiet)
+        {
+            string sql = @"INSERT INTO ChiTietLoi (SoBaoDanh, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet)
+                   VALUES (@SBD, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet)";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SBD", sbd);
+                    cmd.Parameters.AddWithValue("@Ten", ten);
+                    cmd.Parameters.AddWithValue("@Xe", xe);
+                    cmd.Parameters.AddWithValue("@SuKien", suKien);
+                    cmd.Parameters.AddWithValue("@DiemTru", diemTru);
+                    cmd.Parameters.AddWithValue("@ChiTiet", chiTiet);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            // Thêm vào dgv
+            dsChiTietLoi.Add(new ChiTietLoi()
+            {
+                ThoiGian = DateTime.Now,
+                SuKien = suKien,
+                DiemTru = diemTru,
+                ChiTiet = chiTiet
+            });
+        }
+
     }
+
 }
