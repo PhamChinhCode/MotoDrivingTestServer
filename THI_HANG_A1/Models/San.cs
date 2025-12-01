@@ -20,7 +20,7 @@ namespace THI_HANG_A1.Models
             PORT = port;
 
             socketConn = new SocketHandler();
-            socketConn.OnDataReceivedBytes += SocketDataHandler;
+            //socketConn.OnDataReceivedCommand += SocketDataHandler;
         }
 
         private void TriggerUI() => OnChanged?.Invoke();
@@ -65,13 +65,15 @@ namespace THI_HANG_A1.Models
             // XÓA SOCKET CŨ – BẮT BUỘC
             if (socketConn != null)
             {
-                socketConn.OnDataReceivedBytes -= SocketDataHandler;
+                //socketConn.OnDataReceivedBytes += SocketDataHandler;
+                socketConn.OnDataReceivedCommand += commandHandler;
                 socketConn.Disconnect();
             }
 
             // TẠO SOCKETHOÀN TOÀN MỚI
             socketConn = new SocketHandler();
-            socketConn.OnDataReceivedBytes += SocketDataHandler;
+            //socketConn.OnDataReceivedBytes += SocketDataHandler;
+            socketConn.OnDataReceivedCommand += commandHandler;
 
             bool ok = socketConn.Connect(IP, PORT);
 
@@ -84,7 +86,8 @@ namespace THI_HANG_A1.Models
         {
             if (socketConn != null)
             {
-                socketConn.OnDataReceivedBytes -= SocketDataHandler;
+                //socketConn.OnDataReceivedBytes += SocketDataHandler;
+                socketConn.OnDataReceivedCommand += commandHandler;
 
                 try
                 {
@@ -107,7 +110,22 @@ namespace THI_HANG_A1.Models
             TriggerUI();
         }
 
-
+        private void commandHandler(Command cmd)
+        {
+            if (cmd.key == ConstantKeys.VALUE_YARD)
+            {
+                // ========== SENSOR BIT MAPPING ==============
+                // ESP32 tạo data bằng cách shift trước → sensor1 ở BIT 7
+                Sensor1 = (cmd.value & (1u << 0)) != 0;
+                Sensor2 = (cmd.value & (1u << 1)) != 0;
+                Sensor3 = (cmd.value & (1u << 2)) != 0;
+                Sensor4 = (cmd.value & (1u << 3)) != 0;
+                Sensor5 = (cmd.value & (1u << 4)) != 0;
+                Sensor6 = (cmd.value & (1u << 5)) != 0;
+                Sensor7 = (cmd.value & (1u << 6)) != 0;
+                Sensor8 = (cmd.value & (1u << 7)) != 0;
+            }
+        }
 
 
         // ============== FRAME PARSER FOR ESP32 ================
@@ -153,7 +171,7 @@ namespace THI_HANG_A1.Models
             Sensor7 = (value & (1u << 6)) != 0;
             Sensor8 = (value & (1u << 7)) != 0;
 
-            
+
 
             TriggerUI();
         }

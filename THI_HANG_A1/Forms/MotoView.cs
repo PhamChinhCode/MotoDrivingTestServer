@@ -18,17 +18,7 @@ namespace THI_HANG_A1.Forms
 
         private void UserControl1_Load(object sender, EventArgs e)
         {
-            checkBox2.Text = "SignedLeft";
-            checkBox3.Text = "Engine";
-            checkBox4.Text = "null";
-            checkBox1.Text = "Hall";
-            button1.Text = "Edit";
-            button2.Text = "Connect";
-            button3.Text = "Stop";
-            button4.Text = "Start";
-            button5.Text = "Image";
 
-            UpdateUI();
         }
 
 
@@ -125,6 +115,21 @@ namespace THI_HANG_A1.Forms
         private void label4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void MotoView_Load(object sender, EventArgs e)
+        {
+            checkBox2.Text = "SignedLeft";
+            checkBox3.Text = "Engine";
+            checkBox4.Text = "null";
+            checkBox1.Text = "Hall";
+            button1.Text = "Edit";
+            button2.Text = "Connect";
+            button3.Text = "Stop";
+            button4.Text = "Start";
+            button5.Text = "Image";
+
+            UpdateUI();
         }
 
         //    private void button4_Click(object sender, EventArgs e)

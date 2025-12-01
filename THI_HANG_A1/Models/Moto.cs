@@ -110,6 +110,10 @@ namespace THI_HANG_A1.Models
             socketConn.OnDisconnected += disConnectHandler;
         }
         private void onRecvImage(byte[] array)
+
+
+
+
         {
             image = ByteArrayToBitmap(array);
 

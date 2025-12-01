@@ -43,7 +43,7 @@ namespace THI_HANG_A1
             xes = new List<Moto>()
             {
                 new Moto() { Id = 1, Name = "Xe 01", Ip = "192.168.183.16", Port = 123, Status = ConstantKeys.KEY_NULL },
-                new Moto() { Id = 2, Name = "Xe 02", Ip = "192.168.1.11", Port = 5000, Status = ConstantKeys.KEY_NULL },
+                new Moto() { Id = 2, Name = "Xe 02", Ip = "192.168.183.16", Port = 123, Status = ConstantKeys.KEY_NULL },
                 new Moto() { Id = 3, Name = "Xe 03", Ip = "192.168.1.12", Port = 5000, Status = ConstantKeys.KEY_NULL },
                 new Moto() { Id = 4, Name = "Xe 04", Ip = "192.168.1.13", Port = 5000, Status = ConstantKeys.KEY_NULL },
                 new Moto() { Id = 5, Name = "Xe 05", Ip = "192.168.1.14", Port = 5000, Status = ConstantKeys.KEY_NULL }
@@ -56,7 +56,9 @@ namespace THI_HANG_A1
         {
             InitializeComponent();
             TaoDuLieuMotoDemo();
+
             fxe = new QuanLyXe(xes);
+
             sanList = new List<San>();
             sanList.Add(new San("San 1", "192.168.137.167", 123));
             //fxe.ShowDialog();
@@ -1581,6 +1583,7 @@ namespace THI_HANG_A1
 
         private void kiểmTraKếtNốiXeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            fxe = new QuanLyXe(xes);
             fxe.ShowDialog();
         }
 
