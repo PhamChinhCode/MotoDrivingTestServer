@@ -177,7 +177,7 @@ namespace THI_HANG_A1.Managers
             return buf;
 
         }
-        private Bitmap ByteArrayToBitmap(byte[] bytes)
+        public Bitmap ByteArrayToBitmap(byte[] bytes)
         {
             using (var ms = new MemoryStream(bytes))
             {

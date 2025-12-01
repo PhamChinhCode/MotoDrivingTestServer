@@ -26,6 +26,7 @@ namespace THI_HANG_A1.Forms
             button2.Text = "Connect";
             button3.Text = "Stop";
             button4.Text = "Start";
+            button5.Text = "Image";
 
             UpdateUI();
         }
