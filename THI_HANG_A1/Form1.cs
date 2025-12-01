@@ -58,7 +58,7 @@ namespace THI_HANG_A1
             TaoDuLieuMotoDemo();
             fxe = new QuanLyXe(xes);
             sanList = new List<San>();
-            sanList.Add(new San("San 1", "172.172.0.209", 123));
+            sanList.Add(new San("San 1", "192.168.137.167", 123));
             //fxe.ShowDialog();
             //xes[0].Connect();
 

@@ -126,14 +126,15 @@ namespace THI_HANG_A1.Forms
 
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
-        }
+        //    private void button4_Click(object sender, EventArgs e)
+        //    {
+        //        moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
+        //    }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_STOP);
-        }
+        //    private void button3_Click(object sender, EventArgs e)
+        //    {
+        //        moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_STOP);
+        //    }
+        //}
     }
 }

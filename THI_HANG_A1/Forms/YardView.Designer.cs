@@ -33,7 +33,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.chkSensor2 = new System.Windows.Forms.CheckBox();
             this.chkSensor3 = new System.Windows.Forms.CheckBox();
-            this.chkOngHoi = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -96,17 +95,6 @@
             this.chkSensor3.Text = "Sensor3";
             this.chkSensor3.UseVisualStyleBackColor = true;
             this.chkSensor3.CheckedChanged += new System.EventHandler(this.chkSensor3_CheckedChanged);
-            // 
-            // chkOngHoi
-            // 
-            this.chkOngHoi.AutoSize = true;
-            this.chkOngHoi.Location = new System.Drawing.Point(271, 64);
-            this.chkOngHoi.Margin = new System.Windows.Forms.Padding(4);
-            this.chkOngHoi.Name = "chkOngHoi";
-            this.chkOngHoi.Size = new System.Drawing.Size(124, 20);
-            this.chkOngHoi.TabIndex = 9;
-            this.chkOngHoi.Text = "Cambienonghoi";
-            this.chkOngHoi.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -172,18 +160,19 @@
             // chkSensor8
             // 
             this.chkSensor8.AutoSize = true;
-            this.chkSensor8.Location = new System.Drawing.Point(271, 149);
+            this.chkSensor8.Location = new System.Drawing.Point(267, 106);
             this.chkSensor8.Margin = new System.Windows.Forms.Padding(4);
             this.chkSensor8.Name = "chkSensor8";
             this.chkSensor8.Size = new System.Drawing.Size(79, 20);
             this.chkSensor8.TabIndex = 18;
             this.chkSensor8.Text = "Sensor8";
             this.chkSensor8.UseVisualStyleBackColor = true;
+            this.chkSensor8.CheckedChanged += new System.EventHandler(this.chkSensor8_CheckedChanged);
             // 
             // chkSensor7
             // 
             this.chkSensor7.AutoSize = true;
-            this.chkSensor7.Location = new System.Drawing.Point(271, 107);
+            this.chkSensor7.Location = new System.Drawing.Point(267, 64);
             this.chkSensor7.Margin = new System.Windows.Forms.Padding(4);
             this.chkSensor7.Name = "chkSensor7";
             this.chkSensor7.Size = new System.Drawing.Size(79, 20);
@@ -204,7 +193,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.chkOngHoi);
             this.Controls.Add(this.chkSensor3);
             this.Controls.Add(this.chkSensor2);
             this.Controls.Add(this.label2);
@@ -226,7 +214,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox chkSensor2;
         private System.Windows.Forms.CheckBox chkSensor3;
-        private System.Windows.Forms.CheckBox chkOngHoi;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label1;
