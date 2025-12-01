@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -9,7 +11,7 @@ namespace THI_HANG_A1.Models
     public class Moto
     {
         public event Action OnChanged;
-
+        public event Action onImage;
         public byte Id { get; set; }
         public string Name { set; get; }
 
@@ -94,9 +96,10 @@ namespace THI_HANG_A1.Models
             socketConn = new SocketHandler();
         }
 
-        public void Connect()
+        public async Task Connect()
         {
-            bool ok = socketConn.Connect(Ip, Port);
+            //bool ok = socketConn.Connect(Ip, Port);
+            bool ok = await socketConn.ConnectWithTimeout(Ip, Port);
 
             if (!ok)
             {
@@ -110,13 +113,9 @@ namespace THI_HANG_A1.Models
             socketConn.OnDisconnected += disConnectHandler;
         }
         private void onRecvImage(byte[] array)
-
-
-
-
         {
             image = ByteArrayToBitmap(array);
-
+            onImage?.Invoke();
         }
         public Bitmap ByteArrayToBitmap(byte[] bytes)
         {
@@ -137,6 +136,9 @@ namespace THI_HANG_A1.Models
                     Status = (byte)cmd.value;
                     break;
                 case ConstantKeys.IMAGE_KEY:
+                    break;
+                case ConstantKeys.CONTROL_KEY:
+                    MessageBox.Show("Moto seted mode :" + Convert.ToString(cmd.value, 16));
                     break;
 
             }

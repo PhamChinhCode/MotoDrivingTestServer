@@ -60,7 +60,7 @@ namespace THI_HANG_A1.Models
 
 
         // ================= CONNECT ======================
-        public void Connect()
+        public async void Connect()
         {
             // XÓA SOCKET CŨ – BẮT BUỘC
             if (socketConn != null)
@@ -75,8 +75,8 @@ namespace THI_HANG_A1.Models
             //socketConn.OnDataReceivedBytes += SocketDataHandler;
             socketConn.OnDataReceivedCommand += commandHandler;
 
-            bool ok = socketConn.Connect(IP, PORT);
-
+            //bool ok = socketConn.Connect(IP, PORT);
+            bool ok = await socketConn.ConnectWithTimeout(IP, PORT);
             IsConnected = ok;
             TriggerUI();
         }

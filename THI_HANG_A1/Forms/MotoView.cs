@@ -14,6 +14,7 @@ namespace THI_HANG_A1.Forms
             InitializeComponent();
             moto = m;
             moto.OnChanged += MotoOnChanged;
+            moto.onImage += MotoOnChanged;
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
@@ -37,7 +38,7 @@ namespace THI_HANG_A1.Forms
 
         private void UpdateUI()
         {
-
+            pictureBox1.Image = moto.image;
             label1.Text = moto.Name;
             label2.Text = moto.Ip;
             label3.Text = moto.EncoderCount.ToString();
@@ -132,15 +133,19 @@ namespace THI_HANG_A1.Forms
             UpdateUI();
         }
 
-        //    private void button4_Click(object sender, EventArgs e)
-        //    {
-        //        moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
-        //    }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
+        }
 
-        //    private void button3_Click(object sender, EventArgs e)
-        //    {
-        //        moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_STOP);
-        //    }
-        //}
+        private void button3_Click(object sender, EventArgs e)
+        {
+            moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_STOP);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            moto.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET, ConstantKeys.KEY_NULL);
+        }
     }
 }

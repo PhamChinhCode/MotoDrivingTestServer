@@ -4,6 +4,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Task = System.Threading.Tasks.Task;
 
 namespace THI_HANG_A1.Managers
 {
@@ -29,6 +32,8 @@ namespace THI_HANG_A1.Managers
         // ================================================================
         public bool Connect(string ip, int port)
         {
+            IPAddress = ip;
+            IPPort = port;
             try
             {
                 if (_client == null)
@@ -63,6 +68,43 @@ namespace THI_HANG_A1.Managers
                 return false;
             }
         }
+        public async Task<bool> ConnectWithTimeout(string ip, int port, int timeoutMs = 5000)
+        {
+            IPAddress = ip;
+            IPPort = port;
+            try
+            {
+                using (var cts = new CancellationTokenSource(timeoutMs))
+                {
+                    // TcpClient async
+                    _client = new TcpClient();
+
+                    var connectTask = _client.ConnectAsync(ip, port);
+
+                    // Chờ connect hoặc timeout
+                    var completed = await Task.WhenAny(connectTask, Task.Delay(timeoutMs, cts.Token));
+
+                    if (completed != connectTask)
+                    {
+                        // Timeout
+                        _client?.Close();
+                        return false;
+                    }
+
+                    // Connected
+                    await connectTask;  // đảm bảo throw đúng exception nếu có
+                    _stream = _client.GetStream();
+                    StartReceiveThread();
+                    return true;
+                }
+            }
+            catch
+            {
+                _client?.Close();
+                return false;
+            }
+        }
+
         public bool Connect()
         {
             return Connect(IPAddress, IPPort);
@@ -72,6 +114,7 @@ namespace THI_HANG_A1.Managers
         // ================================================================
         public void Disconnect()
         {
+
             try
             {
                 _receiveThread?.Abort();
@@ -82,6 +125,7 @@ namespace THI_HANG_A1.Managers
             try { _client?.Close(); } catch { }
 
             OnDisconnected?.Invoke();
+            MessageBox.Show(" Mất kết nối tới: " + Convert.ToString(IPAddress));
         }
 
         // ================================================================
@@ -119,48 +163,48 @@ namespace THI_HANG_A1.Managers
 
             while (true)
             {
-                try
-                {
-                    //int len = _stream.Read(buffer, 0, buffer.Length);
-                    int data = _stream.ReadByte();
+                //try
+                //{
+                //int len = _stream.Read(buffer, 0, buffer.Length);
+                int data = _stream.ReadByte();
 
-                    if (data <= 0)
-                    {
-                        Disconnect();
-                        return;
-                    }
-                    if (data != ConstantKeys.BYTE_START) return;
-                    buffer = ReadExact(_stream, 9);
-                    if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
-                    cmd.key = buffer[0];
-                    cmd.type = buffer[1];
-                    cmd.value = (UInt32)buffer[3] << 24 | (UInt32)buffer[4] << 16 | (UInt32)buffer[5] << 8 | (UInt32)buffer[6];
-                    if (buffer[8] == ConstantKeys.BYTE_PAYLOAD && buffer[0] == ConstantKeys.IMAGE_KEY)
-                    {
-                        byte[] image = new byte[cmd.value];
-                        buffer = ReadExact(_stream, (int)cmd.value);
-
-                        if (_stream.ReadByte() != ConstantKeys.BYTE_STOP) return;
-
-                        Bitmap bmp = ByteArrayToBitmap(image);
-                        OnDataReceivedImage?.Invoke(image);
-
-                    }
-                    OnDataReceivedCommand?.Invoke(cmd);
-
-
-                    //string msg = Encoding.UTF8.GetString(buffer, 0, len);
-
-                    //// Đưa dữ liệu về Form
-                    //OnDataReceived?.Invoke(buffer, len);
-                    //OnDataReceivedBytes?.Invoke(buffer, len);
-
-                }
-                catch
+                if (data <= 0)
                 {
                     Disconnect();
                     return;
                 }
+                if (data != ConstantKeys.BYTE_START) return;
+                buffer = ReadExact(_stream, 9);
+                if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
+                cmd.key = buffer[0];
+                cmd.type = buffer[1];
+                cmd.value = (UInt32)buffer[3] << 24 | (UInt32)buffer[4] << 16 | (UInt32)buffer[5] << 8 | (UInt32)buffer[6];
+                if (buffer[8] == ConstantKeys.BYTE_PAYLOAD && buffer[0] == ConstantKeys.IMAGE_KEY)
+                {
+                    byte[] image = new byte[cmd.value];
+                    image = ReadExact(_stream, (int)cmd.value);
+
+                    if (_stream.ReadByte() != ConstantKeys.BYTE_STOP) return;
+
+                    Bitmap bmp = ByteArrayToBitmap(image);
+                    OnDataReceivedImage?.Invoke(image);
+
+                }
+                OnDataReceivedCommand?.Invoke(cmd);
+
+
+                //string msg = Encoding.UTF8.GetString(buffer, 0, len);
+
+                //// Đưa dữ liệu về Form
+                //OnDataReceived?.Invoke(buffer, len);
+                //OnDataReceivedBytes?.Invoke(buffer, len);
+
+                //}
+                //catch
+                //{
+                //    Disconnect();
+                //    return;
+                //}
             }
         }
         private byte[] ReadExact(NetworkStream stream, int size)
@@ -203,7 +247,7 @@ namespace THI_HANG_A1.Managers
 
         public const byte KEY_NULL = 0xff;
 
-        public const byte IMAGE_KEY = 0x90;
+
 
 
         // Status
@@ -217,6 +261,11 @@ namespace THI_HANG_A1.Managers
         public const byte STATUS_CONTEST3 = 0xc6;   // bài ziczac
         public const byte STATUS_CONTEST4 = 0xc7;   // bài gồ gề
 
+        //canera key
+        public const byte IMAGE_KEY = 0xB1;
+
+        // mark key
+        public const byte MARK_KEY = 0xB0;
 
 
         // Control command
