@@ -134,9 +134,7 @@
     <Compile Include="Forms\MotoView.Designer.cs">
       <DependentUpon>MotoView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\QLisan.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\QLisan.cs" />
     <Compile Include="Forms\QLisan.Designer.cs">
       <DependentUpon>QLisan.cs</DependentUpon>
     </Compile>

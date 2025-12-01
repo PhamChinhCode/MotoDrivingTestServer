@@ -61,7 +61,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(22, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(44, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
@@ -120,7 +120,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(63, 10);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(44, 16);
             this.label2.TabIndex = 7;
             this.label2.Text = "label2";
             this.label2.Click += new System.EventHandler(this.label2_Click);
@@ -130,7 +130,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(218, 32);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.Size = new System.Drawing.Size(44, 16);
             this.label3.TabIndex = 8;
             this.label3.Text = "label3";
             this.label3.Click += new System.EventHandler(this.label3_Click);
@@ -143,7 +143,6 @@
             this.button3.TabIndex = 9;
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -153,7 +152,6 @@
             this.button4.TabIndex = 10;
             this.button4.Text = "button4";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // pictureBox1
             // 
@@ -169,7 +167,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(131, 49);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.Size = new System.Drawing.Size(44, 16);
             this.label4.TabIndex = 12;
             this.label4.Text = "label4";
             this.label4.Click += new System.EventHandler(this.label4_Click);
@@ -185,7 +183,7 @@
             // 
             // MotoView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuBar;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -205,8 +203,7 @@
             this.Controls.Add(this.checkBox1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MotoView";
-            this.Size = new System.Drawing.Size(591, 92);
-            this.Load += new System.EventHandler(this.UserControl1_Load);
+            this.Size = new System.Drawing.Size(1031, 470);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
