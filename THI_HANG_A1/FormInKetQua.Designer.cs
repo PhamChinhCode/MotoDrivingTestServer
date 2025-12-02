@@ -475,8 +475,8 @@ namespace THI_HANG_A1
             this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 550F));
             this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
             this.tblChiTietLoi.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblChiTietLoi.Location = new System.Drawing.Point(14, 330);
-            this.tblChiTietLoi.Margin = new System.Windows.Forms.Padding(14, 3, 3, 3);
+            this.tblChiTietLoi.Location = new System.Drawing.Point(16, 330);
+            this.tblChiTietLoi.Margin = new System.Windows.Forms.Padding(16, 3, 3, 3);
             this.tblChiTietLoi.Name = "tblChiTietLoi";
             this.tblChiTietLoi.RowCount = 1;
             this.tblChiTietLoi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
