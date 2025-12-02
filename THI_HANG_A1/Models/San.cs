@@ -27,33 +27,42 @@ namespace THI_HANG_A1.Models
 
         // ================= STATES ======================
         public bool IsConnected { get; private set; }
+        public bool Sensor1 { get; private set; }
+        public bool Sensor2 { get; private set; }
+        public bool Sensor3 { get; private set; }
+        public bool Sensor4 { get; private set; }
+        public bool Sensor5 { get; private set; }
+        public bool Sensor6 { get; private set; }
+        public bool Sensor7 { get; private set; }
+        public bool Sensor8 { get; private set; }
 
-        private bool _sensor1;
-        public bool Sensor1 { get => _sensor1; set { _sensor1 = value; TriggerUI(); } }
 
-        private bool _sensor2;
-        public bool Sensor2 { get => _sensor2; set { _sensor2 = value; TriggerUI(); } }
+        //private bool _sensor1;
+        //public bool Sensor1 { get => _sensor1; set { _sensor1 = value; TriggerUI(); } }
 
-        private bool _sensor3;
-        public bool Sensor3 { get => _sensor3; set { _sensor3 = value; TriggerUI(); } }
+        //private bool _sensor2;
+        //public bool Sensor2 { get => _sensor2; set { _sensor2 = value; TriggerUI(); } }
 
-        private bool _sensor4;
-        public bool Sensor4 { get => _sensor4; set { _sensor4 = value; TriggerUI(); } }
+        //private bool _sensor3;
+        //public bool Sensor3 { get => _sensor3; set { _sensor3 = value; TriggerUI(); } }
 
-        private bool _sensor5;
-        public bool Sensor5 { get => _sensor5; set { _sensor5 = value; TriggerUI(); } }
+        //private bool _sensor4;
+        //public bool Sensor4 { get => _sensor4; set { _sensor4 = value; TriggerUI(); } }
 
-        private bool _sensor6;
-        public bool Sensor6 { get => _sensor6; set { _sensor6 = value; TriggerUI(); } }
+        //private bool _sensor5;
+        //public bool Sensor5 { get => _sensor5; set { _sensor5 = value; TriggerUI(); } }
 
-        private bool _sensor7;
-        public bool Sensor7 { get => _sensor7; set { _sensor7 = value; TriggerUI(); } }
+        //private bool _sensor6;
+        //public bool Sensor6 { get => _sensor6; set { _sensor6 = value; TriggerUI(); } }
 
-        private bool _sensor8;
-        public bool Sensor8 { get => _sensor8; set { _sensor8 = value; TriggerUI(); } }
+        //private bool _sensor7;
+        //public bool Sensor7 { get => _sensor7; set { _sensor7 = value; TriggerUI(); } }
 
-        private bool _onghoi;
-        public bool OngHoi { get => _onghoi; set { _onghoi = value; TriggerUI(); } }
+        //private bool _sensor8;
+        //public bool Sensor8 { get => _sensor8; set { _sensor8 = value; TriggerUI(); } }
+
+        //private bool _onghoi;
+        //public bool OngHoi { get => _onghoi; set { _onghoi = value; TriggerUI(); } }
 
         private string _mes;
         public string Mes { get => _mes; set { _mes = value; TriggerUI(); } }
@@ -124,6 +133,7 @@ namespace THI_HANG_A1.Models
                 Sensor6 = (cmd.value & (1u << 5)) != 0;
                 Sensor7 = (cmd.value & (1u << 6)) != 0;
                 Sensor8 = (cmd.value & (1u << 7)) != 0;
+                TriggerUI();
             }
         }
 
