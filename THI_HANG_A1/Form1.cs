@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
@@ -15,7 +16,6 @@ using THI_HANG_A1.Forms;
 using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
-using System.Threading.Tasks;
 
 
 namespace THI_HANG_A1
@@ -74,9 +74,9 @@ namespace THI_HANG_A1
             fxe = new QuanLyXe(xes);
 
             sanList = new List<San>();
-            sanList.Add(new San("San 1", "192.168.137.87", 123));
+            sanList.Add(new San("San 1", "192.168.244.220", 123));
             //fxe.ShowDialog();
-            xes[0].Connect();
+            //xes[0].Connect();
 
             GridThi();
             dgvThi.AutoGenerateColumns = false;
@@ -140,7 +140,7 @@ namespace THI_HANG_A1
             if (dgvchitietloi.Columns["DiemTru"] != null)
             {
                 dgvchitietloi.Columns["DiemTru"].HeaderText = "Điểm trừ";
-                dgvchitietloi.Columns["DiemTru"].Width = 80; 
+                dgvchitietloi.Columns["DiemTru"].Width = 80;
                 dgvchitietloi.Columns["DiemTru"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
 
@@ -335,7 +335,7 @@ namespace THI_HANG_A1
         {
             foreach (DataGridViewRow row in dgvThi.Rows)
             {
-                if (row.DataBoundItem is ThiSinhDangThi ts) 
+                if (row.DataBoundItem is ThiSinhDangThi ts)
                 {
                     var cell = row.Cells["colThoiGian"];
 
@@ -1445,7 +1445,7 @@ namespace THI_HANG_A1
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.id;
             int diemTru = err.diemTru;
-            
+
             InsertErrorToDatabase(
                 ts.SoBaoDanh,
                 ts.SessionID,
@@ -1601,7 +1601,7 @@ namespace THI_HANG_A1
             = new Dictionary<string, TrangThaiXe>();
 
         // Trạng thái xe
-        
+
         private BindingList<ChiTietLoi> dsChiTietLoi = new BindingList<ChiTietLoi>();
 
         private void kiểmTraKếtNốiXeToolStripMenuItem_Click(object sender, EventArgs e)
