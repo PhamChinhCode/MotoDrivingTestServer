@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.khóaThiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tạoMớiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,9 +69,12 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnBatDau = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
+            this.btnFindDaThi = new System.Windows.Forms.ToolStripButton();
+            this.btnFindDangThi = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panelOverlay = new System.Windows.Forms.Panel();
+            this.picLoadingg = new System.Windows.Forms.PictureBox();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.chuotphaichonxe = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.capxeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,6 +91,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer_Thi = new System.Windows.Forms.SplitContainer();
             this.dgvThi = new System.Windows.Forms.DataGridView();
+            this.mnuShowDaThi = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnInKetQua = new System.Windows.Forms.ToolStripMenuItem();
             this.lblDangThi = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -134,14 +139,14 @@
             this.examineesBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.mcdV2A1DataSet1 = new THI_HANG_A1.MCDV2A1DataSet();
             this.dBKySatHachTableAdapter = new THI_HANG_A1.MCDV2A1DataSetTableAdapters.DBKySatHachTableAdapter();
-            this.panelOverlay = new System.Windows.Forms.Panel();
-            this.picLoadingg = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panelOverlay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.chuotphaichonxe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -155,6 +160,7 @@
             this.splitContainer_Thi.Panel2.SuspendLayout();
             this.splitContainer_Thi.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThi)).BeginInit();
+            this.mnuShowDaThi.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvchitietloi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKetQuaChung)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhatKyLoi)).BeginInit();
@@ -166,8 +172,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mcdV2A1DataSet1)).BeginInit();
-            this.panelOverlay.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -382,7 +386,8 @@
             this.toolStripSeparator1,
             this.btnBatDau,
             this.toolStripSeparator2,
-            this.toolStripButton9,
+            this.btnFindDaThi,
+            this.btnFindDangThi,
             this.toolStripSeparator10});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
@@ -432,13 +437,23 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
-            // toolStripButton9
+            // btnFindDaThi
             // 
-            this.toolStripButton9.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton9.Image")));
-            this.toolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton9.Name = "toolStripButton9";
-            this.toolStripButton9.Size = new System.Drawing.Size(109, 24);
-            this.toolStripButton9.Text = "Tìm SBD đã thi";
+            this.btnFindDaThi.Image = ((System.Drawing.Image)(resources.GetObject("btnFindDaThi.Image")));
+            this.btnFindDaThi.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFindDaThi.Name = "btnFindDaThi";
+            this.btnFindDaThi.Size = new System.Drawing.Size(62, 24);
+            this.btnFindDaThi.Text = "Đã thi";
+            this.btnFindDaThi.Click += new System.EventHandler(this.btnFindDaThi_Click);
+            // 
+            // btnFindDangThi
+            // 
+            this.btnFindDangThi.Image = ((System.Drawing.Image)(resources.GetObject("btnFindDangThi.Image")));
+            this.btnFindDangThi.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFindDangThi.Name = "btnFindDangThi";
+            this.btnFindDangThi.Size = new System.Drawing.Size(76, 24);
+            this.btnFindDangThi.Text = "Đang thi";
+            this.btnFindDangThi.Click += new System.EventHandler(this.btnFindDangThi_Click);
             // 
             // toolStripSeparator10
             // 
@@ -465,6 +480,24 @@
             this.splitContainer1.Size = new System.Drawing.Size(1340, 627);
             this.splitContainer1.SplitterDistance = 302;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // panelOverlay
+            // 
+            this.panelOverlay.Controls.Add(this.picLoadingg);
+            this.panelOverlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelOverlay.Location = new System.Drawing.Point(0, 60);
+            this.panelOverlay.Name = "panelOverlay";
+            this.panelOverlay.Size = new System.Drawing.Size(302, 343);
+            this.panelOverlay.TabIndex = 4;
+            // 
+            // picLoadingg
+            // 
+            this.picLoadingg.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picLoadingg.Location = new System.Drawing.Point(0, 0);
+            this.picLoadingg.Name = "picLoadingg";
+            this.picLoadingg.Size = new System.Drawing.Size(302, 343);
+            this.picLoadingg.TabIndex = 0;
+            this.picLoadingg.TabStop = false;
             // 
             // dgv
             // 
@@ -640,6 +673,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvThi.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvThi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvThi.ContextMenuStrip = this.mnuShowDaThi;
             this.dgvThi.Location = new System.Drawing.Point(8, 25);
             this.dgvThi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvThi.Name = "dgvThi";
@@ -648,6 +682,20 @@
             this.dgvThi.Size = new System.Drawing.Size(1007, 173);
             this.dgvThi.TabIndex = 2;
             this.dgvThi.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvThi_CellContentClick);
+            // 
+            // mnuShowDaThi
+            // 
+            this.mnuShowDaThi.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnInKetQua});
+            this.mnuShowDaThi.Name = "contextMenuStrip2";
+            this.mnuShowDaThi.Size = new System.Drawing.Size(127, 26);
+            // 
+            // btnInKetQua
+            // 
+            this.btnInKetQua.Name = "btnInKetQua";
+            this.btnInKetQua.Size = new System.Drawing.Size(126, 22);
+            this.btnInKetQua.Text = "In kết quả";
+            this.btnInKetQua.Click += new System.EventHandler(this.btnInKetQua_Click);
             // 
             // lblDangThi
             // 
@@ -793,6 +841,8 @@
             // 
             // lblDiemTru
             // 
+            this.lblDiemTru.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDiemTru.Location = new System.Drawing.Point(6, 2);
             this.lblDiemTru.Margin = new System.Windows.Forms.Padding(2);
             this.lblDiemTru.Multiline = true;
@@ -817,8 +867,7 @@
             // 
             // txtSerialLog
             // 
-            this.txtSerialLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtSerialLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSerialLog.BackColor = System.Drawing.Color.LightGray;
             this.txtSerialLog.Location = new System.Drawing.Point(540, 84);
@@ -859,14 +908,14 @@
             this.Column19,
             this.Column20,
             this.KetQua});
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvKetQuaChung.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle42.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvKetQuaChung.DefaultCellStyle = dataGridViewCellStyle42;
             this.dgvKetQuaChung.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvKetQuaChung.Location = new System.Drawing.Point(3, 2);
             this.dgvKetQuaChung.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -880,8 +929,8 @@
             // Column15
             // 
             this.Column15.DataPropertyName = "ThoiGianThi";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column15.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column15.DefaultCellStyle = dataGridViewCellStyle37;
             this.Column15.HeaderText = "Thời gian";
             this.Column15.MinimumWidth = 6;
             this.Column15.Name = "Column15";
@@ -900,8 +949,8 @@
             // Column17
             // 
             this.Column17.DataPropertyName = "SBD";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column17.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column17.DefaultCellStyle = dataGridViewCellStyle38;
             this.Column17.HeaderText = "SBD";
             this.Column17.MinimumWidth = 6;
             this.Column17.Name = "Column17";
@@ -911,8 +960,8 @@
             // Column18
             // 
             this.Column18.DataPropertyName = "HangXe";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column18.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column18.DefaultCellStyle = dataGridViewCellStyle39;
             this.Column18.HeaderText = "Hạng";
             this.Column18.MinimumWidth = 6;
             this.Column18.Name = "Column18";
@@ -922,8 +971,8 @@
             // Column19
             // 
             this.Column19.DataPropertyName = "DiemThi";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column19.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column19.DefaultCellStyle = dataGridViewCellStyle40;
             this.Column19.HeaderText = "Điểm";
             this.Column19.MinimumWidth = 6;
             this.Column19.Name = "Column19";
@@ -933,8 +982,8 @@
             // Column20
             // 
             this.Column20.DataPropertyName = "MaXeDaChon";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column20.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column20.DefaultCellStyle = dataGridViewCellStyle41;
             this.Column20.HeaderText = "Xe";
             this.Column20.MinimumWidth = 6;
             this.Column20.Name = "Column20";
@@ -1086,24 +1135,6 @@
             // 
             this.dBKySatHachTableAdapter.ClearBeforeFill = true;
             // 
-            // panelOverlay
-            // 
-            this.panelOverlay.Controls.Add(this.picLoadingg);
-            this.panelOverlay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelOverlay.Location = new System.Drawing.Point(0, 60);
-            this.panelOverlay.Name = "panelOverlay";
-            this.panelOverlay.Size = new System.Drawing.Size(302, 343);
-            this.panelOverlay.TabIndex = 4;
-            // 
-            // picLoadingg
-            // 
-            this.picLoadingg.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picLoadingg.Location = new System.Drawing.Point(0, 0);
-            this.picLoadingg.Name = "picLoadingg";
-            this.picLoadingg.Size = new System.Drawing.Size(302, 343);
-            this.picLoadingg.TabIndex = 0;
-            this.picLoadingg.TabStop = false;
-            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1125,6 +1156,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.panelOverlay.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.chuotphaichonxe.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1141,6 +1174,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_Thi)).EndInit();
             this.splitContainer_Thi.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvThi)).EndInit();
+            this.mnuShowDaThi.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvchitietloi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKetQuaChung)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhatKyLoi)).EndInit();
@@ -1152,8 +1186,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.examineesBindingSource2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mcdV2A1DataSet1)).EndInit();
-            this.panelOverlay.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picLoadingg)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1190,7 +1222,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnBatDau;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton toolStripButton9;
+        private System.Windows.Forms.ToolStripButton btnFindDangThi;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
@@ -1262,5 +1294,8 @@
         private System.Windows.Forms.ToolStripMenuItem kiemtraketnoisan;
         private System.Windows.Forms.Panel panelOverlay;
         private System.Windows.Forms.PictureBox picLoadingg;
+        private System.Windows.Forms.ToolStripButton btnFindDaThi;
+        private System.Windows.Forms.ContextMenuStrip mnuShowDaThi;
+        private System.Windows.Forms.ToolStripMenuItem btnInKetQua;
     }
 }

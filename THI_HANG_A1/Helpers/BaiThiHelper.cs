@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
@@ -80,6 +81,41 @@ namespace THI_HANG_A1.Helpers
         public static bool IsInValidContest1_4(byte st)
         {
             return st == 196 || st == 197 || st == 198 || st == 199;
+        }
+
+
+
+
+        public enum TrangThaiTS
+        {
+            None,
+            DaCapXe,
+            ChuanBi,
+            DangThi,
+            KhongDat,
+            Dat
+        }
+        public static Dictionary<TrangThaiTS, Color> mapMau
+            = new Dictionary<TrangThaiTS, Color>()
+        {
+            { TrangThaiTS.None,       Color.Transparent },
+            { TrangThaiTS.DaCapXe,    Color.Silver },
+            { TrangThaiTS.ChuanBi,    Color.Gold },
+            { TrangThaiTS.DangThi,    Color.DeepSkyBlue },
+            { TrangThaiTS.KhongDat,   Color.Red },
+            { TrangThaiTS.Dat,        Color.LimeGreen },
+        };
+        public static TrangThaiTS ParseTrangThai(string s)
+        {
+            switch (s)
+            {
+                case "Đã cấp xe": return TrangThaiTS.DaCapXe;
+                case "Chuẩn bị": return TrangThaiTS.ChuanBi;
+                case "Đang thi": return TrangThaiTS.DangThi;
+                case "Không đạt": return TrangThaiTS.KhongDat;
+                case "Đạt": return TrangThaiTS.Dat;
+                default: return TrangThaiTS.None;
+            }
         }
 
     }
