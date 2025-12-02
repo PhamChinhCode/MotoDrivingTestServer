@@ -1689,6 +1689,7 @@ namespace THI_HANG_A1
         }
         public void GridDaThi()
         {
+            dgvThi.ContextMenuStrip = mnuShowDaThi;
             lblDangThi.Text = "ĐÃ THI";
             dgvThi.Columns.Clear();
             dgvThi.AutoGenerateColumns = false;
@@ -1881,6 +1882,7 @@ namespace THI_HANG_A1
 
         public void GridThi()
         {
+            dgvThi.ContextMenuStrip= null;
             dgvThi.Columns.Clear();
             dgvThi.AutoGenerateColumns = false;
 
@@ -2013,7 +2015,7 @@ namespace THI_HANG_A1
         {
             lblDangThi.Text = "ĐANG THI";
             GridThi();
-            dgvThi.DataSource = examManager.DanhSachDangThi;
+            dgvThi.DataSource = ds;
         }
 
         private void InsertErrorToDatabase(
