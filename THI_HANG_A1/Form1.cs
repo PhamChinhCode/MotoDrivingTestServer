@@ -2146,7 +2146,6 @@ namespace THI_HANG_A1
             // formQuanLy.Show();
         }
 
-        private BindingList<ChiTietLoi> dsChiTietLoi = new BindingList<ChiTietLoi>();
         
         private void InsertErrorToDatabase(int sbd, string ten, string xe, string suKien, int diemTru, string chiTiet)
         {
