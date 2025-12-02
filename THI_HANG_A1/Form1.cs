@@ -72,6 +72,7 @@ namespace THI_HANG_A1
             InitializeComponent();
             LoadMotoFromDatabase();
             fxe = new QuanLyXe(xes);
+
             sanList = new List<San>();
             sanList.Add(new San("San 1", "192.168.137.87", 123));
             //fxe.ShowDialog();
@@ -1605,6 +1606,7 @@ namespace THI_HANG_A1
 
         private void kiểmTraKếtNốiXeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            fxe = new QuanLyXe(xes);
             fxe.ShowDialog();
         }
 
@@ -1687,6 +1689,7 @@ namespace THI_HANG_A1
         }
         public void GridDaThi()
         {
+            dgvThi.ContextMenuStrip = mnuShowDaThi;
             lblDangThi.Text = "ĐÃ THI";
             dgvThi.Columns.Clear();
             dgvThi.AutoGenerateColumns = false;
@@ -1879,6 +1882,7 @@ namespace THI_HANG_A1
 
         public void GridThi()
         {
+            dgvThi.ContextMenuStrip= null;
             dgvThi.Columns.Clear();
             dgvThi.AutoGenerateColumns = false;
 
@@ -2011,7 +2015,7 @@ namespace THI_HANG_A1
         {
             lblDangThi.Text = "ĐANG THI";
             GridThi();
-            dgvThi.DataSource = examManager.DanhSachDangThi;
+            dgvThi.DataSource = ds;
         }
 
         private void InsertErrorToDatabase(

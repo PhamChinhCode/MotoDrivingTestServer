@@ -9,25 +9,36 @@ namespace THI_HANG_A1.Forms
     public partial class MotoView : UserControl
     {
         private Moto moto;
+        private int i;
         public MotoView(Moto m)
         {
             InitializeComponent();
             moto = m;
             moto.OnChanged += MotoOnChanged;
+            moto.onImage += MotoOnChanged;
+            moto.onRecvCommand += Moto_onRecvCommand;
+        }
+
+        private void Moto_onRecvCommand()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(showLog));
+            }
+            else
+            {
+                showLog();
+            }
+
+        }
+        private void showLog()
+        {
+            textBox1.AppendText(Convert.ToString(moto.log.Count - 1) + "\t" + moto.log[moto.log.Count - 1].ToString() + Environment.NewLine);
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
         {
-            checkBox2.Text = "SignedLeft";
-            checkBox3.Text = "Engine";
-            checkBox4.Text = "null";
-            checkBox1.Text = "Hall";
-            button1.Text = "Edit";
-            button2.Text = "Connect";
-            button3.Text = "Stop";
-            button4.Text = "Start";
 
-            UpdateUI();
         }
 
 
@@ -46,7 +57,7 @@ namespace THI_HANG_A1.Forms
 
         private void UpdateUI()
         {
-
+            pictureBox1.Image = moto.image;
             label1.Text = moto.Name;
             label2.Text = moto.Ip;
             label3.Text = moto.EncoderCount.ToString();
@@ -126,6 +137,21 @@ namespace THI_HANG_A1.Forms
 
         }
 
+        private void MotoView_Load(object sender, EventArgs e)
+        {
+            checkBox2.Text = "SignedLeft";
+            checkBox3.Text = "Engine";
+            checkBox4.Text = "null";
+            checkBox1.Text = "Hall";
+            button1.Text = "Edit";
+            button2.Text = "Connect";
+            button3.Text = "Stop";
+            button4.Text = "Start";
+            button5.Text = "Image";
+
+            UpdateUI();
+        }
+
         private void button4_Click(object sender, EventArgs e)
         {
             moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
@@ -134,6 +160,11 @@ namespace THI_HANG_A1.Forms
         private void button3_Click(object sender, EventArgs e)
         {
             moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_STOP);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            moto.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET, ConstantKeys.KEY_NULL);
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
@@ -8,11 +11,15 @@ namespace THI_HANG_A1.Models
     public class Moto
     {
         public event Action OnChanged;
+        public event Action onImage;
+        public event Action onRecvCommand;
         public byte Id { get; set; }
         public string Name { set; get; }
 
         public string Ip { set; get; }
         public int Port { set; get; }
+
+        public Bitmap image { set; get; }
         private bool connected;
         public bool Connected
         {
@@ -72,6 +79,9 @@ namespace THI_HANG_A1.Models
         //private FrameCnvert frameConvertor;
         public List<LogMoto> log { get; set; } = new List<LogMoto>();
 
+
+
+
         public Moto(string name, string ip, int port)
         {
             Name = name;
@@ -87,9 +97,10 @@ namespace THI_HANG_A1.Models
             socketConn = new SocketHandler();
         }
 
-        public void Connect()
+        public async Task Connect()
         {
-            bool ok = socketConn.Connect(Ip, Port);
+            //bool ok = socketConn.Connect(Ip, Port);
+            bool ok = await socketConn.ConnectWithTimeout(Ip, Port);
 
             if (!ok)
             {
@@ -97,9 +108,43 @@ namespace THI_HANG_A1.Models
                 return;
             }
             Connected = ok;
-
+            socketConn.OnDataReceivedImage += onRecvImage;
+            socketConn.OnDataReceivedCommand += onRecv;
             socketConn.OnDataReceived += SocketDataHandler;
             socketConn.OnDisconnected += disConnectHandler;
+        }
+        private void onRecvImage(byte[] array)
+        {
+            image = ByteArrayToBitmap(array);
+            onImage?.Invoke();
+        }
+        public Bitmap ByteArrayToBitmap(byte[] bytes)
+        {
+            using (var ms = new MemoryStream(bytes))
+            {
+                return new Bitmap(ms);
+            }
+        }
+        private void onRecv(Command cmd)
+        {
+            log.Add(new LogMoto(cmd.key, cmd.type, cmd.value, DateTime.Now));
+            switch (cmd.key)
+            {
+                case ConstantKeys.ERROR_KEY:
+                    ErrorId = (byte)cmd.value;
+                    break;
+                case ConstantKeys.STATUS_KEY:
+                    Status = (byte)cmd.value;
+                    break;
+                case ConstantKeys.IMAGE_KEY:
+                    break;
+                case ConstantKeys.CONTROL_KEY:
+                    //MessageBox.Show("Moto setted mode :" + Convert.ToString(cmd.value, 16));
+                    break;
+
+            }
+            onRecvCommand?.Invoke();
+
         }
         private void disConnectHandler()
         {
@@ -159,6 +204,11 @@ namespace THI_HANG_A1.Models
                 this.type = type;
                 this.value = value;
                 this.ThoiGian = time;
+            }
+            public override string ToString()
+            {
+                string s = Convert.ToString(key, 16) + "\t" + Convert.ToString(type, 16) + "\t" + Convert.ToString(value, 16) + "\t" + ThoiGian.ToString();
+                return s;
             }
         }
 
