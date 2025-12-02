@@ -1289,7 +1289,7 @@ namespace THI_HANG_A1
             }
             // Vẽ nền trắng cho ô (xóa các nội dung cũ)
             e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
-
+            
             if (ts == null)
             {
                 e.Handled = true;
@@ -1528,8 +1528,6 @@ namespace THI_HANG_A1
             var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
             if (ts == null) return;
 
-            // --- [SỬA QUAN TRỌNG TẠI ĐÂY] ---
-            // Bây giờ mới kích hoạt giờ
             ts.GioBatDau = DateTime.Now;
             ts.TrangThai = "Đang thi";
             // --------------------------------
@@ -1539,6 +1537,8 @@ namespace THI_HANG_A1
             {
                 trangThaiXe[ts.Xe] = TrangThaiXe.DangThi;
             }
+            InsertErrorToDatabase(ts.SoBaoDanh, $"{ts.HoDem} {ts.Ten}", ts.Xe,
+                      "Bắt đầu thi", 0, "Thí sinh bắt đầu bài thi");
 
             Moto moto = xes.FirstOrDefault(m => m.Id == ts.XeObj.Id);
 
@@ -2133,5 +2133,51 @@ namespace THI_HANG_A1
                 action();
         }
 
+        private void quảnLýXeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Tạo mới Form3
+            Form3 formQuanLy = new Form3();
+
+            // Cách 1: Mở dạng hộp thoại (Khuyên dùng)
+            // (Bắt buộc phải đóng Form3 thì mới bấm được Form1 => Tránh lỗi mở nhiều cái)
+            formQuanLy.ShowDialog();
+
+            // Cách 2: Mở song song (Nếu bạn muốn vừa xem Form1 vừa xem Form3)
+            // formQuanLy.Show();
+        }
+
+        private BindingList<ChiTietLoi> dsChiTietLoi = new BindingList<ChiTietLoi>();
+        
+        private void InsertErrorToDatabase(int sbd, string ten, string xe, string suKien, int diemTru, string chiTiet)
+        {
+            string sql = @"INSERT INTO ChiTietLoi (SoBaoDanh, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet)
+                   VALUES (@SBD, @Ten, @Xe, GETDATE(), @SuKien, @DiemTru, @ChiTiet)";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SBD", sbd);
+                    cmd.Parameters.AddWithValue("@Ten", ten);
+                    cmd.Parameters.AddWithValue("@Xe", xe);
+                    cmd.Parameters.AddWithValue("@SuKien", suKien);
+                    cmd.Parameters.AddWithValue("@DiemTru", diemTru);
+                    cmd.Parameters.AddWithValue("@ChiTiet", chiTiet);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            // Thêm vào dgv
+            dsChiTietLoi.Add(new ChiTietLoi()
+            {
+                ThoiGian = DateTime.Now,
+                SuKien = suKien,
+                DiemTru = diemTru,
+                ChiTiet = chiTiet
+            });
+        }
+
     }
+
 }
