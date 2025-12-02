@@ -1,12 +1,4 @@
-using System;
-using System.Drawing;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Task = System.Threading.Tasks.Task;
+﻿using Task = System.Threading.Tasks.Task;
 
 namespace THI_HANG_A1.Managers
 {
