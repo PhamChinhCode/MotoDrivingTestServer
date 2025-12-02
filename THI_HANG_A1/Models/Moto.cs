@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -167,7 +168,6 @@ namespace THI_HANG_A1.Models
         }
         private void SocketDataHandler(byte[] buffer, int len)
         {
-            //Status = buffer[0];
             //byte mid = buffer[3];
             //byte mkey = buffer[1];
             //byte mtype = buffer[2];

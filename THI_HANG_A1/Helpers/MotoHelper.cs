@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 
 namespace THI_HANG_A1.Helpers
@@ -9,27 +10,21 @@ namespace THI_HANG_A1.Helpers
         {
             switch (moto.Status)
             {
-                case 0xC1:   // READY
-                    return Color.LightGreen;
+                case ConstantKeys.STATUS_FREE:
+                    return Color.LightGreen;     // Xe rảnh → xanh
 
-                case 0xC2:   // RUNNING
-                    return Color.Orange;
+                case ConstantKeys.STATUS_READY:
+                    return Color.Gold;           // Xe đã cấp xe → vàng
 
-                case 0xC3:   // IDLE (rảnh)
-                    return Color.LightGray;
-                case 0xC4:   // contest1
-                    return Color.Orange;
-                case 0xC5:   // contest2
-                    return Color.Orange;
-                case 0xC6:   // contest3
-                    return Color.Orange;
-                case 0xC7:   // contest4
+                case ConstantKeys.STATUS_TESTING:
+                case ConstantKeys.STATUS_CONTEST1:
+                case ConstantKeys.STATUS_CONTEST2:
+                case ConstantKeys.STATUS_CONTEST3:
+                case ConstantKeys.STATUS_CONTEST4:
                     return Color.Orange;
                 default:
                     return Color.White;
             }
         }
-
     }
-
 }

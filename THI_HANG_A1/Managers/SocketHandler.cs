@@ -277,6 +277,7 @@ namespace THI_HANG_A1.Managers
         public const byte CONTROL_START = 0xA1;     // bắt đầu thi
         public const byte CONTROL_STOP = 0xA2;      // dừng bài thi
         public const byte CONTROL_READY = 0xA3;     // sẵn sàng thi
+        public const byte MARK_KEY = 0xB0;     // điểm còn lại
 
         // Error
         public const byte ERROR_KEY = 0xE0;
