@@ -78,10 +78,6 @@ namespace THI_HANG_A1.Models
         public SocketHandler socketConn;
         //private FrameCnvert frameConvertor;
         public List<LogMoto> log { get; set; } = new List<LogMoto>();
-
-
-
-
         public Moto(string name, string ip, int port)
         {
             Name = name;
