@@ -364,7 +364,7 @@
             this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
             
             this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
-            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 2
+            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 2);
             this.kếtNốiToolStripMenuItem.Text = "Kết nối";
             // 
             // kiểmTraKếtNốiXeToolStripMenuItem
