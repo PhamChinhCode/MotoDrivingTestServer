@@ -17,7 +17,6 @@ using THI_HANG_A1.Forms;
 using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace THI_HANG_A1
@@ -142,7 +141,7 @@ namespace THI_HANG_A1
             if (dgvchitietloi.Columns["DiemTru"] != null)
             {
                 dgvchitietloi.Columns["DiemTru"].HeaderText = "Điểm trừ";
-                dgvchitietloi.Columns["DiemTru"].Width = 80; 
+                dgvchitietloi.Columns["DiemTru"].Width = 80;
                 dgvchitietloi.Columns["DiemTru"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
 
@@ -337,7 +336,7 @@ namespace THI_HANG_A1
         {
             foreach (DataGridViewRow row in dgvThi.Rows)
             {
-                if (row.DataBoundItem is ThiSinhDangThi ts) 
+                if (row.DataBoundItem is ThiSinhDangThi ts)
                 {
                     var cell = row.Cells["colThoiGian"];
 
@@ -1289,7 +1288,7 @@ namespace THI_HANG_A1
             }
             // Vẽ nền trắng cho ô (xóa các nội dung cũ)
             e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
-            
+
             if (ts == null)
             {
                 e.Handled = true;
@@ -1503,7 +1502,7 @@ namespace THI_HANG_A1
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.id;
             int diemTru = err.diemTru;
-            
+
             InsertErrorToDatabase(
                 ts.SoBaoDanh,
                 ts.SessionID,
@@ -1659,7 +1658,7 @@ namespace THI_HANG_A1
             = new Dictionary<string, TrangThaiXe>();
 
         // Trạng thái xe
-        
+
         private BindingList<ChiTietLoi> dsChiTietLoi = new BindingList<ChiTietLoi>();
 
         private void kiểmTraKếtNốiXeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1940,7 +1939,7 @@ namespace THI_HANG_A1
 
         public void GridThi()
         {
-            dgvThi.ContextMenuStrip= null;
+            dgvThi.ContextMenuStrip = null;
             dgvThi.Columns.Clear();
             dgvThi.AutoGenerateColumns = false;
 
@@ -2146,7 +2145,7 @@ namespace THI_HANG_A1
             // formQuanLy.Show();
         }
 
-        
+
         private void InsertErrorToDatabase(int sbd, string ten, string xe, string suKien, int diemTru, string chiTiet)
         {
             string sql = @"INSERT INTO ChiTietLoi (SoBaoDanh, Ten, Xe, ThoiGian, SuKien, DiemTru, ChiTiet)
