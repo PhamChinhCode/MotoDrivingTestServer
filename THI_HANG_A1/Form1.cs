@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -16,6 +17,7 @@ using THI_HANG_A1.Forms;
 using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace THI_HANG_A1
@@ -1022,6 +1024,8 @@ namespace THI_HANG_A1
             // ==========================
             //  GẮN SỰ KIỆN THAY ĐỔI TỪ XE
             // ==========================
+
+
             xeChon.OnChanged += () =>
             {
                 byte st = xeChon.Status;
@@ -1106,6 +1110,60 @@ namespace THI_HANG_A1
 
                 SafeUI(() => dgvThi.Refresh());
             };
+
+
+            // đọc lỗi từ sân
+            San san = sanList[0];
+            san.OnChanged += () =>
+            {
+                int baiThiId = BaiThiHelper.GetId(xeChon.Status);
+                string baiThiMoTa = BaiThiHelper.GetName(xeChon.Status);
+
+                // Map sensor theo bài thi
+                List<(string name, bool value)> sensors = new List<(string name, bool value)>();
+
+                switch (xeChon.Status)
+                {
+                    case ConstantKeys.STATUS_CONTEST1:
+                        sensors.Add(("Sensor1", san.Sensor1));
+                        sensors.Add(("Sensor2", san.Sensor2));
+                        sensors.Add(("Sensor3", san.Sensor3));
+                        break;
+
+                    case ConstantKeys.STATUS_CONTEST2:
+                    case ConstantKeys.STATUS_CONTEST3:
+                    case ConstantKeys.STATUS_CONTEST4:
+                        sensors.Add(("Sensor4", san.Sensor4));
+                        sensors.Add(("Sensor5", san.Sensor5));
+                        break;
+                }
+
+                // Tìm sensor nào đang bật
+                var triggered = sensors.Where(s => s.value).ToList();
+
+                if (triggered.Any())
+                {
+                    foreach (var sensor in triggered)
+                    {
+                        string chiTietLoi = $"Đè vạch tại {sensor.name} – Bài: {baiThiMoTa}";
+
+                        Debug.WriteLine($"[DEBUG] Lỗi {sensor.name}, bài: {baiThiMoTa}");
+
+                        InsertErrorToDatabase(
+                            d.SoBaoDanh,
+                            d.SessionID,
+                            $"{d.HoDem} {d.Ten}",
+                            d.Xe,
+                            chiTietLoi,
+                            5,
+                            chiTietLoi,
+                            null,
+                            baiThiId
+                        );
+                    }
+                }
+            };
+
 
             // 6. Cập nhật vào danh sách và Grid
             ds.Add(d);
