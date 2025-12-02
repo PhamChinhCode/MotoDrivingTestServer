@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -12,6 +11,7 @@ namespace THI_HANG_A1.Models
     {
         public event Action OnChanged;
         public event Action onImage;
+        public event Action onRecvCommand;
         public byte Id { get; set; }
         public string Name { set; get; }
 
@@ -108,7 +108,7 @@ namespace THI_HANG_A1.Models
             }
             Connected = ok;
             socketConn.OnDataReceivedImage += onRecvImage;
-            socketConn.OnDataReceivedCommand += onRecvCommand;
+            socketConn.OnDataReceivedCommand += onRecv;
             socketConn.OnDataReceived += SocketDataHandler;
             socketConn.OnDisconnected += disConnectHandler;
         }
@@ -124,7 +124,7 @@ namespace THI_HANG_A1.Models
                 return new Bitmap(ms);
             }
         }
-        private void onRecvCommand(Command cmd)
+        private void onRecv(Command cmd)
         {
             log.Add(new LogMoto(cmd.key, cmd.type, cmd.value, DateTime.Now));
             switch (cmd.key)
@@ -138,10 +138,11 @@ namespace THI_HANG_A1.Models
                 case ConstantKeys.IMAGE_KEY:
                     break;
                 case ConstantKeys.CONTROL_KEY:
-                    MessageBox.Show("Moto seted mode :" + Convert.ToString(cmd.value, 16));
+                    //MessageBox.Show("Moto setted mode :" + Convert.ToString(cmd.value, 16));
                     break;
 
             }
+            onRecvCommand?.Invoke();
 
         }
         private void disConnectHandler()
@@ -203,6 +204,11 @@ namespace THI_HANG_A1.Models
                 this.type = type;
                 this.value = value;
                 this.ThoiGian = time;
+            }
+            public override string ToString()
+            {
+                string s = Convert.ToString(key, 16) + "\t" + Convert.ToString(type, 16) + "\t" + Convert.ToString(value, 16) + "\t" + ThoiGian.ToString();
+                return s;
             }
         }
 

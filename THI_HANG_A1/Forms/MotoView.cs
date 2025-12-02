@@ -9,12 +9,31 @@ namespace THI_HANG_A1.Forms
     public partial class MotoView : UserControl
     {
         private Moto moto;
+        private int i;
         public MotoView(Moto m)
         {
             InitializeComponent();
             moto = m;
             moto.OnChanged += MotoOnChanged;
             moto.onImage += MotoOnChanged;
+            moto.onRecvCommand += Moto_onRecvCommand;
+        }
+
+        private void Moto_onRecvCommand()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(showLog));
+            }
+            else
+            {
+                showLog();
+            }
+
+        }
+        private void showLog()
+        {
+            textBox1.AppendText(Convert.ToString(moto.log.Count - 1) + "\t" + moto.log[moto.log.Count - 1].ToString() + Environment.NewLine);
         }
 
         private void UserControl1_Load(object sender, EventArgs e)

@@ -175,10 +175,13 @@ namespace THI_HANG_A1.Managers
                 }
                 if (data != ConstantKeys.BYTE_START) return;
                 buffer = ReadExact(_stream, 9);
+
                 if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
+
                 cmd.key = buffer[0];
                 cmd.type = buffer[1];
                 cmd.value = (UInt32)buffer[3] << 24 | (UInt32)buffer[4] << 16 | (UInt32)buffer[5] << 8 | (UInt32)buffer[6];
+
                 if (buffer[8] == ConstantKeys.BYTE_PAYLOAD && buffer[0] == ConstantKeys.IMAGE_KEY)
                 {
                     byte[] image = new byte[cmd.value];
