@@ -29,6 +29,7 @@ namespace THI_HANG_A1
             this.lblQuocHieu = new System.Windows.Forms.Label();
             this.lblTDTDH = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.picAnhChanDung = new System.Windows.Forms.PictureBox();
             this.lblTongThoiGian = new System.Windows.Forms.Label();
             this.lblThoiGianKT = new System.Windows.Forms.Label();
@@ -85,7 +86,6 @@ namespace THI_HANG_A1
             // flowMain
             // 
             this.flowMain.AutoScroll = true;
-            this.flowMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowMain.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.flowMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowMain.Controls.Add(this.panelHeader);
@@ -184,6 +184,7 @@ namespace THI_HANG_A1
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.panel1);
             this.panel2.Controls.Add(this.picAnhChanDung);
             this.panel2.Controls.Add(this.lblTongThoiGian);
             this.panel2.Controls.Add(this.lblThoiGianKT);
@@ -214,11 +215,18 @@ namespace THI_HANG_A1
             this.panel2.Size = new System.Drawing.Size(1014, 152);
             this.panel2.TabIndex = 16;
             // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(3, 338);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 40);
+            this.panel1.TabIndex = 21;
+            // 
             // picAnhChanDung
             // 
             this.picAnhChanDung.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picAnhChanDung.Image = global::THI_HANG_A1.Properties.Resources.anh_4;
-            this.picAnhChanDung.Location = new System.Drawing.Point(8, 10);
+            this.picAnhChanDung.Location = new System.Drawing.Point(10, 10);
             this.picAnhChanDung.Name = "picAnhChanDung";
             this.picAnhChanDung.Size = new System.Drawing.Size(96, 129);
             this.picAnhChanDung.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -467,21 +475,23 @@ namespace THI_HANG_A1
             // 
             // tblChiTietLoi
             // 
+            this.tblChiTietLoi.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tblChiTietLoi.AutoSize = true;
             this.tblChiTietLoi.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tblChiTietLoi.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblChiTietLoi.ColumnCount = 3;
-            this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 550F));
-            this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
-            this.tblChiTietLoi.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tblChiTietLoi.Location = new System.Drawing.Point(16, 330);
             this.tblChiTietLoi.Margin = new System.Windows.Forms.Padding(16, 3, 3, 3);
             this.tblChiTietLoi.Name = "tblChiTietLoi";
             this.tblChiTietLoi.RowCount = 1;
             this.tblChiTietLoi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblChiTietLoi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblChiTietLoi.Size = new System.Drawing.Size(994, 2);
+            this.tblChiTietLoi.Size = new System.Drawing.Size(64, 2);
             this.tblChiTietLoi.TabIndex = 17;
             // 
             // panelFooter
@@ -639,18 +649,6 @@ namespace THI_HANG_A1
 
         private System.Windows.Forms.Panel pnlPreview;
         private FlowLayoutPanel flowMain;
-        private Panel panelFooter;
-        private Button btnInPDF;
-        private Label lblKhongDat;
-        private Label lblDat;
-        private Label lblSoDiem;
-        private Label label19;
-        private Label label25;
-        private Label label23;
-        private Label label15;
-        private Label label11;
-        private Label label7;
-        private TableLayoutPanel tblChiTietLoi;
         private Panel panel2;
         private Label lblTongThoiGian;
         private Label lblThoiGianKT;
@@ -684,7 +682,20 @@ namespace THI_HANG_A1
         private Label label5;
         private Label lblQuocHieu;
         private Label lblTDTDH;
-        private Panel panelInPDF;
         private PictureBox picAnhChanDung;
+        private Panel panel1;
+        private TableLayoutPanel tblChiTietLoi;
+        private Panel panelFooter;
+        private Label lblKhongDat;
+        private Label lblDat;
+        private Label lblSoDiem;
+        private Label label19;
+        private Label label25;
+        private Label label23;
+        private Label label15;
+        private Label label11;
+        private Label label7;
+        private Panel panelInPDF;
+        private Button btnInPDF;
     }
 }
