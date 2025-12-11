@@ -61,6 +61,7 @@
             this.giớiThiệuChươngTrìnhToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kếtNốiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kiểmTraKếtNốiXeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quảnLýXeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kiemtraketnoisan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
@@ -357,25 +358,30 @@
             // 
             this.kếtNốiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.kiểmTraKếtNốiXeToolStripMenuItem,
+            this.quảnLýXeToolStripMenuItem,
             this.kiemtraketnoisan});
             this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
-            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
-            
-            this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
-            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 2);
+            this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.kếtNốiToolStripMenuItem.Text = "Kết nối";
             // 
             // kiểmTraKếtNốiXeToolStripMenuItem
             // 
             this.kiểmTraKếtNốiXeToolStripMenuItem.Name = "kiểmTraKếtNốiXeToolStripMenuItem";
-            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.kiểmTraKếtNốiXeToolStripMenuItem.Text = "Kiểm tra kết nối xe";
             this.kiểmTraKếtNốiXeToolStripMenuItem.Click += new System.EventHandler(this.kiểmTraKếtNốiXeToolStripMenuItem_Click);
+            // 
+            // quảnLýXeToolStripMenuItem
+            // 
+            this.quảnLýXeToolStripMenuItem.Name = "quảnLýXeToolStripMenuItem";
+            this.quảnLýXeToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.quảnLýXeToolStripMenuItem.Text = "Quản lý xe";
+            this.quảnLýXeToolStripMenuItem.Click += new System.EventHandler(this.quảnLýXeToolStripMenuItem_Click);
             // 
             // kiemtraketnoisan
             // 
             this.kiemtraketnoisan.Name = "kiemtraketnoisan";
-            this.kiemtraketnoisan.Size = new System.Drawing.Size(180, 22);
+            this.kiemtraketnoisan.Size = new System.Drawing.Size(178, 22);
             this.kiemtraketnoisan.Text = "Kiểm tra kết nối sân";
             this.kiemtraketnoisan.Click += new System.EventHandler(this.kiemtraketnoisan_Click);
             // 
@@ -397,7 +403,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(1340, 27);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
-            //this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
             // 
             // toolStripButton1
             // 
@@ -556,6 +561,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pictureBox1.Image = global::THI_HANG_A1.Properties.Resources.cac_di_vong_so_8_khong_cham_vach_1;
@@ -684,7 +690,7 @@
             this.dgvThi.RowTemplate.Height = 24;
             this.dgvThi.Size = new System.Drawing.Size(1007, 173);
             this.dgvThi.TabIndex = 2;
-            this.dgvThi.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvThi_CellContentClick);
+            this.dgvThi.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvThi_CellClick);
             // 
             // lblDangThi
             // 
@@ -1294,6 +1300,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem quảnLýXeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem kiemtraketnoisan;
         private System.Windows.Forms.Panel panelOverlay;
         private System.Windows.Forms.PictureBox picLoadingg;

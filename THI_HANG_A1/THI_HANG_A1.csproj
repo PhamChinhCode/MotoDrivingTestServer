@@ -183,6 +183,7 @@
     <Compile Include="Khaibao\ExamLogType.cs" />
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Managers\ExamDataManager.cs" />
+    <Compile Include="Managers\ImageManager.cs" />
     <Compile Include="Managers\SerialManager.cs" />
     <Compile Include="Managers\SocketHandler.cs" />
     <Compile Include="MCDV2A1DataSet.Designer.cs">
@@ -196,6 +197,7 @@
     <Compile Include="Models\San.cs" />
     <Compile Include="Models\ThiSinh.cs" />
     <Compile Include="Models\ThiSinhDangThi.cs" />
+    <Compile Include="Models\ThiSinhDaThi.cs" />
     <Compile Include="Models\ThiSinhXml.cs" />
     <Compile Include="Models\Xe.cs" />
     <Compile Include="Program.cs" />

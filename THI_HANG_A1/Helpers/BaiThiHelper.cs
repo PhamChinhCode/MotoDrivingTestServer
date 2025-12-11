@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
+using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
 
 namespace THI_HANG_A1.Helpers
@@ -26,7 +27,7 @@ namespace THI_HANG_A1.Helpers
             using (SqlConnection conn = new SqlConnection(cnn))
             {
                 conn.Open();
-                string sql = "SELECT StatusCode, ID, TenBai FROM BaiThi";
+                string sql = "SELECT StatusCode, ID, TenBai FROM BaiThi WHERE StatusCode = 193 OR StatusCode BETWEEN 196 AND 199;";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 using (SqlDataReader rd = cmd.ExecuteReader())
@@ -74,16 +75,13 @@ namespace THI_HANG_A1.Helpers
                 ts.BaiThiHienTaiID = baiThiId;
         }
 
-        public static bool IsInValidContest(byte st)
-        {
-            return st == 193 || st == 194 || st == 196 || st == 197 || st == 198 || st == 199;
-        }
         public static bool IsInValidContest1_4(byte st)
         {
-            return st == 196 || st == 197 || st == 198 || st == 199;
+            return st == ConstantKeys.STATUS_CONTEST1 ||
+                   st == ConstantKeys.STATUS_CONTEST2 ||
+                   st == ConstantKeys.STATUS_CONTEST3 ||
+                   st == ConstantKeys.STATUS_CONTEST4;
         }
-
-
 
 
         public enum TrangThaiTS

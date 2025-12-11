@@ -30,7 +30,6 @@ namespace THI_HANG_A1
             this.lblTDTDH = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.picAnhChanDung = new System.Windows.Forms.PictureBox();
             this.lblTongThoiGian = new System.Windows.Forms.Label();
             this.lblThoiGianKT = new System.Windows.Forms.Label();
             this.lblLanThi = new System.Windows.Forms.Label();
@@ -55,6 +54,7 @@ namespace THI_HANG_A1
             this.label22 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.flowImages = new System.Windows.Forms.FlowLayoutPanel();
             this.tblChiTietLoi = new System.Windows.Forms.TableLayoutPanel();
             this.panelFooter = new System.Windows.Forms.Panel();
             this.lblKhongDat = new System.Windows.Forms.Label();
@@ -71,7 +71,6 @@ namespace THI_HANG_A1
             this.flowMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picAnhChanDung)).BeginInit();
             this.panelFooter.SuspendLayout();
             this.panelInPDF.SuspendLayout();
             this.SuspendLayout();
@@ -90,12 +89,13 @@ namespace THI_HANG_A1
             this.flowMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowMain.Controls.Add(this.panelHeader);
             this.flowMain.Controls.Add(this.panel2);
+            this.flowMain.Controls.Add(this.flowImages);
             this.flowMain.Controls.Add(this.tblChiTietLoi);
             this.flowMain.Controls.Add(this.panelFooter);
             this.flowMain.Controls.Add(this.panelInPDF);
             this.flowMain.Location = new System.Drawing.Point(50, 44);
             this.flowMain.Name = "flowMain";
-            this.flowMain.Size = new System.Drawing.Size(1023, 768);
+            this.flowMain.Size = new System.Drawing.Size(1023, 772);
             this.flowMain.TabIndex = 0;
             // 
             // panelHeader
@@ -185,7 +185,6 @@ namespace THI_HANG_A1
             // panel2
             // 
             this.panel2.Controls.Add(this.panel1);
-            this.panel2.Controls.Add(this.picAnhChanDung);
             this.panel2.Controls.Add(this.lblTongThoiGian);
             this.panel2.Controls.Add(this.lblThoiGianKT);
             this.panel2.Controls.Add(this.lblLanThi);
@@ -222,22 +221,11 @@ namespace THI_HANG_A1
             this.panel1.Size = new System.Drawing.Size(200, 40);
             this.panel1.TabIndex = 21;
             // 
-            // picAnhChanDung
-            // 
-            this.picAnhChanDung.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picAnhChanDung.Image = global::THI_HANG_A1.Properties.Resources.anh_4;
-            this.picAnhChanDung.Location = new System.Drawing.Point(10, 10);
-            this.picAnhChanDung.Name = "picAnhChanDung";
-            this.picAnhChanDung.Size = new System.Drawing.Size(96, 129);
-            this.picAnhChanDung.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picAnhChanDung.TabIndex = 1;
-            this.picAnhChanDung.TabStop = false;
-            // 
             // lblTongThoiGian
             // 
             this.lblTongThoiGian.AutoSize = true;
             this.lblTongThoiGian.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTongThoiGian.Location = new System.Drawing.Point(923, 116);
+            this.lblTongThoiGian.Location = new System.Drawing.Point(898, 117);
             this.lblTongThoiGian.Name = "lblTongThoiGian";
             this.lblTongThoiGian.Size = new System.Drawing.Size(44, 16);
             this.lblTongThoiGian.TabIndex = 0;
@@ -247,7 +235,7 @@ namespace THI_HANG_A1
             // 
             this.lblThoiGianKT.AutoSize = true;
             this.lblThoiGianKT.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblThoiGianKT.Location = new System.Drawing.Point(626, 116);
+            this.lblThoiGianKT.Location = new System.Drawing.Point(539, 117);
             this.lblThoiGianKT.Name = "lblThoiGianKT";
             this.lblThoiGianKT.Size = new System.Drawing.Size(44, 16);
             this.lblThoiGianKT.TabIndex = 0;
@@ -257,7 +245,7 @@ namespace THI_HANG_A1
             // 
             this.lblLanThi.AutoSize = true;
             this.lblLanThi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLanThi.Location = new System.Drawing.Point(251, 116);
+            this.lblLanThi.Location = new System.Drawing.Point(94, 117);
             this.lblLanThi.Name = "lblLanThi";
             this.lblLanThi.Size = new System.Drawing.Size(44, 16);
             this.lblLanThi.TabIndex = 0;
@@ -267,7 +255,7 @@ namespace THI_HANG_A1
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(802, 116);
+            this.label28.Location = new System.Drawing.Point(777, 117);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(110, 16);
             this.label28.TabIndex = 0;
@@ -277,7 +265,7 @@ namespace THI_HANG_A1
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(467, 116);
+            this.label20.Location = new System.Drawing.Point(380, 117);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(137, 16);
             this.label20.TabIndex = 0;
@@ -287,7 +275,7 @@ namespace THI_HANG_A1
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(162, 116);
+            this.label12.Location = new System.Drawing.Point(5, 117);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(56, 16);
             this.label12.TabIndex = 0;
@@ -297,7 +285,7 @@ namespace THI_HANG_A1
             // 
             this.lblSoXe.AutoSize = true;
             this.lblSoXe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSoXe.Location = new System.Drawing.Point(923, 84);
+            this.lblSoXe.Location = new System.Drawing.Point(898, 85);
             this.lblSoXe.Name = "lblSoXe";
             this.lblSoXe.Size = new System.Drawing.Size(44, 16);
             this.lblSoXe.TabIndex = 0;
@@ -307,7 +295,7 @@ namespace THI_HANG_A1
             // 
             this.lblThoiGianBD.AutoSize = true;
             this.lblThoiGianBD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblThoiGianBD.Location = new System.Drawing.Point(626, 84);
+            this.lblThoiGianBD.Location = new System.Drawing.Point(539, 85);
             this.lblThoiGianBD.Name = "lblThoiGianBD";
             this.lblThoiGianBD.Size = new System.Drawing.Size(44, 16);
             this.lblThoiGianBD.TabIndex = 0;
@@ -317,7 +305,7 @@ namespace THI_HANG_A1
             // 
             this.lblSoCCCD.AutoSize = true;
             this.lblSoCCCD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSoCCCD.Location = new System.Drawing.Point(251, 84);
+            this.lblSoCCCD.Location = new System.Drawing.Point(94, 85);
             this.lblSoCCCD.Name = "lblSoCCCD";
             this.lblSoCCCD.Size = new System.Drawing.Size(44, 16);
             this.lblSoCCCD.TabIndex = 0;
@@ -327,7 +315,7 @@ namespace THI_HANG_A1
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(802, 84);
+            this.label26.Location = new System.Drawing.Point(777, 85);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(112, 16);
             this.label26.TabIndex = 0;
@@ -337,7 +325,7 @@ namespace THI_HANG_A1
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(467, 84);
+            this.label18.Location = new System.Drawing.Point(380, 85);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(136, 16);
             this.label18.TabIndex = 0;
@@ -347,7 +335,7 @@ namespace THI_HANG_A1
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(162, 84);
+            this.label10.Location = new System.Drawing.Point(5, 85);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(75, 16);
             this.label10.TabIndex = 0;
@@ -357,7 +345,7 @@ namespace THI_HANG_A1
             // 
             this.lblSBD.AutoSize = true;
             this.lblSBD.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSBD.Location = new System.Drawing.Point(923, 51);
+            this.lblSBD.Location = new System.Drawing.Point(898, 52);
             this.lblSBD.Name = "lblSBD";
             this.lblSBD.Size = new System.Drawing.Size(44, 16);
             this.lblSBD.TabIndex = 0;
@@ -367,7 +355,7 @@ namespace THI_HANG_A1
             // 
             this.lblNgaySH.AutoSize = true;
             this.lblNgaySH.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNgaySH.Location = new System.Drawing.Point(626, 51);
+            this.lblNgaySH.Location = new System.Drawing.Point(539, 52);
             this.lblNgaySH.Name = "lblNgaySH";
             this.lblNgaySH.Size = new System.Drawing.Size(44, 16);
             this.lblNgaySH.TabIndex = 0;
@@ -377,7 +365,7 @@ namespace THI_HANG_A1
             // 
             this.lbNgaySinh.AutoSize = true;
             this.lbNgaySinh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbNgaySinh.Location = new System.Drawing.Point(251, 51);
+            this.lbNgaySinh.Location = new System.Drawing.Point(94, 52);
             this.lbNgaySinh.Name = "lbNgaySinh";
             this.lbNgaySinh.Size = new System.Drawing.Size(44, 16);
             this.lbNgaySinh.TabIndex = 0;
@@ -387,7 +375,7 @@ namespace THI_HANG_A1
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(802, 51);
+            this.label24.Location = new System.Drawing.Point(777, 52);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(99, 16);
             this.label24.TabIndex = 0;
@@ -397,7 +385,7 @@ namespace THI_HANG_A1
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(467, 51);
+            this.label16.Location = new System.Drawing.Point(380, 52);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(110, 16);
             this.label16.TabIndex = 0;
@@ -407,7 +395,7 @@ namespace THI_HANG_A1
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(162, 51);
+            this.label8.Location = new System.Drawing.Point(5, 52);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 16);
             this.label8.TabIndex = 0;
@@ -417,7 +405,7 @@ namespace THI_HANG_A1
             // 
             this.lblHang.AutoSize = true;
             this.lblHang.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHang.Location = new System.Drawing.Point(923, 20);
+            this.lblHang.Location = new System.Drawing.Point(898, 21);
             this.lblHang.Name = "lblHang";
             this.lblHang.Size = new System.Drawing.Size(44, 16);
             this.lblHang.TabIndex = 0;
@@ -427,7 +415,7 @@ namespace THI_HANG_A1
             // 
             this.lblKhoaSH.AutoSize = true;
             this.lblKhoaSH.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblKhoaSH.Location = new System.Drawing.Point(626, 20);
+            this.lblKhoaSH.Location = new System.Drawing.Point(539, 21);
             this.lblKhoaSH.Name = "lblKhoaSH";
             this.lblKhoaSH.Size = new System.Drawing.Size(44, 16);
             this.lblKhoaSH.TabIndex = 0;
@@ -436,10 +424,10 @@ namespace THI_HANG_A1
             // lblHoTen
             // 
             this.lblHoTen.AutoSize = true;
-            this.lblHoTen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHoTen.Location = new System.Drawing.Point(251, 20);
+            this.lblHoTen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHoTen.Location = new System.Drawing.Point(94, 21);
             this.lblHoTen.Name = "lblHoTen";
-            this.lblHoTen.Size = new System.Drawing.Size(44, 16);
+            this.lblHoTen.Size = new System.Drawing.Size(50, 16);
             this.lblHoTen.TabIndex = 0;
             this.lblHoTen.Text = "label6";
             // 
@@ -447,7 +435,7 @@ namespace THI_HANG_A1
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(802, 20);
+            this.label22.Location = new System.Drawing.Point(777, 21);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(48, 16);
             this.label22.TabIndex = 0;
@@ -457,7 +445,7 @@ namespace THI_HANG_A1
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(467, 20);
+            this.label14.Location = new System.Drawing.Point(380, 21);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(108, 16);
             this.label14.TabIndex = 0;
@@ -467,11 +455,21 @@ namespace THI_HANG_A1
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(162, 20);
+            this.label6.Location = new System.Drawing.Point(5, 21);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(77, 16);
             this.label6.TabIndex = 0;
             this.label6.Text = "Họ và tên:";
+            // 
+            // flowImages
+            // 
+            this.flowImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowImages.Location = new System.Drawing.Point(3, 330);
+            this.flowImages.Name = "flowImages";
+            this.flowImages.Padding = new System.Windows.Forms.Padding(30, 0, 30, 0);
+            this.flowImages.Size = new System.Drawing.Size(1014, 147);
+            this.flowImages.TabIndex = 20;
+            this.flowImages.WrapContents = false;
             // 
             // tblChiTietLoi
             // 
@@ -485,14 +483,14 @@ namespace THI_HANG_A1
             this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 550F));
             this.tblChiTietLoi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
-            this.tblChiTietLoi.Location = new System.Drawing.Point(16, 330);
-            this.tblChiTietLoi.Margin = new System.Windows.Forms.Padding(16, 3, 3, 3);
+            this.tblChiTietLoi.Location = new System.Drawing.Point(20, 483);
+            this.tblChiTietLoi.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
             this.tblChiTietLoi.Name = "tblChiTietLoi";
             this.tblChiTietLoi.RowCount = 1;
             this.tblChiTietLoi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblChiTietLoi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblChiTietLoi.Size = new System.Drawing.Size(64, 2);
-            this.tblChiTietLoi.TabIndex = 17;
+            this.tblChiTietLoi.Size = new System.Drawing.Size(974, 2);
+            this.tblChiTietLoi.TabIndex = 24;
             // 
             // panelFooter
             // 
@@ -505,10 +503,10 @@ namespace THI_HANG_A1
             this.panelFooter.Controls.Add(this.label15);
             this.panelFooter.Controls.Add(this.label11);
             this.panelFooter.Controls.Add(this.label7);
-            this.panelFooter.Location = new System.Drawing.Point(3, 338);
+            this.panelFooter.Location = new System.Drawing.Point(3, 491);
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Size = new System.Drawing.Size(1014, 192);
-            this.panelFooter.TabIndex = 18;
+            this.panelFooter.TabIndex = 25;
             // 
             // lblKhongDat
             // 
@@ -603,10 +601,10 @@ namespace THI_HANG_A1
             // panelInPDF
             // 
             this.panelInPDF.Controls.Add(this.btnInPDF);
-            this.panelInPDF.Location = new System.Drawing.Point(3, 536);
+            this.panelInPDF.Location = new System.Drawing.Point(3, 689);
             this.panelInPDF.Name = "panelInPDF";
             this.panelInPDF.Size = new System.Drawing.Size(1014, 76);
-            this.panelInPDF.TabIndex = 20;
+            this.panelInPDF.TabIndex = 26;
             // 
             // btnInPDF
             // 
@@ -625,7 +623,7 @@ namespace THI_HANG_A1
             // FormInKetQua
             // 
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1129, 862);
+            this.ClientSize = new System.Drawing.Size(1126, 862);
             this.Controls.Add(this.flowMain);
             this.Name = "FormInKetQua";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -637,7 +635,6 @@ namespace THI_HANG_A1
             this.panelHeader.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picAnhChanDung)).EndInit();
             this.panelFooter.ResumeLayout(false);
             this.panelFooter.PerformLayout();
             this.panelInPDF.ResumeLayout(false);
@@ -682,8 +679,8 @@ namespace THI_HANG_A1
         private Label label5;
         private Label lblQuocHieu;
         private Label lblTDTDH;
-        private PictureBox picAnhChanDung;
         private Panel panel1;
+        private FlowLayoutPanel flowImages;
         private TableLayoutPanel tblChiTietLoi;
         private Panel panelFooter;
         private Label lblKhongDat;
