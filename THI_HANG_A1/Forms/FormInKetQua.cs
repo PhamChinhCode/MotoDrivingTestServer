@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using THI_HANG_A1.Helpers;
 using Color = System.Drawing.Color;
+using Image = System.Drawing.Image;
 
 namespace THI_HANG_A1
 {
@@ -23,6 +24,8 @@ namespace THI_HANG_A1
         private int _sessionId;
         private DataTable _thongTin;
         private DataTable _chiTietLoi;
+        private List<Image> _imgs;
+
 
         public FormInKetQua(int sessionId)
         {
@@ -33,7 +36,8 @@ namespace THI_HANG_A1
         private void LoadData()
         {
             _thongTin = LoadThongTinThiSinhPrint(_sessionId);
-            _chiTietLoi = LoadChiTietLoi(_sessionId);  
+            _chiTietLoi = LoadChiTietLoi(_sessionId);
+            _imgs = LoadAllImages(_sessionId);
 
             if (_thongTin.Rows.Count == 0)
             {
@@ -42,24 +46,52 @@ namespace THI_HANG_A1
                 return;
             }
             BindInfo();
+            GeneratePictureBoxes();
             BindChiTietLoi();
         }
+        private void GeneratePictureBoxes()
+        {
+            flowImages.Controls.Clear();
+            foreach (var img in _imgs)
+            {
+                PictureBox pb = new PictureBox();
+                pb.Width = 96;
+                pb.Height = 130;
+                pb.BackColor = Color.White;
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                // Cách nhau 40px (40px margin bên phải)
+                pb.Margin = new Padding(0, 0, 40, 0);
+
+                pb.Image = img;
+
+                flowImages.Controls.Add(pb);
+            }
+            CenterFlowImages();
+        }
+
+        private void CenterFlowImages()
+        {
+            if (flowImages.Controls.Count == 0) return;
+
+            int totalWidth = 0;
+
+            foreach (Control c in flowImages.Controls)
+                totalWidth += c.Width + c.Margin.Left + c.Margin.Right;
+
+            // khoảng còn dư để căn giữa
+            int space = flowImages.Width - totalWidth;
+
+            if (space > 0)
+                flowImages.Padding = new Padding(space / 2, 0, 0, 0);
+            else
+                flowImages.Padding = new Padding(0);
+        }
+
 
         private void BindInfo()
         {
             DataRow r = _thongTin.Rows[0];
-
-            // ẢNH CHÂN DUNG
-            string path = r["AnhChanDung"].ToString();
-
-            if (File.Exists(path))
-            {
-                picAnhChanDung.Image = System.Drawing.Image.FromFile(path);
-            }
-            else
-            {
-                picAnhChanDung.Image = null;
-            }
 
             // Thông tin thí sinh
             lblHoTen.Text = r["HoTen"].ToString();
@@ -96,6 +128,55 @@ namespace THI_HANG_A1
             }
             lblSoDiem.Text = mark.ToString();
         }
+        private List<Image> LoadAllImages(int sessionId)
+        {
+            List<Image> list = new List<Image>();
+
+            // 1) Ảnh chân dung
+            if (_thongTin.Rows.Count > 0 && _thongTin.Rows[0]["AnhChanDung"] != DBNull.Value)
+            {
+                string pathChanDung = _thongTin.Rows[0]["AnhChanDung"].ToString();
+
+                if (!string.IsNullOrWhiteSpace(pathChanDung) && File.Exists(pathChanDung))
+                {
+                    try
+                    {
+                        list.Add(Image.FromFile(pathChanDung));
+                    }
+                    catch { }
+                }
+            }
+
+            // 2) Ảnh lỗi từ ChiTietLoi
+            string sql = @"
+                SELECT ImagePath 
+                FROM ChiTietLoi 
+                WHERE SessionID = @SID AND ImagePath IS NOT NULL
+                ORDER BY ThoiGian ASC
+            ";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SID", sessionId);
+
+                    using (SqlDataReader rd = cmd.ExecuteReader())
+                    {
+                        while (rd.Read())
+                        {
+                            string path = rd["ImagePath"].ToString();
+                            if (File.Exists(path))
+                                list.Add(Image.FromFile(path));
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
+
 
         private void BindChiTietLoi()
         {
@@ -346,5 +427,6 @@ namespace THI_HANG_A1
                 flowMain.VerticalScroll.Visible = false;
             };
         }
+
     }
 }

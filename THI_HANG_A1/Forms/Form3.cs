@@ -36,13 +36,6 @@ namespace THI_HANG_A1
                 table.DefaultView.Sort = "Name ASC";
 
                 dgvDevices.DataSource = table;
-                if (dgvDevices.Columns.Contains("ID")) dgvDevices.Columns["ID"].Visible = true;
-                cboIPAddress.Items.Clear();
-                foreach (DataRow row in table.Rows)
-                {
-                    string ip = row["IPAddress"].ToString();
-                    if (!cboIPAddress.Items.Contains(ip)) cboIPAddress.Items.Add(ip);
-                }
             }
             catch (Exception ex)
             {
@@ -59,17 +52,9 @@ namespace THI_HANG_A1
                 {
                     DataGridViewRow row = this.dgvDevices.Rows[e.RowIndex];
                     txtDeviceID.Text = row.Cells["ID"].Value.ToString();
-
-                    string ip = row.Cells["IPAddress"].Value.ToString();
-                    if (cboIPAddress.Items.Contains(ip))
-                        cboIPAddress.SelectedItem = ip;
-                    else
-                        cboIPAddress.Text = ip;
-
+                    txtIpAddress.Text = row.Cells["IPAddress"].Value.ToString();
                     txtName.Text = row.Cells["Name"].Value.ToString();
                     txtType.Text = row.Cells["Type"].Value.ToString();
-
-                    cboIPAddress.Enabled = true; 
                 }
                 catch { }
             }
@@ -79,7 +64,7 @@ namespace THI_HANG_A1
         private void btnAdd_Click(object sender, EventArgs e)
         {
             // Kiểm tra dữ liệu
-            if (string.IsNullOrEmpty(txtType.Text) || string.IsNullOrEmpty(cboIPAddress.Text) || string.IsNullOrEmpty(txtName.Text))
+            if (string.IsNullOrEmpty(txtType.Text) || string.IsNullOrEmpty(txtIpAddress.Text) || string.IsNullOrEmpty(txtName.Text))
             {
                 MessageBox.Show("Vui lòng nhập đủ Type, IP và Tên");
                 return;
@@ -89,7 +74,7 @@ namespace THI_HANG_A1
             {
                 THI_HANG_A1.MCDV2A1DataSetTableAdapters.DevicesTableAdapter adapter = new THI_HANG_A1.MCDV2A1DataSetTableAdapters.DevicesTableAdapter();
 
-                adapter.Insert(txtType.Text.Trim(), cboIPAddress.Text.Trim(), txtName.Text.Trim());
+                adapter.Insert(txtType.Text.Trim(), txtIpAddress.Text.Trim(), txtName.Text.Trim());
 
                 MessageBox.Show("Thêm thành công!");
                 Form3_Load(null, null); 
@@ -123,7 +108,7 @@ namespace THI_HANG_A1
                         // Cập nhật thông tin mới
                         row["Type"] = txtType.Text.Trim();
                         row["Name"] = txtName.Text.Trim();             
-                        row["IPAddress"] = cboIPAddress.Text.Trim();
+                        row["IPAddress"] = txtIpAddress.Text.Trim();
                       
 
                         adapter.Update(table);
@@ -184,42 +169,9 @@ namespace THI_HANG_A1
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtDeviceID.Text = "";
-            cboIPAddress.Text = "";
-            cboIPAddress.SelectedIndex = -1;
+            txtIpAddress.Text = "";
             txtType.Text = "";
             txtName.Text = "";
-            cboIPAddress.Enabled = true; // Mở khóa cho nhập IP mới
-        }
-
-        // --- CHỌN IP TỪ COMBOBOX ---
-        private void cboIPAddress_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cboIPAddress.SelectedIndex == -1) return;
-
-            try
-            {
-                string selectedIP = cboIPAddress.Text;
-
-                THI_HANG_A1.MCDV2A1DataSetTableAdapters.DevicesTableAdapter adapter = new THI_HANG_A1.MCDV2A1DataSetTableAdapters.DevicesTableAdapter();
-                THI_HANG_A1.MCDV2A1DataSet.DevicesDataTable table = new THI_HANG_A1.MCDV2A1DataSet.DevicesDataTable();
-
-                adapter.Fill(table);
-
-                foreach (System.Data.DataRow row in table.Rows)
-                {
-                    if (row["IPAddress"].ToString() == selectedIP)
-                    {
-                        txtType.Text = row["Type"].ToString();
-                        txtName.Text = row["Name"].ToString();
-                        txtDeviceID.Text = row["ID"].ToString(); // Quan trọng: Phải lấy ID để còn Sửa/Xóa
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi khi chọn IP: " + ex.Message);
-            }
         }
     }
 }

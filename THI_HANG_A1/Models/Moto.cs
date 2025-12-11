@@ -13,6 +13,7 @@ namespace THI_HANG_A1.Models
         public event Action OnChanged;
         public event Action onImage;
         public event Action onRecvCommand;
+        public event Action<byte[]> OnImageReceived;
         public byte Id { get; set; }
         public string Name { set; get; }
 
@@ -113,6 +114,8 @@ namespace THI_HANG_A1.Models
         {
             image = ByteArrayToBitmap(array);
             onImage?.Invoke();
+            // event mới → gửi byte[] cho form để lưu
+            OnImageReceived?.Invoke(array);
         }
         public Bitmap ByteArrayToBitmap(byte[] bytes)
         {
@@ -185,6 +188,10 @@ namespace THI_HANG_A1.Models
             }
 
 
+        }
+        public void ClearOnChanged()
+        {
+            OnChanged = null;
         }
         public class LogMoto
         {

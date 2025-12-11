@@ -8,4 +8,11 @@
         public int GiaiDoan { get; set; }
 
     }
+
+    public enum TrangThaiXe
+    {
+        Ranh,      // chưa ai dùng / dùng xong
+        SanSang,   // đã chuẩn bị cho 1 thí sinh
+        DangThi    // đang thi
+    }
 }

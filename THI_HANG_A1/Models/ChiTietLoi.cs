@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace THI_HANG_A1.Models
 {
-    internal class ChiTietLoi
+    public class ChiTietLoi
     {
         public DateTime ThoiGian { get; set; }
         public string SuKien { get; set; }

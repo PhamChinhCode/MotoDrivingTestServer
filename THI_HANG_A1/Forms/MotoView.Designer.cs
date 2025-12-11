@@ -209,7 +209,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(427, 209);
+            this.textBox1.Size = new System.Drawing.Size(427, 119);
             this.textBox1.TabIndex = 14;
             // 
             // MotoView
@@ -235,7 +235,7 @@
             this.Controls.Add(this.checkBox1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MotoView";
-            this.Size = new System.Drawing.Size(573, 325);
+            this.Size = new System.Drawing.Size(544, 227);
             this.Load += new System.EventHandler(this.MotoView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

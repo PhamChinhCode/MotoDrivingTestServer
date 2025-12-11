@@ -131,16 +131,16 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form3.cs">
+    <Compile Include="Forms\Form3.cs">
       <SubType>Form</SubType>
     </Compile>
-	  <Compile Include="Form3.Designer.cs">
-		  <DependentUpon>Form3.cs</DependentUpon>
-	  </Compile>
-    <Compile Include="FormInKetQua.cs">
+    <Compile Include="Forms\Form3.Designer.cs">
+      <DependentUpon>Form3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormInKetQua.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormInKetQua.Designer.cs">
+    <Compile Include="Forms\FormInKetQua.Designer.cs">
       <DependentUpon>FormInKetQua.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MotoView.cs">
@@ -167,11 +167,11 @@
     <Compile Include="Forms\YardView.Designer.cs">
       <DependentUpon>YardView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form2.cs">
+    <Compile Include="Forms\FormCapXe.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="Forms\FormCapXe.Designer.cs">
+      <DependentUpon>FormCapXe.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BaiThiHelper.cs" />
     <Compile Include="Helpers\FaultDefinitions.cs" />
@@ -183,6 +183,7 @@
     <Compile Include="Khaibao\ExamLogType.cs" />
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Managers\ExamDataManager.cs" />
+    <Compile Include="Managers\ImageManager.cs" />
     <Compile Include="Managers\SerialManager.cs" />
     <Compile Include="Managers\SocketHandler.cs" />
     <Compile Include="MCDV2A1DataSet.Designer.cs">
@@ -196,6 +197,7 @@
     <Compile Include="Models\San.cs" />
     <Compile Include="Models\ThiSinh.cs" />
     <Compile Include="Models\ThiSinhDangThi.cs" />
+    <Compile Include="Models\ThiSinhDaThi.cs" />
     <Compile Include="Models\ThiSinhXml.cs" />
     <Compile Include="Models\Xe.cs" />
     <Compile Include="Program.cs" />
@@ -208,13 +210,13 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-	  <EmbeddedResource Include="Form3.resx">
-		  <DependentUpon>Form3.cs</DependentUpon>
-	  </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form3.resx">
+      <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormInKetQua.resx">
+    <EmbeddedResource Include="Forms\FormCapXe.resx">
+      <DependentUpon>FormCapXe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormInKetQua.resx">
       <DependentUpon>FormInKetQua.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MotoView.resx">
