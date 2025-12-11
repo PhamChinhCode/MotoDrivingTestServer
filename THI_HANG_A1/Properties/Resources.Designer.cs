@@ -73,6 +73,26 @@ namespace THI_HANG_A1.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap anh_1 {
+            get {
+                object obj = ResourceManager.GetObject("anh_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap anh_4 {
+            get {
+                object obj = ResourceManager.GetObject("anh_4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cac_di_vong_so_8_khong_cham_vach_1 {
             get {
                 object obj = ResourceManager.GetObject("cac-di-vong-so-8-khong-cham-vach-1", resourceCulture);
@@ -103,6 +123,46 @@ namespace THI_HANG_A1.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_dong {
+            get {
+                object obj = ResourceManager.GetObject("icon_dong", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_previewPrint {
+            get {
+                object obj = ResourceManager.GetObject("icon_previewPrint", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_print {
+            get {
+                object obj = ResourceManager.GetObject("icon_print", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_xemlog {
+            get {
+                object obj = ResourceManager.GetObject("icon_xemlog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ketquathilancuoi {
             get {
                 object obj = ResourceManager.GetObject("ketquathilancuoi", resourceCulture);
@@ -116,6 +176,16 @@ namespace THI_HANG_A1.Properties {
         internal static System.Drawing.Bitmap ketquathilandau {
             get {
                 object obj = ResourceManager.GetObject("ketquathilandau", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Loading_icon {
+            get {
+                object obj = ResourceManager.GetObject("Loading_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
