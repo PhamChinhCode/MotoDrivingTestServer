@@ -248,8 +248,6 @@ namespace THI_HANG_A1.Managers
         public const byte KEY_NULL = 0xff;
 
 
-
-
         // Status
         public const byte STATUS_KEY = 0xc0;
 
@@ -266,6 +264,8 @@ namespace THI_HANG_A1.Managers
 
         // mark key
         public const byte MARK_KEY = 0xB0;
+        public const byte IDNUMBER_COMMAND = 0xB2;
+        public const byte REALTIME_COMMAND = 0xB3;
 
 
         // Control command

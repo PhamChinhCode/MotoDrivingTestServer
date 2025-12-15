@@ -143,6 +143,10 @@
     <Compile Include="Forms\FormInKetQua.Designer.cs">
       <DependentUpon>FormInKetQua.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormKetThucSession.cs" />
+    <Compile Include="Forms\FormKetThucSession.Designer.cs">
+      <DependentUpon>FormKetThucSession.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MotoView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -195,6 +199,7 @@
     <Compile Include="Models\LoiViPham.cs" />
     <Compile Include="Models\Moto.cs" />
     <Compile Include="Models\San.cs" />
+    <Compile Include="Models\SessionThi.cs" />
     <Compile Include="Models\ThiSinh.cs" />
     <Compile Include="Models\ThiSinhDangThi.cs" />
     <Compile Include="Models\ThiSinhDaThi.cs" />
@@ -218,6 +223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormInKetQua.resx">
       <DependentUpon>FormInKetQua.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormKetThucSession.resx">
+      <DependentUpon>FormKetThucSession.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MotoView.resx">
       <DependentUpon>MotoView.cs</DependentUpon>

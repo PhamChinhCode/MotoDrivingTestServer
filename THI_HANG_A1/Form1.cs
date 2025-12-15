@@ -74,7 +74,6 @@ namespace THI_HANG_A1
                             Moto existing = oldMap[id];
                             existing.Name = rd["Name"].ToString();
                             existing.Ip = rd["IPAddress"].ToString();
-
                             newList.Add(existing);
                         }
                         else
@@ -105,7 +104,10 @@ namespace THI_HANG_A1
 
             sanList = new List<San>();
             sanList.Add(new San("San 1", "192.168.0.150", 123));
-            sanList[0].Connect();
+            if (!sanList[0].IsConnected)
+                sanList[0].Connect();
+            else
+                sanList[0].Disconnect();
             //fxe.ShowDialog();
             //xes[0].Connect();
 
@@ -499,6 +501,10 @@ namespace THI_HANG_A1
                     ReadOnly = true
                 });
             }
+            // 1. Dọn session treo từ lần chạy trước
+            BaiThiHelper.RecoverStaleSessions(120);
+            StartRecoveryWatchdog();
+
             BaiThiHelper.LoadBaiThi();
             FaultDefinitions.LoadFaults();
 
@@ -821,9 +827,6 @@ namespace THI_HANG_A1
 
             // 3. LOAD LÊN GRID TRÁI
             LoadDanhSachLenGrid(maKySH);
-
-            // 4. Nạp 5 người đầu tiên vào hàng chờ
-            Nap5NguoiChuanBi(listXml);
         }
 
         private void LoadDanhSachLenGrid(string maKySH)
@@ -849,33 +852,6 @@ namespace THI_HANG_A1
             }
         }
 
-
-        private void Nap5NguoiChuanBi(List<ThiSinhXml> listXml)
-        {
-            // Xóa danh sách chuẩn bị cũ
-            examManager.DanhSachChuanBiThi.Clear();
-
-            int dem = 0;
-            foreach (var item in listXml)
-            {
-                if (dem >= 5) break; // Chỉ lấy 5 người đầu tiên
-
-                ThiSinh ts = new ThiSinh();
-                ts.SBD = item.SoBaoDanh.ToString();
-                ts.HoTen = item.Hodem;
-                ts.CCCD = item.SoCMT;
-
-                // Gán đường dẫn ảnh
-                string path = $"D:\\{item.KySatHach}\\anh_{item.SoBaoDanh}.jpg";
-                if (File.Exists(path)) ts.AnhChanDung = path;
-
-                // --- [ĐOẠN SỬA LỖI] ---
-                // Thay vì gọi hàm ThemVaoDSChuanBi, ta Add trực tiếp vào list:
-                examManager.DanhSachChuanBiThi.Add(ts);
-
-                dem++;
-            }
-        }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1022,6 +998,7 @@ namespace THI_HANG_A1
                 return;
 
             string soXe = xeChon.Id.ToString();
+            StartRealtimeSender();
 
             // 1. Nếu xe mới đang phục vụ người khác → gỡ sự kiện người cũ
             if (xeDangDung.TryGetValue(soXe, out var oldD))
@@ -1037,6 +1014,9 @@ namespace THI_HANG_A1
             // 5. Lưu xe đang dùng
             xeDangDung[ts.Xe] = ts;
 
+            // gửi sbd thí sinh về esp xe
+            ts.XeObj?.sendCommand(ConstantKeys.IDNUMBER_COMMAND, ConstantKeys.BYTE_SET, (byte)ts.SoBaoDanh);
+
             // ===========================================================
             // 6. GẮN EVENT CHO XE MỚI
             // ===========================================================
@@ -1046,9 +1026,7 @@ namespace THI_HANG_A1
             {
                 byte st = xeChon.Status;
                 byte errId = xeChon.ErrorId;
-
                 BaiThiHelper.CapNhatBaiThiHienTai(ts, st);
-                if (!BaiThiHelper.IsInValidContest1_4(st)) return;
 
                 // HOÀN THÀNH TẤT CẢ BÀI
                 if (st == ConstantKeys.STATUS_FREE &&
@@ -1065,13 +1043,16 @@ namespace THI_HANG_A1
                     );
 
                     UpdateMarkSession(ts.SessionID, ts.DiemConLai, true);
-                    Task.Delay(400).ContinueWith(_ =>
+                    
+                    SafeUI(() =>
                     {
                         CleanupEvents(ts);
                         ds.Remove(ts);
                     });
                     return;
                 }
+
+                if (!BaiThiHelper.IsInValidContest1_4(st)) return;
 
                 // VÀO BÀI MỚI
                 if (st != ts.LastStatus && BaiThiHelper.IsInValidContest1_4(st))
@@ -1118,6 +1099,9 @@ namespace THI_HANG_A1
                         fault.moTa, fault.diemTru, chiTiet,
                         fault.id, ts.BaiThiHienTaiID, ts
                     );
+                    // gửi mã lỗi về esp
+                    byte errorKey = FaultDefinitions.GetErrorKeyByErrorId(errId);
+                    ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorKey);
 
                     ts.SoLoi++;
                     ts.DiemTru += fault.diemTru;
@@ -1178,15 +1162,6 @@ namespace THI_HANG_A1
                 {
                     case ConstantKeys.STATUS_CONTEST1:
                         sensors.Add(("Sensor1", san.Sensor1));
-                        sensors.Add(("Sensor2", san.Sensor2));
-                        sensors.Add(("Sensor3", san.Sensor3));
-                        break;
-
-                    case ConstantKeys.STATUS_CONTEST2:
-                    case ConstantKeys.STATUS_CONTEST3:
-                    case ConstantKeys.STATUS_CONTEST4:
-                        sensors.Add(("Sensor4", san.Sensor4));
-                        sensors.Add(("Sensor5", san.Sensor5));
                         break;
                 }
 
@@ -1202,6 +1177,20 @@ namespace THI_HANG_A1
                             chiTiet, 5, chiTiet,
                             null, baiId, ts
                         );
+                        // gửi lỗi về esp xe
+                        ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, ConstantKeys.ERROR_DE_VACH_CNV);
+
+                        FaultDefinitions.FaultByErrorId.TryGetValue(ConstantKeys.ERROR_DE_VACH_CNV, out var fault);
+                        ts.SoLoi++;
+                        ts.DiemTru += fault.diemTru;
+                        ts.DiemConLai -= fault.diemTru;
+                        if (ts.LastSentMark != ts.DiemConLai)
+                        {
+                            UpdateMarkSession(ts.SessionID, ts.DiemConLai);
+                            ts.XeObj.sendCommand(ConstantKeys.MARK_KEY, ConstantKeys.BYTE_SET, (byte)ts.DiemConLai);
+                            ts.LastSentMark = ts.DiemConLai;
+                        }
+                        CheckStopCondition(ts);
                     }
                 }
             };
@@ -1212,6 +1201,7 @@ namespace THI_HANG_A1
             dgvThi.Refresh();
             HienThiThongTinThiSinh(ts);
         }
+
         void ChupAnh(Moto xe, ThiSinhDangThi ts)
         {
             if (isWaitingImage) return;
@@ -1219,9 +1209,7 @@ namespace THI_HANG_A1
             isWaitingImage = true;
             ts.WaitingImage = true;
 
-            xe.sendCommand(ConstantKeys.IMAGE_KEY,
-                           ConstantKeys.BYTE_GET,
-                           ConstantKeys.KEY_NULL);
+            xe.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET,ConstantKeys.KEY_NULL);
 
             Task.Delay(1000).ContinueWith(_ => isWaitingImage = false);
         }
@@ -1234,11 +1222,7 @@ namespace THI_HANG_A1
             CleanupEvents(d);
 
             // 2) STOP XE
-            d.XeObj?.sendCommand(
-                ConstantKeys.CONTROL_KEY,
-                ConstantKeys.BYTE_SET,
-                ConstantKeys.CONTROL_STOP
-            );
+            d.XeObj?.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_STOP);
 
             // 3) LOG kết thúc
             InsertErrorToDatabase(
@@ -1377,12 +1361,23 @@ namespace THI_HANG_A1
             string baiThiMoTa = BaiThiHelper.GetNameByBaiThiId(baiThiId);
             string chiTietLoi = $"{err.moTa} – Tại vị trí: {baiThiMoTa}";
 
+            // gửi mã lỗi về esp
+            byte errorKey = FaultDefinitions.GetErrorKeyByErrorId(faultId);
+            ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorKey);
+
             //===============================
             //  CẬP NHẬT ĐIỂM
             //===============================
             ts.SoLoi++;
             ts.DiemTru += diemTru;
             ts.DiemConLai -= diemTru;
+
+            if (ts.LastSentMark != ts.DiemConLai)
+            {
+                UpdateMarkSession(ts.SessionID, ts.DiemConLai);
+                ts.XeObj.sendCommand(ConstantKeys.MARK_KEY, ConstantKeys.BYTE_SET, (byte)ts.DiemConLai);
+                ts.LastSentMark = ts.DiemConLai;
+            }
 
             //===============================
             //  LƯU LỖI VÀO DATABASE
@@ -1463,12 +1458,19 @@ namespace THI_HANG_A1
 
             // Trạng thái: Đạt / Không đạt (dựa vào Mark)
             lblTrangThai.Text = ts.Mark >= 80 ? "Đạt" : "Không đạt";
-            int tongDiemTru = ts.DiemTru_BT1 + ts.DiemTru_BT4 + ts.DiemTru_BT5 + ts.DiemTru_BT6 + ts.DiemTru_BT7;
 
-            lblDiemTruu.Text = tongDiemTru.ToString();
-            lblDiemConLai.Text = (100 - tongDiemTru).ToString();
+            lblDiemTruu.Text = (100 - ts.Mark).ToString();
+            lblDiemConLai.Text = ts.Mark.ToString();
 
-            lblSoLoi.Text = ts.NhatKyLoi?.Count.ToString() ?? "0";
+            lblSoLoi.Text = ts.NhatKyLoi?
+                            .Count(loi => loi.DiemTru > 0)
+                            .ToString() ?? "0";
+
+            lblLanThi.Text = ts.LanThi.ToString();
+
+            var dsSession = LoadLanThiTheoSBD(ts.SBD);
+            BindLanThiToCombo(dsSession);
+            cboLanThi.SelectedValue = ts.SessionID;
 
             // Load chi tiết lỗi
             dsChiTietLoi.Clear();  // không reset UI
@@ -1476,9 +1478,80 @@ namespace THI_HANG_A1
                 dsChiTietLoi.Add(loi);
             dgvchitietloi.Refresh();
         }
+        private void HienThiSession(ThiSinhDaThi ts)
+        {
+            lblLanThi.Text = ts.LanThi.ToString();
+            lblDiemTruu.Text = (100 - ts.Mark).ToString();
+            lblDiemConLai.Text = ts.Mark.ToString();
+            lblTrangThai.Text = ts.Mark >= 80 ? "Đạt" : "Không đạt";
+            lblSoLoi.Text = ts.NhatKyLoi?
+                            .Count(loi => loi.DiemTru > 0)
+                            .ToString() ?? "0";
+
+            dsChiTietLoi.Clear();  // không reset UI
+            foreach (var loi in ts.NhatKyLoi)
+                dsChiTietLoi.Add(loi);
+            dgvchitietloi.Refresh();
+
+            dgvThi.Refresh();
+        }
+
+        private void BindLanThiToCombo(List<SessionThi> dsSession)
+        {
+            cboLanThi.DataSource = null;
+            cboLanThi.DataSource = dsSession;
+            cboLanThi.DisplayMember = "TenHienThi";
+            cboLanThi.ValueMember = "SessionID";
+        }
+
+        private List<SessionThi> LoadLanThiTheoSBD(long sbd)
+        {
+            string sql = @"
+                SELECT 
+                    ID AS SessionID,
+                    StartTime,
+                    Mark,
+                    LyDoKetThuc
+                FROM Sessions
+                WHERE SBD = @SBD
+                  AND IsFinish = 1
+                ORDER BY StartTime
+            ";
+
+            var list = new List<SessionThi>();
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SBD", sbd);
+
+                    using (SqlDataReader rd = cmd.ExecuteReader())
+                    {
+                        int lan = 1;
+                        while (rd.Read())
+                        {
+                            list.Add(new SessionThi
+                            {
+                                SessionID = Convert.ToInt32(rd["SessionID"]),
+                                LanThi = lan++,
+                                StartTime = Convert.ToDateTime(rd["StartTime"]),
+                                Mark = Convert.ToInt32(rd["Mark"]),
+                                LyDoKetThuc = rd["LyDoKetThuc"] == DBNull.Value
+                                    ? (LyDoKetThuc?)null
+                                    : (LyDoKetThuc)Convert.ToInt32(rd["LyDoKetThuc"])
+                            });
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
 
 
-        private ToolStripMenuItem mnuCB, mnuBD, mnuTDX;
+        private ToolStripMenuItem mnuCB, mnuBD, mnuTDX, mnuKT;
         private void TaoMenuThiSinh()
         {
             cmsThiSinh = new ContextMenuStrip();
@@ -1496,11 +1569,13 @@ namespace THI_HANG_A1
             cmsThiSinh.Items.Add("Ẩn", null, mnuAn_Click);
             cmsThiSinh.Items.Add("In biên bản", null, mnuInBienBan_Click);
             cmsThiSinh.Items.Add("Chụp ảnh", null, mnuChupAnh_Click);
-            cmsThiSinh.Items.Add("Kết thúc", null, mnuKetThuc_Click);
+            mnuKT = new ToolStripMenuItem("Kết thúc", null, mnuKetThuc_Click);
+            cmsThiSinh.Items.Add(mnuKT);
 
             // Gán sự kiện mở menu
             cmsThiSinh.Opening += CmsThiSinh_Opening;
         }
+
 
         private void CmsThiSinh_Opening(object sender, CancelEventArgs e)
         {
@@ -1510,7 +1585,7 @@ namespace THI_HANG_A1
             if (ts == null) { e.Cancel = true; return; }
 
             // Reset tất cả
-            mnuCB.Enabled = mnuBD.Enabled = mnuTDX.Enabled = false;
+            mnuCB.Enabled = mnuBD.Enabled = mnuTDX.Enabled = mnuKT.Enabled = false;
 
             // Chưa cấp xe ⇒ chỉ cho đổi xe
             if (string.IsNullOrWhiteSpace(ts.Xe))
@@ -1531,6 +1606,7 @@ namespace THI_HANG_A1
                     break;
 
                 case "Đang thi":
+                    mnuKT.Enabled = true;
                     // tất cả disabled — để nguyên
                     break;
 
@@ -1675,6 +1751,22 @@ namespace THI_HANG_A1
             var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
             if (ts == null) return;
 
+            // =============================
+            // KIỂM TRA: CÓ THÍ SINH KHÁC CHƯA QUA BÀI 8 KHÔNG?
+            // =============================
+            var tsChuaQuaBai8 = KiemTraThiSinhChuaQuaBai8();
+            if (tsChuaQuaBai8 != null && tsChuaQuaBai8.SoBaoDanh != ts.SoBaoDanh)
+            {
+                MessageBox.Show(
+                    $"Không thể bắt đầu!\n" +
+                    $"Thí sinh {tsChuaQuaBai8.SoBaoDanh} vẫn chưa qua bài số 8.",
+                    "Không thể bắt đầu",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
             ts.GioBatDau = DateTime.Now;
             ts.TrangThai = "Đang thi";
             // --------------------------------
@@ -1710,43 +1802,73 @@ namespace THI_HANG_A1
                 timerCapNhatThoiGian.Start();
             dgvThi.Refresh();
         }
+        private ThiSinhDangThi KiemTraThiSinhChuaQuaBai8()
+        {
+            return ds.FirstOrDefault(x =>
+                x.TrangThai == "Đang thi" &&
+                x.BaiThiHienTaiID == ConstantKeys.STATUS_READY
+            );
+        }
+
         private void mnuKetThuc_Click(object sender, EventArgs e)
         {
             if (_currentRowIndex < 0) return;
             var d = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
             if (d == null) return;
-            // STOP XE
-            if (d.XeObj != null)
+            var dangthi = trangThaiXe[d.Xe] == TrangThaiXe.DangThi && d.TrangThai == "Đang thi";
+            if (!dangthi)
             {
-                try
-                {
-                    d.XeObj.sendCommand(
-                        ConstantKeys.CONTROL_KEY,
-                        ConstantKeys.BYTE_SET,
-                        ConstantKeys.CONTROL_STOP
-                    );
-                }
-                catch { /* ignore lỗi nếu xe đã mất kết nối */ }
+                MessageBox.Show(
+                    "Thí sinh chưa hoặc không đang thi, không thể kết thúc bài.",
+                    "Không thể kết thúc",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
             }
-            // LOG kết thúc
-            InsertErrorToDatabase(
-                d.SoBaoDanh, d.SessionID,
-                $"{d.HoDem} {d.Ten}", d.Xe,
-                "Kết thúc bài thi",
-                0,
-                "Giám khảo đã kết thúc bài thi",
-                null, d.BaiThiHienTaiID, d
-            );
-
-            // Cập nhật session
-            UpdateMarkSession(d.SessionID, d.DiemConLai, true);
-            // Gỡ các event liên quan đến TS này
-            CleanupEvents(d);
-            // Remove khỏi danh sách thi
-            SafeUI(() =>
+            using (FormKetThucSession frm = new FormKetThucSession())
             {
-                ds.Remove(d);
-            });
+                if (frm.ShowDialog() != DialogResult.OK)
+                    return;
+
+                LyDoKetThuc lyDo = frm.LyDoDuocChon;
+
+                // STOP XE
+                if (d.XeObj != null)
+                {
+                    try
+                    {
+                        d.XeObj.sendCommand(
+                            ConstantKeys.CONTROL_KEY,
+                            ConstantKeys.BYTE_SET,
+                            ConstantKeys.CONTROL_STOP
+                        );
+                    }
+                    catch {  }
+                }
+                InsertErrorToDatabase(
+                   d.SoBaoDanh,
+                   d.SessionID,
+                   $"{d.HoDem} {d.Ten}",
+                   d.Xe,
+                   "Giám khảo kết thúc bài thi",
+                   d.DiemConLai,
+                   LyDoKetThucMapper.Ten(lyDo),
+                   null,
+                   d.BaiThiHienTaiID,
+                   d
+               );
+
+                // Cập nhật session
+                KetThucSession(d.SessionID, 0, lyDo);
+                // Gỡ các event liên quan đến TS này
+                CleanupEvents(d);
+                // Remove khỏi danh sách thi
+                SafeUI(() =>
+                {
+                    ds.Remove(d);
+                });
+            }
         }
         private void mnuThayDoiXe_Click(object sender, EventArgs e)
         {
@@ -1755,6 +1877,17 @@ namespace THI_HANG_A1
             var ts = dgvThi.Rows[_currentRowIndex].DataBoundItem as ThiSinhDangThi;
             if (ts == null) return;
 
+            if (BaiThiHelper.IsInValidContest1_4(ts.XeObj.Status))
+            {
+                MessageBox.Show(
+                    "Thí sinh đang thi, không thể đổi xe.",
+                    "Không thể đổi xe",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+
+            }
             LoadMotoFromDatabase();
             Capxe frm = new Capxe(xes, ts.SoBaoDanh, ts.HangGPLX);
             frm.StartPosition = FormStartPosition.CenterParent;
@@ -1814,18 +1947,48 @@ namespace THI_HANG_A1
             {
                 conn.Open();
 
-                string sql = @"
-                    INSERT INTO Sessions (SBD, DeviceID, StartTime, Duration, Time, Mark)
-                    OUTPUT INSERTED.ID
-                    VALUES (@SBD, @DeviceID, GETDATE(), 80, 1, 100)";
-
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                using (var tran = conn.BeginTransaction(IsolationLevel.Serializable))
                 {
-                    cmd.Parameters.AddWithValue("@SBD", sbd);
-                    cmd.Parameters.AddWithValue("@DeviceID", deviceId);
+                    int nextTime;
 
-                    int sessionId = (int)cmd.ExecuteScalar();
-                    return sessionId;
+                    // 1️⃣ Lấy lần thi tiếp theo (lock theo SBD)
+                    using (SqlCommand cmd = new SqlCommand(@"
+                        SELECT ISNULL(MAX([Time]), 0) + 1
+                        FROM Sessions WITH (UPDLOCK, HOLDLOCK)
+                        WHERE SBD = @SBD
+                    ", conn, tran))
+                    {
+                        cmd.Parameters.AddWithValue("@SBD", sbd);
+                        nextTime = Convert.ToInt32(cmd.ExecuteScalar());
+                    }
+
+                    // 2️⃣ Insert session + set LastUpdate
+                    using (SqlCommand cmd = new SqlCommand(@"
+                        INSERT INTO Sessions (
+                            SBD, DeviceID, StartTime, Duration,
+                            [Time], Mark, IsFinish, LastUpdate
+                        )
+                        OUTPUT INSERTED.ID
+                        VALUES (
+                            @SBD,
+                            @DeviceID,
+                            GETDATE(),
+                            80,
+                            @Time,
+                            100,
+                            0,
+                            GETDATE()
+                        )
+                    ", conn, tran))
+                    {
+                        cmd.Parameters.AddWithValue("@SBD", sbd);
+                        cmd.Parameters.AddWithValue("@DeviceID", deviceId);
+                        cmd.Parameters.AddWithValue("@Time", nextTime);
+
+                        int sessionId = (int)cmd.ExecuteScalar();
+                        tran.Commit();
+                        return sessionId;
+                    }
                 }
             }
         }
@@ -1838,15 +2001,28 @@ namespace THI_HANG_A1
         /// <param name="isFinish">đánh dấu đã kết thúc bài thi</param>
         private void UpdateMarkSession(int sessionId, int mark, bool? isFinish = null)
         {
-            // SQL base
             string sql = @"
                 UPDATE Sessions
-                SET Mark = @Mark
+                SET 
+                    Mark = @Mark,
+                    LastUpdate = GETDATE()
             ";
 
-            // Nếu isFinish có giá trị → thêm vào SQL
             if (isFinish.HasValue)
+            {
                 sql += ", IsFinish = @IsFinish";
+
+                // ✅ chỉ set EndTime 1 lần
+                if (isFinish.Value)
+                {
+                    sql += @",
+                EndTime = CASE 
+                    WHEN EndTime IS NULL THEN GETDATE()
+                    ELSE EndTime
+                END
+            ";
+                }
+            }
 
             sql += " WHERE ID = @SessionId";
 
@@ -1865,11 +2041,43 @@ namespace THI_HANG_A1
                 }
             }
         }
+        private void KetThucSession(int sessionId, int diemConLai, LyDoKetThuc lyDo)
+        {
+            string sql = @"
+                UPDATE Sessions
+                SET 
+                    Mark = @Mark,
+                    IsFinish = 1,
+                    LyDoKetThuc = @LyDoKetThuc,
+                    LastUpdate = GETDATE(),
+                    EndTime = CASE 
+                        WHEN EndTime IS NULL THEN GETDATE()
+                        ELSE EndTime
+                    END
+                WHERE ID = @SessionId
+            ";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Mark", diemConLai);
+                    cmd.Parameters.AddWithValue("@LyDoKetThuc", (int)lyDo);
+                    cmd.Parameters.AddWithValue("@SessionId", sessionId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
 
         private void btnFindDaThi_Click(object sender, EventArgs e)
         {
             ModeTabFilter = "DaThi";
+            label9.Visible = true;
+            label10.Visible = true;
+            lblLanThi.Visible = true;
+            cboLanThi.Visible = true;
             GridDaThi();
             LoadThiSinhDaThi();
         }
@@ -1939,7 +2147,7 @@ namespace THI_HANG_A1
             // ===== Số lần thi =====
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
-                HeaderText = "Số lần",
+                HeaderText = "Số lần thi",
                 DataPropertyName = "SoLanThi",
                 Width = 60
             });
@@ -1958,35 +2166,35 @@ namespace THI_HANG_A1
 
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
-                HeaderText = "Sẵn sàng",
+                HeaderText = "Sẵn sàng (ĐT)",
                 DataPropertyName = "DiemTru_BT1",
                 Width = 80
             });
 
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
-                HeaderText = "Số 8",
+                HeaderText = "Số 8 (ĐT)",
                 DataPropertyName = "DiemTru_BT4",
                 Width = 90
             });
 
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
-                HeaderText = "Đ. thẳng",
+                HeaderText = "Đ. thẳng (ĐT)",
                 DataPropertyName = "DiemTru_BT5",
                 Width = 90
             });
 
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
-                HeaderText = "Ziczac",
+                HeaderText = "Ziczac (ĐT)",
                 DataPropertyName = "DiemTru_BT6",
                 Width = 90
             });
 
             dgvThi.Columns.Add(new DataGridViewTextBoxColumn()
             {
-                HeaderText = "Gồ ghề",
+                HeaderText = "Gồ ghề (ĐT)",
                 DataPropertyName = "DiemTru_BT7",
                 Width = 90
             });
@@ -2004,39 +2212,47 @@ namespace THI_HANG_A1
         private void LoadThiSinhDaThi()
         {
             string sql = @"
-                SELECT 
-                    TS.SBD,
-                    S.ID as SessionID,
-                    TS.HoDem,
-                    TS.Ten,
-                    TS.HangGPLX,
-                    TS.AnhChanDung,
-                    S.DeviceID,
-                    S.StartTime,
-                    S.Duration,
-                    S.Time as SoLanThi,
-                    S.Mark,
-                    ISNULL([1], 0) AS DiemTru_BT1,
-                    ISNULL([4], 0) AS DiemTru_BT4,
-                    ISNULL([5], 0) AS DiemTru_BT5,
-                    ISNULL([6], 0) AS DiemTru_BT6,
-                    ISNULL([7], 0) AS DiemTru_BT7
-
-                FROM Sessions S
-                JOIN Thisinhsh TS ON TS.SBD = S.SBD
-                LEFT JOIN (
+                WITH CTE AS
+                (
                     SELECT 
-                        SessionID,
-                        BaiThiID,
-                        SUM(DiemTru) AS dt
-                    FROM ChitietLoi
-                    GROUP BY SessionID, BaiThiID
-                ) AS C
-                PIVOT (
-                    SUM(dt) FOR BaiThiID IN ([1], [4], [5], [6], [7])
-                ) AS P ON S.ID = P.SessionID
-                WHERE S.IsFinish = 1
-                ORDER BY S.StartTime DESC;
+                        TS.SBD,
+                        S.ID AS SessionID,
+                        TS.HoDem,
+                        TS.Ten,
+                        TS.HangGPLX,
+                        TS.AnhChanDung,
+                        S.DeviceID,
+                        S.StartTime,
+                        S.EndTime,
+                        S.Duration,
+                        S.Time AS SoLanThi,
+                        S.Mark,
+                        ISNULL(P.[1], 0) AS DiemTru_BT1,
+                        ISNULL(P.[4], 0) AS DiemTru_BT4,
+                        ISNULL(P.[5], 0) AS DiemTru_BT5,
+                        ISNULL(P.[6], 0) AS DiemTru_BT6,
+                        ISNULL(P.[7], 0) AS DiemTru_BT7,
+
+                        ROW_NUMBER() OVER (PARTITION BY TS.SBD ORDER BY S.StartTime DESC) AS rn
+                    FROM Sessions S
+                    JOIN Thisinhsh TS ON TS.SBD = S.SBD
+                    LEFT JOIN (
+                        SELECT 
+                            SessionID,
+                            BaiThiID,
+                            SUM(DiemTru) AS dt
+                        FROM ChitietLoi
+                        GROUP BY SessionID, BaiThiID
+                    ) AS C
+                    PIVOT (
+                        SUM(dt) FOR BaiThiID IN ([1], [4], [5], [6], [7])
+                    ) AS P ON S.ID = P.SessionID
+                    WHERE S.IsFinish = 1
+                )
+                SELECT *
+                FROM CTE
+                WHERE rn = 1
+                ORDER BY StartTime DESC;
             ";
 
             var list = new List<ThiSinhDaThi>();
@@ -2059,6 +2275,7 @@ namespace THI_HANG_A1
                             ImagePath = rd["AnhChanDung"].ToString(),
                             DeviceID = rd["DeviceID"].ToString(),
                             StartTime = Convert.ToDateTime(rd["StartTime"]),
+                            EndTime = Convert.ToDateTime(rd["EndTime"]),
                             Duration = Convert.ToInt32(rd["Duration"]),
                             SoLanThi = Convert.ToInt32(rd["SoLanThi"]),
                             Mark = Convert.ToInt32(rd["Mark"]),
@@ -2115,6 +2332,103 @@ namespace THI_HANG_A1
             }
 
             return list;
+        }
+
+
+
+        private void cboLanThi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboLanThi.SelectedItem == null)
+                return;
+
+            // Lấy item được chọn
+            var lanThi = cboLanThi.SelectedItem as SessionThi;
+            if (lanThi == null)
+                return;
+
+            int sessionId = lanThi.SessionID;
+
+            var model = LoadSessionDetailModel(sessionId);
+            if (model == null) return;
+
+            // row đang chọn
+            var row = dgvThi.CurrentRow;
+            if (row == null) return;
+
+            var ts = row.DataBoundItem as ThiSinhDaThi;
+            if (ts == null) return;
+
+            // update model
+            ts.SessionID = model.SessionID;
+            ts.DeviceID = model.DeviceID;
+            ts.StartTime = model.StartTime;
+            ts.LanThi = lanThi.LanThi;
+            ts.Mark = model.Mark;
+            ts.DiemTru_BT1 = model.DiemTru_BT1;
+            ts.DiemTru_BT4 = model.DiemTru_BT4;
+            ts.DiemTru_BT5 = model.DiemTru_BT5;
+            ts.DiemTru_BT6 = model.DiemTru_BT6;
+            ts.DiemTru_BT7 = model.DiemTru_BT7;
+            ts.NhatKyLoi = LoadChiTietLoiTheoSession(sessionId);
+
+            // hiển thị chi tiết (label)
+            HienThiSession(ts);
+        }
+        private ThiSinhDaThi LoadSessionDetailModel(int sessionId)
+        {
+            string sql = @"
+                SELECT 
+                    S.StartTime,
+                    S.Duration,
+                    S.Time AS SoLanThi,
+                    S.DeviceID,
+                    S.Mark,
+                    ISNULL(P.[1], 0) AS DiemTru_BT1,
+                    ISNULL(P.[4], 0) AS DiemTru_BT4,
+                    ISNULL(P.[5], 0) AS DiemTru_BT5,
+                    ISNULL(P.[6], 0) AS DiemTru_BT6,
+                    ISNULL(P.[7], 0) AS DiemTru_BT7
+                FROM Sessions S
+                LEFT JOIN (
+                    SELECT SessionID, BaiThiID, SUM(DiemTru) AS dt
+                    FROM ChiTietLoi
+                    GROUP BY SessionID, BaiThiID
+                ) AS C
+                PIVOT (
+                    SUM(dt) FOR BaiThiID IN ([1], [4], [5], [6], [7])
+                ) AS P ON S.ID = P.SessionID
+                WHERE S.ID = @SessionID";
+
+            using (SqlConnection conn = new SqlConnection(cnn))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SessionID", sessionId);
+
+                    using (SqlDataReader rd = cmd.ExecuteReader())
+                    {
+                        if (rd.Read())
+                        {
+                            return new ThiSinhDaThi
+                            {
+                                SessionID = sessionId,
+                                StartTime = rd.GetDateTime(0),
+                                Duration = rd.GetInt32(1),
+                                SoLanThi = rd.GetInt32(2),
+                                DeviceID = rd.GetInt32(3).ToString(),
+                                Mark = rd.GetInt32(4),   
+                                DiemTru_BT1 = rd.GetInt32(5),
+                                DiemTru_BT4 = rd.GetInt32(6),
+                                DiemTru_BT5 = rd.GetInt32(7),
+                                DiemTru_BT6 = rd.GetInt32(8),
+                                DiemTru_BT7 = rd.GetInt32(9),
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
 
@@ -2280,6 +2594,11 @@ namespace THI_HANG_A1
             GridThi();
             dgvThi.DataSource = null;
             dgvThi.DataSource = ds;
+
+            label9.Visible = false;
+            label10.Visible = false;
+            lblLanThi.Visible = false;
+            cboLanThi.Visible = false;
             pictureBox1.BackColor = SystemColors.Control;
             pictureBox1.Image = _defaultImage;
             dsChiTietLoi.Clear();
@@ -2346,6 +2665,7 @@ namespace THI_HANG_A1
             });
             return newId;
         }
+
         public void UpdateChiTietLoiImage(int errorRecordId, string imagePath)
         {
             using (SqlConnection conn = new SqlConnection(cnn))
@@ -2381,15 +2701,72 @@ namespace THI_HANG_A1
         {
             // Tạo mới Form3
             Form3 formQuanLy = new Form3();
-
-            // Cách 1: Mở dạng hộp thoại (Khuyên dùng)
-            // (Bắt buộc phải đóng Form3 thì mới bấm được Form1 => Tránh lỗi mở nhiều cái)
             formQuanLy.ShowDialog();
-
-            // Cách 2: Mở song song (Nếu bạn muốn vừa xem Form1 vừa xem Form3)
-            // formQuanLy.Show();
         }
 
+        private void StartRecoveryWatchdog()
+        {
+            _recoveryTimer = new System.Windows.Forms.Timer();
+            _recoveryTimer.Interval = 30_000; // 30 giây
+
+            _recoveryTimer.Tick += (s, e) =>
+            {
+                try
+                {
+                    BaiThiHelper.RecoverStaleSessions(120);
+                }
+                catch (Exception ex)
+                {
+                    // log nếu cần
+                }
+            };
+
+            _recoveryTimer.Start();
+        }
+
+        private void StartRealtimeSender()
+        {
+            timerRealtime = new System.Windows.Forms.Timer();
+            timerRealtime.Interval = 1000; // 1 giây
+            timerRealtime.Tick += (s, e) =>
+            {
+                foreach (var ts in ds)
+                {
+                    SendRealtimeToDevice(ts.XeObj);
+                }
+            };
+            timerRealtime.Start();
+        }
+        private void SendRealtimeToDevice(Moto xe)
+        {
+            if (xe == null)
+                return;
+
+            uint packedTime = PackDateTime(DateTime.Now);
+
+            xe.sendCommand(
+                ConstantKeys.REALTIME_COMMAND,
+                ConstantKeys.BYTE_SET,
+                packedTime
+            );
+        }
+        private uint PackDateTime(DateTime dt)
+        {
+            uint year = (uint)(dt.Year - 2020);
+            uint month = (uint)dt.Month;
+            uint day = (uint)dt.Day;
+            uint hour = (uint)dt.Hour;
+            uint minute = (uint)dt.Minute;
+            uint second = (uint)dt.Second;
+
+            return
+                (year << 26) |
+                (month << 22) |
+                (day << 17) |
+                (hour << 12) |
+                (minute << 6) |
+                second;
+        }
 
     }
 
