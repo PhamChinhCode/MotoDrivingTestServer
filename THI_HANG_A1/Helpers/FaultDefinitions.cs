@@ -6,56 +6,67 @@ using THI_HANG_A1.Properties;
 
 namespace THI_HANG_A1.Helpers
 {
+    public class Fault
+    {
+        public int Id { get; set; }          // ID trong bảng Faults
+        public int ErrorId { get; set; }     // ErrorId từ ESP
+        public int DiemTru { get; set; }     // Điểm trừ
+        public string MoTa { get; set; }     // Mô tả lỗi
+    }
     public static class FaultDefinitions
     {
         // id, errorId, diemTru, baiThiId, moTa
         public static Dictionary<string, (int id, int errorId, int diemTru, int baiThiId, string moTa)> FaultMap
             = new Dictionary<string, (int, int, int, int, string)>();
 
-        public static Dictionary<int, (int id, int errorId, int diemTru, string moTa)> FaultByErrorId
-            = new Dictionary<int, (int, int, int, string)>();
+        public static Dictionary<int, Fault> FaultByErrorId = new Dictionary<int, Fault>();
 
         private static readonly string cnn = Settings.Default.Conn;
 
         public static void LoadFaults()
         {
             FaultMap.Clear();
+            FaultByErrorId.Clear();
 
-            // --- Lỗi mặc định ---
             FaultMap["Chuẩn bị"] = (0, 0, 0, 0, "Chuẩn bị thi");
             FaultMap["Bắt đầu"] = (0, 0, 0, 0, "Bắt đầu bài thi");
 
-            string sql = "SELECT ID, FullName, Subtraction, ErrorId FROM Faults";
+            string sql = "SELECT ID, FullName, Subtraction, ErrorId FROM Faults WHERE ErrorId IS NOT NULL";
 
             using (SqlConnection conn = new SqlConnection(cnn))
             {
                 conn.Open();
-
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 using (SqlDataReader rd = cmd.ExecuteReader())
                 {
                     while (rd.Read())
                     {
-                        int id = Convert.ToInt32(rd["ID"]);
-                        string fullName = rd["FullName"].ToString();
-                        int subtraction = Convert.ToInt32(rd["Subtraction"]);
-                        int errorId = Convert.ToInt32(rd["ErrorId"]);
+                        var fault = new Fault
+                        {
+                            Id = Convert.ToInt32(rd["ID"]),
+                            ErrorId = Convert.ToInt32(rd["ErrorId"]),
+                            DiemTru = Convert.ToInt32(rd["Subtraction"]),
+                            MoTa = rd["FullName"].ToString()
+                        };
 
-                        // Map theo tên lỗi
-                        FaultMap[fullName] = (id, errorId, subtraction, 0, fullName);
-
-                        // Map theo ErrorId để đọc từ ESP32
-                        FaultByErrorId[errorId] = (id, errorId, subtraction, fullName);
+                        FaultByErrorId[fault.ErrorId] = fault;
                     }
                 }
             }
         }
 
-        public static readonly Dictionary<string, string> FaultUIMap = new Dictionary<string, string>
+        public static Fault GetFaultByErrorId(int errorId)
         {
-            { "Chống chân", "Chạm chân xuống đất" },
-            { "Đổ xe", "Đổ xe" },
-            { "Ngoài hình", "Đi ra ngoài" }
+            return FaultByErrorId.TryGetValue(errorId, out var fault)
+                ? fault
+                : null;
+        }
+
+        public static readonly Dictionary<string, byte> FaultUIMap = new Dictionary<string, byte>
+        {
+            { "Chống chân", ConstantKeys.ERROR_CHAM_CHAN },
+            { "Đổ xe", ConstantKeys.ERROR_DO_XE },
+            { "Ngoài hình", ConstantKeys.ERROR_DI_RA_NGOAI }
         };
         private static readonly Dictionary<int, byte> ErrorIdToKeyMap =
             new Dictionary<int, byte>
