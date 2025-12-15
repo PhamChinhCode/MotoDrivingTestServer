@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using THI_HANG_A1.Managers;
 using THI_HANG_A1.Properties;
 
 namespace THI_HANG_A1.Helpers
@@ -56,5 +57,27 @@ namespace THI_HANG_A1.Helpers
             { "Đổ xe", "Đổ xe" },
             { "Ngoài hình", "Đi ra ngoài" }
         };
+        private static readonly Dictionary<int, byte> ErrorIdToKeyMap =
+            new Dictionary<int, byte>
+            {
+                { 0xE1, ConstantKeys.ERROR_DE_VACH_XP },
+                { 0xE2, ConstantKeys.ERROR_DE_VACH_CNV },
+                { 0xE3, ConstantKeys.ERROR_CHAM_CHAN },
+                { 0xE4, ConstantKeys.ERROR_QUA_TG_THI },
+                { 0xE5, ConstantKeys.ERROR_DI_SAI_DUONG },
+                { 0xE6, ConstantKeys.ERROR_DO_XE },
+                { 0xE7, ConstantKeys.ERROR_DI_RA_NGOAI },
+                { 0xE8, ConstantKeys.ERROR_TAT_MAY },
+                { 0xE9, ConstantKeys.ERROR_KHONG_DOI_MU },
+                { 0xEA, ConstantKeys.ERROR_KHONG_XI_NHAN_VAO },
+                { 0xEB, ConstantKeys.ERROR_QUA_THOI_GIAN_XP }
+            };
+
+        public static byte GetErrorKeyByErrorId(int errorId)
+        {
+            return ErrorIdToKeyMap.TryGetValue(errorId, out var key)
+                ? key
+                : ConstantKeys.ERROR_KEY;
+        }
     }
 }

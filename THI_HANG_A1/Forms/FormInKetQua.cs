@@ -191,7 +191,7 @@ namespace THI_HANG_A1
             // TẠO HEADER
             // ============================
             AddHeaderCell("Thời gian");
-            AddHeaderCell("Chi tiết lỗi");
+            AddHeaderCell("Chi tiết");
             AddHeaderCell("Điểm trừ");
 
             tblChiTietLoi.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -249,7 +249,7 @@ namespace THI_HANG_A1
                     TS.HoDem + ' ' + TS.Ten AS HoTen,
                     TS.HangGPLX,
                     TS.NgaySinh,
-	                TS.AnhChanDung,
+                    TS.AnhChanDung,
                     TS.SoCCCD,
                     KSH.TenKSH,
                     KSH.NgayThi,
@@ -257,9 +257,17 @@ namespace THI_HANG_A1
                     S.ID AS SessionID,
                     S.DeviceID,
                     S.StartTime,
-                    DATEADD(SECOND, S.Duration, S.StartTime) AS EndTime,
+                    S.EndTime,
+                    RIGHT(
+                        '0' + CAST(DATEDIFF(SECOND, S.StartTime, S.EndTime) / 60 AS varchar),
+                        2
+                    )
+                    + ':' +
+                    RIGHT(
+                        '0' + CAST(DATEDIFF(SECOND, S.StartTime, S.EndTime) % 60 AS varchar),
+                        2
+                    ) AS Duration_mmss,
 
-                    RIGHT(CONVERT(varchar, DATEADD(SECOND, S.Duration, 0), 108), 5) AS Duration_mmss,
                     S.Time AS SoLanThi,
                     S.Mark,
                     CASE WHEN S.Mark >= 80 THEN 1 ELSE 0 END AS KetQua
@@ -305,7 +313,6 @@ namespace THI_HANG_A1
                     CT.DiemTru
                 FROM ChiTietLoi CT
                 WHERE CT.SessionID = @SessionID
-                    AND CT.DiemTru > 0 
                 ORDER BY CT.ThoiGian ASC;
     ";
 
