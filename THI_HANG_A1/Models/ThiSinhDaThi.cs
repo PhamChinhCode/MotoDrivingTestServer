@@ -15,8 +15,10 @@ namespace THI_HANG_A1.Models
         public string HangGPLX { get; set; }
         public string DeviceID { get; set; }
         public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int Duration { get; set; }
         public int SoLanThi { get; set; }
+        public int LanThi { get; set; }
         public int Mark { get; set; }
 
         public int DiemTru_BT1 { get; set; }
