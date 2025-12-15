@@ -94,7 +94,7 @@ namespace THI_HANG_A1.Managers
                     // Connected
                     await connectTask;  // đảm bảo throw đúng exception nếu có
                     //_stream.ReadTimeout = 5000;
-                    _stream = _client.GetgitStream();
+                    _stream = _client.GetStream();
                     StartReceiveThread();
                     return true;
                 }
