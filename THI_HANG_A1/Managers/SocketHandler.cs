@@ -93,6 +93,7 @@ namespace THI_HANG_A1.Managers
 
                     // Connected
                     await connectTask;  // đảm bảo throw đúng exception nếu có
+                    //_stream.ReadTimeout = 5000;
                     _stream = _client.GetStream();
                     StartReceiveThread();
                     return true;
@@ -151,6 +152,7 @@ namespace THI_HANG_A1.Managers
         // ================================================================
         private void StartReceiveThread()
         {
+
             _receiveThread = new Thread(ReceiveLoop);
             _receiveThread.IsBackground = true;
             _receiveThread.Start();
@@ -163,18 +165,27 @@ namespace THI_HANG_A1.Managers
 
             while (true)
             {
-                //try
-                //{
-                //int len = _stream.Read(buffer, 0, buffer.Length);
-                int data = _stream.ReadByte();
 
-                if (data <= 0)
+
+                try
                 {
+                    int data = _stream.ReadByte();
+
+                    if (data <= 0)
+                    {
+                        Disconnect();
+                        return;
+                    }
+                    if (data != ConstantKeys.BYTE_START) return;
+                    buffer = ReadExact(_stream, 9);
+                }
+                catch (IOException)
+                {
+                    // ReadTimeout hoặc socket lỗi
                     Disconnect();
                     return;
                 }
-                if (data != ConstantKeys.BYTE_START) return;
-                buffer = ReadExact(_stream, 9);
+
 
                 if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
 
@@ -194,20 +205,6 @@ namespace THI_HANG_A1.Managers
 
                 }
                 OnDataReceivedCommand?.Invoke(cmd);
-
-
-                //string msg = Encoding.UTF8.GetString(buffer, 0, len);
-
-                //// Đưa dữ liệu về Form
-                //OnDataReceived?.Invoke(buffer, len);
-                //OnDataReceivedBytes?.Invoke(buffer, len);
-
-                //}
-                //catch
-                //{
-                //    Disconnect();
-                //    return;
-                //}
             }
         }
         private byte[] ReadExact(NetworkStream stream, int size)

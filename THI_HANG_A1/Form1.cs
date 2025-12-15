@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -105,7 +104,8 @@ namespace THI_HANG_A1
             fxe = new QuanLyXe(xes);
 
             sanList = new List<San>();
-            sanList.Add(new San("San 1", "192.168.244.220", 123));
+            sanList.Add(new San("San 1", "192.168.0.150", 123));
+            sanList[0].Connect();
             //fxe.ShowDialog();
             //xes[0].Connect();
 
@@ -1101,6 +1101,12 @@ namespace THI_HANG_A1
                     errId != ts.LastError &&
                     FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var fault))
                 {
+
+                    //
+                    if (errId == 229)
+                    {
+                        return;
+                    }
                     ts.LastError = errId;
 
                     string moTa = BaiThiHelper.GetName(st);
@@ -1457,7 +1463,7 @@ namespace THI_HANG_A1
 
             // Trạng thái: Đạt / Không đạt (dựa vào Mark)
             lblTrangThai.Text = ts.Mark >= 80 ? "Đạt" : "Không đạt";
-            int tongDiemTru = ts.DiemTru_BT1 + ts.DiemTru_BT4 + ts.DiemTru_BT5 + ts.DiemTru_BT6 + ts.DiemTru_BT7; 
+            int tongDiemTru = ts.DiemTru_BT1 + ts.DiemTru_BT4 + ts.DiemTru_BT5 + ts.DiemTru_BT6 + ts.DiemTru_BT7;
 
             lblDiemTruu.Text = tongDiemTru.ToString();
             lblDiemConLai.Text = (100 - tongDiemTru).ToString();

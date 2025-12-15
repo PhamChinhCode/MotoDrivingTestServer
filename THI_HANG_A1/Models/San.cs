@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -88,9 +89,13 @@ namespace THI_HANG_A1.Models
             bool ok = await socketConn.ConnectWithTimeout(IP, PORT);
             IsConnected = ok;
             TriggerUI();
+            socketConn.OnDisconnected += disconnect;
         }
 
-
+        public void disconnect()
+        {
+            MessageBox.Show("disconnect");
+        }
         public void Disconnect()
         {
             if (socketConn != null)
