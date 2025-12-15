@@ -85,8 +85,13 @@ namespace THI_HANG_A1.Helpers
                 JOIN ThiSinhSH TS ON TS.SBD = S.SBD
                 WHERE 
                     S.IsFinish = 0
-                    AND S.LastUpdate IS NOT NULL
-                    AND S.LastUpdate < DATEADD(SECOND, -@Timeout, GETDATE())
+                    AND (
+                        -- Case 1: có LastUpdate và đã quá timeout
+                        (S.LastUpdate IS NOT NULL AND S.LastUpdate < DATEADD(SECOND, -@Timeout, GETDATE()))
+                        OR
+                        -- Case 2: LastUpdate NULL (phòng trường hợp crash sớm) -> dùng StartTime làm mốc
+                        (S.LastUpdate IS NULL AND S.StartTime < DATEADD(SECOND, -@Timeout, GETDATE()))
+                    );
             ";
 
             using (SqlConnection conn = new SqlConnection(cnn))
@@ -102,15 +107,16 @@ namespace THI_HANG_A1.Helpers
                         {
                             list.Add(new SessionInfo
                             {
-                                SessionID = rd.GetInt32(0),
-                                SBD = rd.GetInt64(1),
-                                Xe = rd.GetString(2),
-                                Ten = rd.GetString(3)
+                                SessionID = Convert.ToInt32(rd["ID"]),
+                                SBD = Convert.ToInt64(rd["SBD"]),
+                                Xe = rd["DeviceID"].ToString(),
+                                Ten = rd["TenThiSinh"].ToString()
                             });
                         }
                     }
                 }
             }
+
             return list;
         }
 

@@ -1091,21 +1091,21 @@ namespace THI_HANG_A1
                     ts.LastError = errId;
 
                     string moTa = BaiThiHelper.GetName(st);
-                    string chiTiet = $"{fault.moTa} – Tại bài: {moTa}";
+                    string chiTiet = $"{fault.MoTa} – Tại bài: {moTa}";
 
                     InsertErrorToDatabase(
                         ts.SoBaoDanh, ts.SessionID,
                         $"{ts.HoDem} {ts.Ten}", ts.Xe,
-                        fault.moTa, fault.diemTru, chiTiet,
-                        fault.id, ts.BaiThiHienTaiID, ts
+                        fault.MoTa, fault.DiemTru, chiTiet,
+                        fault.Id, ts.BaiThiHienTaiID, ts
                     );
                     // gửi mã lỗi về esp
                     byte errorKey = FaultDefinitions.GetErrorKeyByErrorId(errId);
                     ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorKey);
 
                     ts.SoLoi++;
-                    ts.DiemTru += fault.diemTru;
-                    ts.DiemConLai -= fault.diemTru;
+                    ts.DiemTru += fault.DiemTru;
+                    ts.DiemConLai -= fault.DiemTru;
 
                     if (ts.LastSentMark != ts.DiemConLai)
                     {
@@ -1181,8 +1181,8 @@ namespace THI_HANG_A1
 
                         FaultDefinitions.FaultByErrorId.TryGetValue(ConstantKeys.ERROR_DE_VACH_CNV, out var fault);
                         ts.SoLoi++;
-                        ts.DiemTru += fault.diemTru;
-                        ts.DiemConLai -= fault.diemTru;
+                        ts.DiemTru += fault.DiemTru;
+                        ts.DiemConLai -= fault.DiemTru;
                         if (ts.LastSentMark != ts.DiemConLai)
                         {
                             UpdateMarkSession(ts.SessionID, ts.DiemConLai);
@@ -1352,13 +1352,14 @@ namespace THI_HANG_A1
             //===============================
             //   DÙNG MAP ĐỂ LẤY LỖI
             //===============================
-            string fullName = FaultDefinitions.FaultUIMap[cot];
-            var err = FaultDefinitions.FaultMap[fullName];
-            int faultId = err.id;
-            int diemTru = err.diemTru;
+            byte errorId = FaultDefinitions.FaultUIMap[cot];
+            var err = FaultDefinitions.GetFaultByErrorId(errorId);
+            if (err == null) return;
+            int faultId = err.Id;
+            int diemTru = err.DiemTru;
             int baiThiId = ts.BaiThiHienTaiID;
             string baiThiMoTa = BaiThiHelper.GetNameByBaiThiId(baiThiId);
-            string chiTietLoi = $"{err.moTa} – Tại vị trí: {baiThiMoTa}";
+            string chiTietLoi = $"{err.MoTa} – Tại vị trí: {baiThiMoTa}";
 
             // gửi mã lỗi về esp
             byte errorKey = FaultDefinitions.GetErrorKeyByErrorId(faultId);
@@ -1386,7 +1387,7 @@ namespace THI_HANG_A1
                 ts.SessionID,
                 $"{ts.HoDem} {ts.Ten}",
                 ts.Xe,
-                err.moTa,
+                err.MoTa,
                 diemTru,
                 chiTietLoi,
                 faultId,
@@ -2687,7 +2688,6 @@ namespace THI_HANG_A1
             }
         }
 
-
         private void SafeUI(Action action)
         {
             if (this.InvokeRequired)
@@ -2722,51 +2722,6 @@ namespace THI_HANG_A1
 
             _recoveryTimer.Start();
         }
-
-        private void StartRealtimeSender()
-        {
-            timerRealtime = new System.Windows.Forms.Timer();
-            timerRealtime.Interval = 1000; // 1 giây
-            timerRealtime.Tick += (s, e) =>
-            {
-                foreach (var ts in ds)
-                {
-                    SendRealtimeToDevice(ts.XeObj);
-                }
-            };
-            timerRealtime.Start();
-        }
-        private void SendRealtimeToDevice(Moto xe)
-        {
-            if (xe == null)
-                return;
-
-            uint packedTime = PackDateTime(DateTime.Now);
-
-            xe.sendCommand(
-                ConstantKeys.REALTIME_COMMAND,
-                ConstantKeys.BYTE_SET,
-                packedTime
-            );
-        }
-        private uint PackDateTime(DateTime dt)
-        {
-            uint year = (uint)(dt.Year - 2020);
-            uint month = (uint)dt.Month;
-            uint day = (uint)dt.Day;
-            uint hour = (uint)dt.Hour;
-            uint minute = (uint)dt.Minute;
-            uint second = (uint)dt.Second;
-
-            return
-                (year << 26) |
-                (month << 22) |
-                (day << 17) |
-                (hour << 12) |
-                (minute << 6) |
-                second;
-        }
-
     }
 
 }

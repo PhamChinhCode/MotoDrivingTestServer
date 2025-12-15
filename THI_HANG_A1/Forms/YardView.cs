@@ -30,13 +30,11 @@ namespace THI_HANG_A1.Forms
                 UpdateUI();
         }
 
-        int i = 0;
         private void UpdateUI()
         {
             lblName.Text = san.Name;
             label2.Text = san.IP;
             label1.Text = san.Mes;
-
             if (!san.IsConnected)
             {
                 // CLEAR UI khi ngắt kết nối
