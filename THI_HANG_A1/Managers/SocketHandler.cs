@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 
 namespace THI_HANG_A1.Managers
@@ -126,7 +125,7 @@ namespace THI_HANG_A1.Managers
             try { _client?.Close(); } catch { }
 
             OnDisconnected?.Invoke();
-            MessageBox.Show(" Mất kết nối tới: " + Convert.ToString(IPAddress));
+            //MessageBox.Show(" Mất kết nối tới: " + Convert.ToString(IPAddress));
         }
 
         // ================================================================
@@ -162,6 +161,8 @@ namespace THI_HANG_A1.Managers
         {
             byte[] buffer = new byte[1024];
             Command cmd = new Command();
+
+
 
             while (true)
             {

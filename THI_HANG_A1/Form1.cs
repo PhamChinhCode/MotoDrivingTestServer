@@ -998,7 +998,7 @@ namespace THI_HANG_A1
                 return;
 
             string soXe = xeChon.Id.ToString();
-            StartRealtimeSender();
+            //StartRealtimeSender();
 
             // 1. Nếu xe mới đang phục vụ người khác → gỡ sự kiện người cũ
             if (xeDangDung.TryGetValue(soXe, out var oldD))
@@ -1043,7 +1043,7 @@ namespace THI_HANG_A1
                     );
 
                     UpdateMarkSession(ts.SessionID, ts.DiemConLai, true);
-                    
+
                     SafeUI(() =>
                     {
                         CleanupEvents(ts);
@@ -1156,7 +1156,6 @@ namespace THI_HANG_A1
                 San san = sanList[0];
                 int baiId = BaiThiHelper.GetId(xeChon.Status);
                 string baiMoTa = BaiThiHelper.GetName(xeChon.Status);
-
                 List<(string name, bool val)> sensors = new List<(string name, bool val)>();
                 switch (xeChon.Status)
                 {
@@ -1209,7 +1208,7 @@ namespace THI_HANG_A1
             isWaitingImage = true;
             ts.WaitingImage = true;
 
-            xe.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET,ConstantKeys.KEY_NULL);
+            xe.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET, ConstantKeys.KEY_NULL);
 
             Task.Delay(1000).ContinueWith(_ => isWaitingImage = false);
         }
@@ -1844,7 +1843,7 @@ namespace THI_HANG_A1
                             ConstantKeys.CONTROL_STOP
                         );
                     }
-                    catch {  }
+                    catch { }
                 }
                 InsertErrorToDatabase(
                    d.SoBaoDanh,
@@ -2417,7 +2416,7 @@ namespace THI_HANG_A1
                                 Duration = rd.GetInt32(1),
                                 SoLanThi = rd.GetInt32(2),
                                 DeviceID = rd.GetInt32(3).ToString(),
-                                Mark = rd.GetInt32(4),   
+                                Mark = rd.GetInt32(4),
                                 DiemTru_BT1 = rd.GetInt32(5),
                                 DiemTru_BT4 = rd.GetInt32(6),
                                 DiemTru_BT5 = rd.GetInt32(7),

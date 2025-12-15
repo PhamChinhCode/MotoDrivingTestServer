@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection.Emit;
 using System.Windows.Forms;
 using THI_HANG_A1.Models;
 
@@ -37,8 +36,7 @@ namespace THI_HANG_A1.Forms
             lblName.Text = san.Name;
             label2.Text = san.IP;
             label1.Text = san.Mes;
-            MessageBox.Show("Đã đẹn vạch: " + i);
-            i++;
+
             if (!san.IsConnected)
             {
                 // CLEAR UI khi ngắt kết nối
