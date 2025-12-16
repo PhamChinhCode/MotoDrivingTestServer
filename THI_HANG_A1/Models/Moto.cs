@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -105,10 +104,17 @@ namespace THI_HANG_A1.Models
                 return;
             }
             Connected = ok;
+
             socketConn.OnDataReceivedImage += onRecvImage;
             socketConn.OnDataReceivedCommand += onRecv;
             socketConn.OnDataReceived += SocketDataHandler;
             socketConn.OnDisconnected += disConnectHandler;
+
+            // gửi thời gian xuống cho thiết bị
+            long epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            //MessageBox.Show(Convert.ToString(epoch));
+            UInt32 timestamp = Convert.ToUInt32(epoch);
+            sendCommand(ConstantKeys.REALTIME_COMMAND, ConstantKeys.BYTE_SET, timestamp);
         }
         private void onRecvImage(byte[] array)
         {
