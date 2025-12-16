@@ -1154,14 +1154,24 @@ namespace THI_HANG_A1
             ts.SanChangedHandler = () =>
             {
                 San san = sanList[0];
-                int baiId = BaiThiHelper.GetId(xeChon.Status);
-                string baiMoTa = BaiThiHelper.GetName(xeChon.Status);
+                int baiId = ts.BaiThiHienTaiID;
+                string baiMoTa = BaiThiHelper.GetNameByBaiThiId(baiId);
                 List<(string name, bool val)> sensors = new List<(string name, bool val)>();
                 switch (xeChon.Status)
                 {
                     case ConstantKeys.STATUS_CONTEST1:
                         sensors.Add(("Sensor1", san.Sensor1));
                         break;
+                    case ConstantKeys.STATUS_CONTEST2:
+                        sensors.Add(("Sensor2", san.Sensor2));
+                        break;
+                    case ConstantKeys.STATUS_CONTEST3:
+                        sensors.Add(("Sensor3", san.Sensor3));
+                        break;
+                    case ConstantKeys.STATUS_CONTEST4:
+                        sensors.Add(("Sensor4", san.Sensor4));
+                        break;
+
                 }
 
                 foreach (var s in sensors)
@@ -1854,7 +1864,7 @@ namespace THI_HANG_A1
                    d.DiemConLai,
                    LyDoKetThucMapper.Ten(lyDo),
                    null,
-                   d.BaiThiHienTaiID,
+                   d.BaiThiHienTaiID > 0 ? (int?)d.BaiThiHienTaiID : BaiThiHelper.GetId(ConstantKeys.STATUS_READY),
                    d
                );
 
