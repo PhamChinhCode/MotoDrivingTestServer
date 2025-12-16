@@ -1362,8 +1362,7 @@ namespace THI_HANG_A1
             string chiTietLoi = $"{err.MoTa} – Tại vị trí: {baiThiMoTa}";
 
             // gửi mã lỗi về esp
-            byte errorKey = FaultDefinitions.GetErrorKeyByErrorId(faultId);
-            ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorKey);
+            ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorId);
 
             //===============================
             //  CẬP NHẬT ĐIỂM

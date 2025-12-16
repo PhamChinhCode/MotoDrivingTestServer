@@ -67,7 +67,6 @@ namespace THI_HANG_A1.Helpers
             }
             if (sessions.Count > 0)
             {
-                MessageBox.Show("finish all session");
                 AutoFinishStaleSessions(timeoutSeconds);
             }
         }
