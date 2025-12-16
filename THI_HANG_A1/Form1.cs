@@ -1082,12 +1082,6 @@ namespace THI_HANG_A1
                     errId != ts.LastError &&
                     FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var fault))
                 {
-
-                    //
-                    if (errId == 229)
-                    {
-                        return;
-                    }
                     ts.LastError = errId;
 
                     string moTa = BaiThiHelper.GetName(st);
@@ -1171,7 +1165,6 @@ namespace THI_HANG_A1
                     case ConstantKeys.STATUS_CONTEST4:
                         sensors.Add(("Sensor4", san.Sensor4));
                         break;
-
                 }
 
                 foreach (var s in sensors)
