@@ -1857,7 +1857,7 @@ namespace THI_HANG_A1
                    d.DiemConLai,
                    LyDoKetThucMapper.Ten(lyDo),
                    null,
-                   d.BaiThiHienTaiID,
+                   d.BaiThiHienTaiID > 0 ? (int?)d.BaiThiHienTaiID : BaiThiHelper.GetId(ConstantKeys.STATUS_READY),
                    d
                );
 

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 
 namespace THI_HANG_A1.Managers
@@ -64,6 +65,7 @@ namespace THI_HANG_A1.Managers
             }
             catch (Exception)
             {
+                MessageBox.Show("Khong ket noi dc");
                 return false;
             }
         }
@@ -151,7 +153,6 @@ namespace THI_HANG_A1.Managers
         // ================================================================
         private void StartReceiveThread()
         {
-
             _receiveThread = new Thread(ReceiveLoop);
             _receiveThread.IsBackground = true;
             _receiveThread.Start();
