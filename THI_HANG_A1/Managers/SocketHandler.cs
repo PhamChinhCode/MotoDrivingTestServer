@@ -291,7 +291,7 @@ namespace THI_HANG_A1.Managers
         // ================= EVENTS =================
         public event Action<Command> OnDataReceivedCommand;
         public event Action<byte[]> OnDataReceivedImage;
-        public event Action<byte[], int> OnDataReceived;
+        //public event Action<byte[], int> OnDataReceived;
         public event Action OnDisconnected;
 
         // ================= TIMER =================

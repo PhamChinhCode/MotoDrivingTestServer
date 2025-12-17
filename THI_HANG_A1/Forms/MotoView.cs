@@ -9,7 +9,6 @@ namespace THI_HANG_A1.Forms
     public partial class MotoView : UserControl
     {
         private Moto moto;
-        private int i;
         public MotoView(Moto m)
         {
             InitializeComponent();
@@ -33,7 +32,19 @@ namespace THI_HANG_A1.Forms
         }
         private void showLog()
         {
-            textBox1.AppendText(Convert.ToString(moto.log.Count - 1) + "\t" + moto.log[moto.log.Count - 1].ToString() + Environment.NewLine);
+            try
+            {
+                if (textBox1 == null || textBox1.IsDisposed) return;
+                if (moto.log == null || moto.log.Count == 0) return;
+
+                int lastIndex = moto.log.Count - 1;
+                textBox1.AppendText(lastIndex + "\t" + moto.log[lastIndex] + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
@@ -113,20 +124,29 @@ namespace THI_HANG_A1.Forms
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
             button2.Enabled = false;
-            if (!moto.Connected)
+
+            try
             {
-                moto.Connect();
-                //button2.Text = "Ngắt kết nối";
+                if (!moto.Connected)
+                {
+                    await moto.Connect();   // async thật
+                }
+                else
+                {
+                    moto.Disconnect();           // sync
+                }
             }
-            else
+            catch (Exception ex)
             {
-                moto.Disconnect();
-                //button2.Text = "Kết nối";
+                MessageBox.Show(ex.Message);
             }
-            button2.Enabled = true;
+            finally
+            {
+                button2.Enabled = true;
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
