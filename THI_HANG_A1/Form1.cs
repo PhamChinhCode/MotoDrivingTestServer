@@ -1022,7 +1022,7 @@ namespace THI_HANG_A1
             // ===========================================================
 
             // a. Event trạng thái bài thi
-            ts.XeChangedHandler = () =>
+            ts.XeChangedHandler = async () =>
             {
                 byte st = xeChon.Status;
                 byte errId = xeChon.ErrorId;
@@ -2688,6 +2688,16 @@ namespace THI_HANG_A1
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private void toolStripProgressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripLabel1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void SafeUI(Action action)
