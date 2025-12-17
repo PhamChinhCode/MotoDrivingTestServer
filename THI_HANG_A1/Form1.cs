@@ -108,6 +108,7 @@ namespace THI_HANG_A1
                 sanList[0].Connect();
             else
                 sanList[0].Disconnect();
+
             //fxe.ShowDialog();
             //xes[0].Connect();
 
@@ -213,152 +214,6 @@ namespace THI_HANG_A1
 
         #endregion
 
-        //#region === NÚT ĐIỀU KHIỂN, LỖI ===
-
-        ///// <summary>
-        ///// Giao xe cho thí sinh được chọn ở bảng CHUẨN BỊ THI
-        ///// </summary>
-
-        ///// <summary>
-        ///// Bắt đầu lượt thi cho thí sinh đang chọn trong bảng ĐANG THI
-        ///// </summary>
-        //private void btnBatDau_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        examManager.BatDauLuotThi(ts);
-
-        //        if (!timerCapNhatThoiGian.Enabled)
-        //            timerCapNhatThoiGian.Start();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Vui lòng CHỌN thí sinh trong bảng 'ĐANG THI' để bắt đầu.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
-
-        //private void btnKetThucLuot_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            $"Xác nhận kết thúc lượt thi của {ts.HoTen} với điểm số là {ts.DiemTongHop}?",
-        //            "Xác nhận kết thúc", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            _ = examManager.KetThucLuotThiThuCong(ts);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Vui lòng chọn thí sinh cần kết thúc bài thi.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
-
-        //// Các nút lỗi (nhẹ/nặng) – GIỮ NGUYÊN, chỉ sửa grid thành dgvdangthii
-
-        //private void btnLoiChamVach_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.GhiNhanLoiThuCong(ts, 5, $"Chạm vạch lần {ts.LoiChamVach + 1}", "ChamVach", t => t.LoiChamVach++);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private void btnLoiChetMay_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.GhiNhanLoiThuCong(ts, 5, $"Chết máy lần {ts.LoiChetMay + 1}", "ChetMay", t => t.LoiChetMay++);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private void btnLoiKhongXiNhan_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.GhiNhanLoiThuCong(ts, 5, $"Không xi nhan lần {ts.LoiKhongXiNhan + 1}", "KhongXiNhan", t => t.LoiKhongXiNhan++);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private async void btnLoiNgaDo_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            "Xác nhận thí sinh bị lỗi 'Ngã/đổ xe' và bị loại trực tiếp?",
-        //            "Xác nhận lỗi loại", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            ts.LoiNgaDo = 1;
-        //            await examManager.LoaiTrucTiep(ts, ts.DiemTongHop, "Ngã/đổ xe (Loại trực tiếp)", "DoXe");
-        //        }
-        //    }
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private async void btnLoiSaiHinh_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            "Xác nhận thí sinh bị lỗi 'Chạy sai hình' và bị loại trực tiếp?",
-        //            "Xác nhận lỗi loại", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            ts.LoiChaySaiHinh = 1;
-        //            await examManager.LoaiTrucTiep(ts, ts.DiemTongHop, "Chạy sai hình (Loại trực tiếp)", "SaiHinh");
-        //        }
-        //    }
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private async void btnLoiQuaTocDo_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            "Xác nhận thí sinh bị lỗi 'Vượt quá tốc độ' và bị loại trực tiếp?",
-        //            "Xác nhận lỗi loại", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            ts.LoiQuaTocDo = 1;
-        //            await examManager.LoaiTrucTiep(ts, ts.DiemTongHop, "Vượt quá tốc độ (Loại trực tiếp)", "VuotTocDo");
-        //        }
-        //    }
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private void btnQuaVongSo8_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.QuaVongSo8(ts);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh trong bảng 'ĐANG THI'.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //}
-
-        //#endregion
-
-        //private void btnQuaVongSo8_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.QuaVongSo8(ts);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh trong bảng 'ĐANG THI'.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //}
-
-        //#endregion
         #region === TIMER CẬP NHẬT THỜI GIAN ===
 
         // Khai báo duy nhất một hàm `timerCapNhatThoiGian_Tick`
@@ -509,7 +364,44 @@ namespace THI_HANG_A1
             FaultDefinitions.LoadFaults();
 
             LoadingComponent();
+
+            sanAliveTimer = new Timer();
+            sanAliveTimer.Interval = 1000; // 1 giây
+            sanAliveTimer.Tick += SanAliveTimer_Tick;
+            sanAliveTimer.Start();
         }
+        private void SanAliveTimer_Tick(object sender, EventArgs e)
+        {
+            if (sanList == null || sanList.Count == 0)
+                return;
+
+            var san = sanList[0];
+
+            // 🔥 1. GỬI HEARTBEAT (BẮT BUỘC)
+            san.socketConn.SendHeartbeat();
+
+            // 🔥 2. CHECK BẰNG IsStillAlive (KHÔNG DÙNG IsAlive)
+            bool alive = san.socketConn.IsStillAlive();
+
+            if (txtCheckAlive.Lines.Length > 200)
+                txtCheckAlive.Clear();
+
+            txtCheckAlive.AppendText(
+                $"{Environment.NewLine}Trạng thái({DateTime.Now}): {alive}"
+            );
+
+            if (alive)
+            {
+                lblSanStatus.Text = "Sân: Đang kết nối";
+                lblSanStatus.ForeColor = Color.Green;
+            }
+            else
+            {
+                lblSanStatus.Text = "Sân: Mất kết nối";
+                lblSanStatus.ForeColor = Color.Red;
+            }
+        }
+
         private void LoadingComponent()
         {
             // Làm mờ nền

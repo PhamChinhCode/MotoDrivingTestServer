@@ -23,6 +23,9 @@ namespace THI_HANG_A1.Managers
 
         public bool IsConnected => _client != null && _client.Connected;
 
+        public bool IsAlive { get; private set; }
+        public DateTime LastAliveTime { get; private set; }
+
         // Sự kiện đẩy dữ liệu ra Form
         public event Action<byte[], int> OnDataReceived;
         public event Action OnDisconnected;
@@ -50,6 +53,9 @@ namespace THI_HANG_A1.Managers
                         // Bắt đầu Thread nhận dữ liệu
                         StartReceiveThread();
                         //}
+
+                        IsAlive = false;
+                        LastAliveTime = DateTime.MinValue;
                         return true;
                     }
                     else
@@ -65,7 +71,6 @@ namespace THI_HANG_A1.Managers
             }
             catch (Exception)
             {
-                MessageBox.Show("Khong ket noi dc");
                 return false;
             }
         }
@@ -125,7 +130,7 @@ namespace THI_HANG_A1.Managers
 
             try { _stream?.Close(); } catch { }
             try { _client?.Close(); } catch { }
-
+            IsAlive = false;
             OnDisconnected?.Invoke();
             //MessageBox.Show(" Mất kết nối tới: " + Convert.ToString(IPAddress));
         }
@@ -207,6 +212,9 @@ namespace THI_HANG_A1.Managers
 
                 }
                 OnDataReceivedCommand?.Invoke(cmd);
+
+                LastAliveTime = DateTime.Now;
+                IsAlive = true;
             }
         }
         private byte[] ReadExact(NetworkStream stream, int size)
@@ -229,6 +237,14 @@ namespace THI_HANG_A1.Managers
             {
                 return new Bitmap(ms);
             }
+        }
+
+        public bool IsStillAlive(int timeoutMs = 3000)
+        {
+            if (!IsAlive) return false;
+
+            return (DateTime.Now - LastAliveTime)
+                .TotalMilliseconds < timeoutMs;
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
@@ -13,6 +14,8 @@ namespace THI_HANG_A1.Models
         public int PORT { get; private set; }
 
         public SocketHandler socketConn;
+
+        public bool IsAlive => socketConn?.IsStillAlive() ?? false;
 
         public San(string name, string ip, int port)
         {
