@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using THI_HANG_A1.Managers;
 
 namespace THI_HANG_A1.Models
@@ -75,7 +76,7 @@ namespace THI_HANG_A1.Models
         }
 
 
-        public SocketHandler socketConn;
+        public SocketHandlerAsync socketConn;
         //private FrameCnvert frameConvertor;
         public List<LogMoto> log { get; set; } = new List<LogMoto>();
         public Moto(string name, string ip, int port)
@@ -83,20 +84,20 @@ namespace THI_HANG_A1.Models
             Name = name;
             Ip = ip;
             Port = port;
-            socketConn = new SocketHandler();
+            socketConn = new SocketHandlerAsync();
 
         }
 
         public Moto()
         {
 
-            socketConn = new SocketHandler();
+            socketConn = new SocketHandlerAsync();
         }
 
         public async Task Connect()
         {
             //bool ok = socketConn.Connect(Ip, Port);
-            bool ok = await socketConn.ConnectWithTimeout(Ip, Port);
+            bool ok = await socketConn.ConnectAsync(Ip, Port);
 
             if (!ok)
             {
@@ -104,7 +105,10 @@ namespace THI_HANG_A1.Models
                 return;
             }
             Connected = ok;
-
+            socketConn.OnDataReceivedImage -= onRecvImage;
+            socketConn.OnDataReceivedCommand -= onRecv;
+            socketConn.OnDataReceived -= SocketDataHandler;
+            socketConn.OnDisconnected -= disConnectHandler;
             socketConn.OnDataReceivedImage += onRecvImage;
             socketConn.OnDataReceivedCommand += onRecv;
             socketConn.OnDataReceived += SocketDataHandler;
@@ -115,6 +119,10 @@ namespace THI_HANG_A1.Models
             //MessageBox.Show(Convert.ToString(epoch));
             UInt32 timestamp = Convert.ToUInt32(epoch);
             sendCommand(ConstantKeys.REALTIME_COMMAND, ConstantKeys.BYTE_SET, timestamp);
+        }
+        public void Disconnect()
+        {
+            socketConn.Disconnect();
         }
         private void onRecvImage(byte[] array)
         {
@@ -153,7 +161,9 @@ namespace THI_HANG_A1.Models
         }
         private void disConnectHandler()
         {
+            if (Connected) MessageBox.Show("Mất kết nối với xe !");
             Connected = false;
+
         }
         public void sendCommand(byte key, byte type, UInt32 value)
         {
@@ -169,7 +179,7 @@ namespace THI_HANG_A1.Models
             buff[7] = (byte)(value & 0xff);
             buff[8] = 0;
             buff[9] = ConstantKeys.BYTE_STOP;
-            socketConn.SendBytes(buff);
+            socketConn.SendBytesAsync(buff);
         }
         private void SocketDataHandler(byte[] buffer, int len)
         {
