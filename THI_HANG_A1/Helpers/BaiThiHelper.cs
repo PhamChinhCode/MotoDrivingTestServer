@@ -1,14 +1,8 @@
-﻿using DocumentFormat.OpenXml.Office.SpreadSheetML.Y2023.DataSourceVersioning;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using THI_HANG_A1.Forms;
 using THI_HANG_A1.Managers;
 using THI_HANG_A1.Models;
@@ -239,6 +233,15 @@ namespace THI_HANG_A1.Helpers
             if (baiThiId > 0)
                 ts.BaiThiHienTaiID = baiThiId;
         }
+        public static bool IsInValidContest(byte st)
+        {
+            return st == ConstantKeys.STATUS_READY ||
+                   st == ConstantKeys.STATUS_CONTEST1 ||
+                   st == ConstantKeys.STATUS_CONTEST2 ||
+                   st == ConstantKeys.STATUS_CONTEST3 ||
+                   st == ConstantKeys.STATUS_CONTEST4;
+        }
+
 
         public static bool IsInValidContest1_4(byte st)
         {
@@ -299,6 +302,47 @@ namespace THI_HANG_A1.Helpers
                 case "Không đạt": return TrangThaiTS.KhongDat;
                 case "Đạt": return TrangThaiTS.Dat;
                 default: return TrangThaiTS.None;
+            }
+        }
+
+        public static string GetSoundName(byte errorId)
+        {
+            switch (errorId)
+            {
+                case ConstantKeys.ERROR_DE_VACH_XP:        // 0xE1
+                case ConstantKeys.ERROR_DE_VACH_CNV:       // 0xE2
+                    return "ChamVach";
+
+                case ConstantKeys.ERROR_CHAM_CHAN:         // 0xE3
+                    return "VuotTocDo";
+                    //return "ChamChan";                // chưa có file
+
+                case ConstantKeys.ERROR_QUA_TG_THI:        // 0xE4
+                    return "VuotTocDo";
+                //return "QuaTGThi";                // chua co sound
+
+                case ConstantKeys.ERROR_QUA_THOI_GIAN_XP:  // 0xEB
+                    return "VuotTocDo";
+                //return "QuaTGXuatPhat";            // chua co sound
+
+                case ConstantKeys.ERROR_DI_SAI_DUONG:      // 0xE5
+                case ConstantKeys.ERROR_DI_RA_NGOAI:       // 0xE7
+                    return "SaiHinh";
+
+                case ConstantKeys.ERROR_DO_XE:              // 0xE6
+                    return "DoXe";
+
+                case ConstantKeys.ERROR_TAT_MAY:            // 0xE8
+                    return "ChetMay";
+
+                case ConstantKeys.ERROR_KHONG_DOI_MU:       // 0xE9
+                    return "SaiHinh";                   // chưa có file
+
+                case ConstantKeys.ERROR_KHONG_XI_NHAN_VAO:  // 0xEA
+                    return "KhongXiNhan";
+
+                default:
+                    return null; // hoặc "SaiHinh"
             }
         }
 

@@ -74,6 +74,7 @@ namespace THI_HANG_A1
                             Moto existing = oldMap[id];
                             existing.Name = rd["Name"].ToString();
                             existing.Ip = rd["IPAddress"].ToString();
+                            //existing.Status = ConstantKeys.STATUS_FREE;
                             newList.Add(existing);
                         }
                         else
@@ -108,6 +109,7 @@ namespace THI_HANG_A1
                 sanList[0].Connect();
             else
                 sanList[0].Disconnect();
+
             //fxe.ShowDialog();
             //xes[0].Connect();
 
@@ -213,152 +215,6 @@ namespace THI_HANG_A1
 
         #endregion
 
-        //#region === NÚT ĐIỀU KHIỂN, LỖI ===
-
-        ///// <summary>
-        ///// Giao xe cho thí sinh được chọn ở bảng CHUẨN BỊ THI
-        ///// </summary>
-
-        ///// <summary>
-        ///// Bắt đầu lượt thi cho thí sinh đang chọn trong bảng ĐANG THI
-        ///// </summary>
-        //private void btnBatDau_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        examManager.BatDauLuotThi(ts);
-
-        //        if (!timerCapNhatThoiGian.Enabled)
-        //            timerCapNhatThoiGian.Start();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Vui lòng CHỌN thí sinh trong bảng 'ĐANG THI' để bắt đầu.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
-
-        //private void btnKetThucLuot_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            $"Xác nhận kết thúc lượt thi của {ts.HoTen} với điểm số là {ts.DiemTongHop}?",
-        //            "Xác nhận kết thúc", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            _ = examManager.KetThucLuotThiThuCong(ts);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Vui lòng chọn thí sinh cần kết thúc bài thi.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
-
-        //// Các nút lỗi (nhẹ/nặng) – GIỮ NGUYÊN, chỉ sửa grid thành dgvdangthii
-
-        //private void btnLoiChamVach_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.GhiNhanLoiThuCong(ts, 5, $"Chạm vạch lần {ts.LoiChamVach + 1}", "ChamVach", t => t.LoiChamVach++);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private void btnLoiChetMay_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.GhiNhanLoiThuCong(ts, 5, $"Chết máy lần {ts.LoiChetMay + 1}", "ChetMay", t => t.LoiChetMay++);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private void btnLoiKhongXiNhan_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.GhiNhanLoiThuCong(ts, 5, $"Không xi nhan lần {ts.LoiKhongXiNhan + 1}", "KhongXiNhan", t => t.LoiKhongXiNhan++);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private async void btnLoiNgaDo_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            "Xác nhận thí sinh bị lỗi 'Ngã/đổ xe' và bị loại trực tiếp?",
-        //            "Xác nhận lỗi loại", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            ts.LoiNgaDo = 1;
-        //            await examManager.LoaiTrucTiep(ts, ts.DiemTongHop, "Ngã/đổ xe (Loại trực tiếp)", "DoXe");
-        //        }
-        //    }
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private async void btnLoiSaiHinh_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            "Xác nhận thí sinh bị lỗi 'Chạy sai hình' và bị loại trực tiếp?",
-        //            "Xác nhận lỗi loại", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            ts.LoiChaySaiHinh = 1;
-        //            await examManager.LoaiTrucTiep(ts, ts.DiemTongHop, "Chạy sai hình (Loại trực tiếp)", "SaiHinh");
-        //        }
-        //    }
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private async void btnLoiQuaTocDo_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //    {
-        //        var xacNhan = MessageBox.Show(
-        //            "Xác nhận thí sinh bị lỗi 'Vượt quá tốc độ' và bị loại trực tiếp?",
-        //            "Xác nhận lỗi loại", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (xacNhan == DialogResult.Yes)
-        //        {
-        //            ts.LoiQuaTocDo = 1;
-        //            await examManager.LoaiTrucTiep(ts, ts.DiemTongHop, "Vượt quá tốc độ (Loại trực tiếp)", "VuotTocDo");
-        //        }
-        //    }
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh đang thi.", "Chưa chọn thí sinh");
-        //}
-
-        //private void btnQuaVongSo8_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.QuaVongSo8(ts);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh trong bảng 'ĐANG THI'.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //}
-
-        //#endregion
-
-        //private void btnQuaVongSo8_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvThi.CurrentRow?.DataBoundItem is ThiSinh ts)
-        //        examManager.QuaVongSo8(ts);
-        //    else
-        //        MessageBox.Show("Vui lòng chọn thí sinh trong bảng 'ĐANG THI'.",
-        //            "Chưa chọn thí sinh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //}
-
-        //#endregion
         #region === TIMER CẬP NHẬT THỜI GIAN ===
 
         // Khai báo duy nhất một hàm `timerCapNhatThoiGian_Tick`
@@ -940,6 +796,13 @@ namespace THI_HANG_A1
             if (drv == null)
                 return;
 
+            if (x == null)
+            {
+                MessageBox.Show("Thí sinh chưa được chọn đúng.",
+                    "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // 3. Mở form cấp xe
             LoadMotoFromDatabase();
             Capxe frm = new Capxe(xes, x.SoBaoDanh, x.HangGPLX);
@@ -989,6 +852,7 @@ namespace THI_HANG_A1
             };
             ds.Add(d);
             CapXeChoThiSinh(d, xeChon);
+
             // 6. Tạo SESSION trong database
             d.SessionID = CreateSession(d.SoBaoDanh, Convert.ToInt32(d.XeObj.Id));
         }
@@ -1034,6 +898,8 @@ namespace THI_HANG_A1
                 {
                     ChupAnh(xeChon, ts);
 
+                    audioManager.PhatAmThanh(ts, "ThiDat");
+
                     InsertErrorToDatabase(
                         ts.SoBaoDanh, ts.SessionID,
                         $"{ts.HoDem} {ts.Ten}", ts.Xe,
@@ -1052,7 +918,7 @@ namespace THI_HANG_A1
                     return;
                 }
 
-                if (!BaiThiHelper.IsInValidContest1_4(st)) return;
+                if (!BaiThiHelper.IsInValidContest(st)) return;
 
                 // VÀO BÀI MỚI
                 if (st != ts.LastStatus && BaiThiHelper.IsInValidContest1_4(st))
@@ -1083,10 +949,16 @@ namespace THI_HANG_A1
                     errId != ts.LastError &&
                     FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var fault))
                 {
+                    if (errId == ConstantKeys.ERROR_KHONG_XI_NHAN_VAO && st != ConstantKeys.STATUS_CONTEST1)
+                        return;
+
                     ts.LastError = errId;
 
                     string moTa = BaiThiHelper.GetName(st);
                     string chiTiet = $"{fault.MoTa} – Tại bài: {moTa}";
+
+                    string soundNamePath = BaiThiHelper.GetSoundName(errId);
+                    audioManager.PhatAmThanh(ts, soundNamePath);
 
                     InsertErrorToDatabase(
                         ts.SoBaoDanh, ts.SessionID,
@@ -1174,6 +1046,8 @@ namespace THI_HANG_A1
                     {
                         string chiTiet = $"Đè vạch {s.name} – Bài: {baiMoTa}";
 
+                        audioManager.PhatAmThanh(ts, "ChamVach");
+
                         InsertErrorToDatabase(
                             ts.SoBaoDanh, ts.SessionID,
                             $"{ts.HoDem} {ts.Ten}", ts.Xe,
@@ -1220,6 +1094,8 @@ namespace THI_HANG_A1
         {
             if (d.DiemConLai >= 80)
                 return;
+
+            audioManager.PhatAmThanh(d, "ThiTruot");
 
             // 1) Gỡ event NGAY LẬP TỨC để xe không bắn thêm trạng thái sai
             CleanupEvents(d);
@@ -1364,6 +1240,9 @@ namespace THI_HANG_A1
             int baiThiId = ts.BaiThiHienTaiID;
             string baiThiMoTa = BaiThiHelper.GetNameByBaiThiId(baiThiId);
             string chiTietLoi = $"{err.MoTa} – Tại vị trí: {baiThiMoTa}";
+
+            string soundNamePath = BaiThiHelper.GetSoundName(errorId);
+            audioManager.PhatAmThanh(ts, soundNamePath);
 
             // gửi mã lỗi về esp
             ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorId);
@@ -1725,6 +1604,8 @@ namespace THI_HANG_A1
             trangThaiXe[soXe] = TrangThaiXe.SanSang;
             string cot = "Chuẩn bị";  // tên hành động
 
+            audioManager.PhatAmThanh(ts, "ChuanBi");
+
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.id;
             int diemTru = err.diemTru;
@@ -1785,6 +1666,8 @@ namespace THI_HANG_A1
             moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
 
             string cot = "Bắt đầu";
+
+            audioManager.PhatAmThanh(ts, "BatDau");
 
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.id;
@@ -1861,6 +1744,8 @@ namespace THI_HANG_A1
                    d.BaiThiHienTaiID > 0 ? (int?)d.BaiThiHienTaiID : BaiThiHelper.GetId(ConstantKeys.STATUS_READY),
                    d
                );
+
+                audioManager.PhatAmThanh(d, "ThiTruot");
 
                 // Cập nhật session
                 KetThucSession(d.SessionID, 0, lyDo);
