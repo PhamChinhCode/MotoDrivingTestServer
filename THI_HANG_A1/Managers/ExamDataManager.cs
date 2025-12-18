@@ -97,7 +97,7 @@ namespace THI_HANG_A1.Managers
             DanhSachDangThi.Add(ts);
             DanhSachChuanBiThi.Remove(ts);
 
-            _audioManager.PhatAmThanh(ts, "ChuanBi");
+            //_audioManager.PhatAmThanh(ts, "ChuanBi");
 
             // GỬI LỆNH VỚI PAYLOAD 1-BYTE
             if (byte.TryParse(xe.MaXe, out byte maXeByte))
@@ -124,7 +124,7 @@ namespace THI_HANG_A1.Managers
             }
 
             ts.ThoiGianBatDau = DateTime.Now;
-            _audioManager.PhatAmThanh(ts, "BatDau");
+            //_audioManager.PhatAmThanh(ts, "BatDau");
 
             // GỬI LỆNH VỚI PAYLOAD 1-BYTE
             if (byte.TryParse(ts.MaXeDaChon, out byte maXeByte))
@@ -209,7 +209,7 @@ namespace THI_HANG_A1.Managers
         {
             if (ts == null) return;
             GhiNhanLoi(ts, diemTru, chiTietLoi);
-            _audioManager.PhatAmThanh(ts, amThanh);
+            //_audioManager.PhatAmThanh(ts, amThanh);
             updateCounter?.Invoke(ts);
             ts.DiemTongHop -= diemTru;
             DanhSachDangThi.ResetBindings();
@@ -348,7 +348,7 @@ namespace THI_HANG_A1.Managers
             {
                 // Lỗi trừ điểm
                 GhiNhanLoi(ts, diemTru, chiTietLoi);
-                _audioManager.PhatAmThanh(ts, amThanhLoi);
+                //_audioManager.PhatAmThanh(ts, amThanhLoi);
                 ts.DiemTongHop -= diemTru;
                 DanhSachDangThi.ResetBindings(); // Cập nhật UI
             }

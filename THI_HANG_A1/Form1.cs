@@ -74,6 +74,7 @@ namespace THI_HANG_A1
                             Moto existing = oldMap[id];
                             existing.Name = rd["Name"].ToString();
                             existing.Ip = rd["IPAddress"].ToString();
+                            //existing.Status = ConstantKeys.STATUS_FREE;
                             newList.Add(existing);
                         }
                         else
@@ -364,44 +365,7 @@ namespace THI_HANG_A1
             FaultDefinitions.LoadFaults();
 
             LoadingComponent();
-
-            sanAliveTimer = new Timer();
-            sanAliveTimer.Interval = 1000; // 1 giây
-            sanAliveTimer.Tick += SanAliveTimer_Tick;
-            sanAliveTimer.Start();
         }
-        private void SanAliveTimer_Tick(object sender, EventArgs e)
-        {
-            if (sanList == null || sanList.Count == 0)
-                return;
-
-            var san = sanList[0];
-
-            // 🔥 1. GỬI HEARTBEAT (BẮT BUỘC)
-            san.socketConn.SendHeartbeat();
-
-            // 🔥 2. CHECK BẰNG IsStillAlive (KHÔNG DÙNG IsAlive)
-            bool alive = san.socketConn.IsStillAlive();
-
-            if (txtCheckAlive.Lines.Length > 200)
-                txtCheckAlive.Clear();
-
-            txtCheckAlive.AppendText(
-                $"{Environment.NewLine}Trạng thái({DateTime.Now}): {alive}"
-            );
-
-            if (alive)
-            {
-                lblSanStatus.Text = "Sân: Đang kết nối";
-                lblSanStatus.ForeColor = Color.Green;
-            }
-            else
-            {
-                lblSanStatus.Text = "Sân: Mất kết nối";
-                lblSanStatus.ForeColor = Color.Red;
-            }
-        }
-
         private void LoadingComponent()
         {
             // Làm mờ nền
@@ -832,6 +796,13 @@ namespace THI_HANG_A1
             if (drv == null)
                 return;
 
+            if (x == null)
+            {
+                MessageBox.Show("Thí sinh chưa được chọn đúng.",
+                    "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // 3. Mở form cấp xe
             LoadMotoFromDatabase();
             Capxe frm = new Capxe(xes, x.SoBaoDanh, x.HangGPLX);
@@ -881,6 +852,7 @@ namespace THI_HANG_A1
             };
             ds.Add(d);
             CapXeChoThiSinh(d, xeChon);
+
             // 6. Tạo SESSION trong database
             d.SessionID = CreateSession(d.SoBaoDanh, Convert.ToInt32(d.XeObj.Id));
         }
@@ -914,7 +886,7 @@ namespace THI_HANG_A1
             // ===========================================================
 
             // a. Event trạng thái bài thi
-            ts.XeChangedHandler = () =>
+            ts.XeChangedHandler = async () =>
             {
                 byte st = xeChon.Status;
                 byte errId = xeChon.ErrorId;
@@ -925,6 +897,8 @@ namespace THI_HANG_A1
                     BaiThiHelper.IsInValidContest1_4(ts.LastStatus))
                 {
                     ChupAnh(xeChon, ts);
+
+                    audioManager.PhatAmThanh(ts, "ThiDat");
 
                     InsertErrorToDatabase(
                         ts.SoBaoDanh, ts.SessionID,
@@ -944,7 +918,7 @@ namespace THI_HANG_A1
                     return;
                 }
 
-                if (!BaiThiHelper.IsInValidContest1_4(st)) return;
+                if (!BaiThiHelper.IsInValidContest(st)) return;
 
                 // VÀO BÀI MỚI
                 if (st != ts.LastStatus && BaiThiHelper.IsInValidContest1_4(st))
@@ -974,16 +948,16 @@ namespace THI_HANG_A1
                     errId != ts.LastError &&
                     FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var fault))
                 {
-
-                    //
-                    if (errId == 229)
-                    {
+                    if (errId == ConstantKeys.ERROR_KHONG_XI_NHAN_VAO && st != ConstantKeys.STATUS_CONTEST1)
                         return;
-                    }
+
                     ts.LastError = errId;
 
                     string moTa = BaiThiHelper.GetName(st);
                     string chiTiet = $"{fault.MoTa} – Tại bài: {moTa}";
+
+                    string soundNamePath = BaiThiHelper.GetSoundName(errId);
+                    audioManager.PhatAmThanh(ts, soundNamePath);
 
                     InsertErrorToDatabase(
                         ts.SoBaoDanh, ts.SessionID,
@@ -1063,7 +1037,6 @@ namespace THI_HANG_A1
                     case ConstantKeys.STATUS_CONTEST4:
                         sensors.Add(("Sensor4", san.Sensor4));
                         break;
-
                 }
 
                 foreach (var s in sensors)
@@ -1071,6 +1044,8 @@ namespace THI_HANG_A1
                     if (s.val)
                     {
                         string chiTiet = $"Đè vạch {s.name} – Bài: {baiMoTa}";
+
+                        audioManager.PhatAmThanh(ts, "ChamVach");
 
                         InsertErrorToDatabase(
                             ts.SoBaoDanh, ts.SessionID,
@@ -1118,6 +1093,8 @@ namespace THI_HANG_A1
         {
             if (d.DiemConLai >= 80)
                 return;
+
+            audioManager.PhatAmThanh(d, "ThiTruot");
 
             // 1) Gỡ event NGAY LẬP TỨC để xe không bắn thêm trạng thái sai
             CleanupEvents(d);
@@ -1262,6 +1239,9 @@ namespace THI_HANG_A1
             int baiThiId = ts.BaiThiHienTaiID;
             string baiThiMoTa = BaiThiHelper.GetNameByBaiThiId(baiThiId);
             string chiTietLoi = $"{err.MoTa} – Tại vị trí: {baiThiMoTa}";
+
+            string soundNamePath = BaiThiHelper.GetSoundName(errorId);
+            audioManager.PhatAmThanh(ts, soundNamePath);
 
             // gửi mã lỗi về esp
             ts.XeObj?.sendCommand(ConstantKeys.ERROR_KEY, ConstantKeys.BYTE_SET, errorId);
@@ -1623,6 +1603,8 @@ namespace THI_HANG_A1
             trangThaiXe[soXe] = TrangThaiXe.SanSang;
             string cot = "Chuẩn bị";  // tên hành động
 
+            audioManager.PhatAmThanh(ts, "ChuanBi");
+
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.id;
             int diemTru = err.diemTru;
@@ -1683,6 +1665,8 @@ namespace THI_HANG_A1
             moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
 
             string cot = "Bắt đầu";
+
+            audioManager.PhatAmThanh(ts, "BatDau");
 
             var err = FaultDefinitions.FaultMap[cot];
             int faultId = err.id;
@@ -1759,6 +1743,8 @@ namespace THI_HANG_A1
                    d.BaiThiHienTaiID > 0 ? (int?)d.BaiThiHienTaiID : BaiThiHelper.GetId(ConstantKeys.STATUS_READY),
                    d
                );
+
+                audioManager.PhatAmThanh(d, "ThiTruot");
 
                 // Cập nhật session
                 KetThucSession(d.SessionID, 0, lyDo);
@@ -2587,6 +2573,16 @@ namespace THI_HANG_A1
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private void toolStripProgressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripLabel1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void SafeUI(Action action)

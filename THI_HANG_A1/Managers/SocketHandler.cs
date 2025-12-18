@@ -1,236 +1,518 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 
 namespace THI_HANG_A1.Managers
 {
-    public class SocketHandler
+    //public class SocketHandler
+    //{
+    //    private TcpClient _client;
+    //    private NetworkStream _stream;
+    //    private Thread _receiveThread;
+    //    public string IPAddress { get; set; }
+    //    public int IPPort { get; set; }
+    //    public event Action<Command> OnDataReceivedCommand;
+    //    public event Action<byte[]> OnDataReceivedImage;
+
+
+    //    public bool IsConnected => _client != null && _client.Connected;
+
+    //    // Sự kiện đẩy dữ liệu ra Form
+    //    public event Action<byte[], int> OnDataReceived;
+    //    public event Action OnDisconnected;
+    //    private System.Windows.Forms.Timer timerOnline;
+
+    //    // ================================================================
+    //    // KẾT NỐI
+    //    // ================================================================
+    //    public SocketHandler()
+    //    {
+    //        timerOnline = new System.Windows.Forms.Timer();
+    //        timerOnline.Interval = 2000;
+    //        timerOnline.Tick += async (s, e) =>
+    //        {
+    //            bool ok = await PingAsync(IPAddress, 1000);
+    //            if (!ok && IsConnected)
+    //                MessageBox.Show("no connect !!!!");
+    //        };
+
+    //    }
+    //    public bool Connect(string ip, int port)
+    //    {
+    //        IPAddress = ip;
+    //        IPPort = port;
+    //        try
+    //        {
+    //            if (_client == null)
+    //            {
+    //                _client = new TcpClient();
+    //            }
+    //            if (!_client.Connected)
+    //            {
+    //                _client.Connect(ip, port);
+    //                if (_client.Connected)
+    //                {
+    //                    _stream = _client.GetStream();
+
+    //                    // Bắt đầu Thread nhận dữ liệu
+    //                    StartReceiveThread();
+    //                    //}
+    //                    return true;
+    //                }
+    //                else
+    //                {
+    //                    return false;
+    //                }
+    //            }
+    //            else
+    //            {
+    //                return true;
+    //            }
+
+    //        }
+    //        catch (Exception)
+    //        {
+    //            MessageBox.Show("Khong ket noi dc");
+    //            return false;
+    //        }
+    //    }
+    //    public async Task<bool> ConnectWithTimeout(string ip, int port, int timeoutMs = 5000)
+    //    {
+    //        IPAddress = ip;
+    //        IPPort = port;
+    //        timerOnline.Start();
+    //        try
+    //        {
+    //            using (var cts = new CancellationTokenSource(timeoutMs))
+    //            {
+    //                // TcpClient async
+    //                _client = new TcpClient();
+
+    //                var connectTask = _client.ConnectAsync(ip, port);
+
+    //                // Chờ connect hoặc timeout
+    //                var completed = await Task.WhenAny(connectTask, Task.Delay(timeoutMs, cts.Token));
+
+    //                if (completed != connectTask)
+    //                {
+    //                    // Timeout
+    //                    _client?.Close();
+    //                    return false;
+    //                }
+
+    //                // Connected
+    //                await connectTask;  // đảm bảo throw đúng exception nếu có
+    //                //_stream.ReadTimeout = 5000;
+    //                _stream = _client.GetStream();
+    //                StartReceiveThread();
+    //                return true;
+    //            }
+    //        }
+    //        catch
+    //        {
+    //            _client?.Close();
+    //            return false;
+    //        }
+    //    }
+
+    //    public bool Connect()
+    //    {
+    //        return Connect(IPAddress, IPPort);
+    //    }
+    //    // ================================================================
+    //    // NGẮT KẾT NỐI
+    //    // ================================================================
+    //    public void Disconnect()
+    //    {
+
+    //        try
+    //        {
+    //            _receiveThread?.Abort();
+    //        }
+    //        catch { }
+
+    //        try { _stream?.Close(); } catch { }
+    //        try { _client?.Close(); } catch { }
+
+    //        OnDisconnected?.Invoke();
+    //        //MessageBox.Show(" Mất kết nối tới: " + Convert.ToString(IPAddress));
+    //    }
+    //    private async Task<bool> PingAsync(string ip, int timeoutMs = 1000)
+    //    {
+    //        try
+    //        {
+    //            using (var ping = new Ping())
+    //            {
+    //                var reply = await ping.SendPingAsync(ip, timeoutMs);
+    //                return reply.Status == IPStatus.Success;
+    //            }
+    //        }
+    //        catch
+    //        {
+    //            return false;
+    //        }
+    //    }
+    //    public bool Ping(string ip, int timeoutMs = 1000)
+    //    {
+    //        try
+    //        {
+    //            using (Ping ping = new Ping())
+    //            {
+    //                PingReply reply = ping.Send(ip, timeoutMs);
+
+    //                return reply.Status == IPStatus.Success;
+    //            }
+    //        }
+    //        catch
+    //        {
+    //            return false;
+    //        }
+    //    }
+    //    // ================================================================
+    //    // GỬI DỮ LIỆU
+    //    // ================================================================
+    //    public void SendString(string msg)
+    //    {
+    //        if (!IsConnected) return;
+
+    //        byte[] data = Encoding.UTF8.GetBytes(msg);
+    //        _stream.Write(data, 0, data.Length);
+    //    }
+
+    //    public void SendBytes(byte[] data)
+    //    {
+    //        if (!IsConnected) return;
+
+    //        _stream.Write(data, 0, data.Length);
+    //    }
+
+    //    // ================================================================
+    //    // NHẬN DỮ LIỆU (THREAD)
+    //    // ================================================================
+    //    private void StartReceiveThread()
+    //    {
+    //        _receiveThread = new Thread(ReceiveLoop);
+    //        _receiveThread.IsBackground = true;
+    //        _receiveThread.Start();
+    //    }
+
+    //    private void ReceiveLoop()
+    //    {
+    //        byte[] buffer = new byte[1024];
+    //        Command cmd = new Command();
+
+
+
+    //        while (true)
+    //        {
+
+
+    //            try
+    //            {
+    //                int data = _stream.ReadByte();
+
+    //                if (data <= 0)
+    //                {
+    //                    Disconnect();
+    //                    return;
+    //                }
+    //                if (data != ConstantKeys.BYTE_START) return;
+    //                buffer = ReadExact(_stream, 9);
+    //            }
+    //            catch (IOException)
+    //            {
+    //                // ReadTimeout hoặc socket lỗi
+    //                Disconnect();
+    //                return;
+    //            }
+
+
+    //            if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
+
+    //            cmd.key = buffer[0];
+    //            cmd.type = buffer[1];
+    //            cmd.value = (UInt32)buffer[3] << 24 | (UInt32)buffer[4] << 16 | (UInt32)buffer[5] << 8 | (UInt32)buffer[6];
+
+    //            if (buffer[8] == ConstantKeys.BYTE_PAYLOAD && buffer[0] == ConstantKeys.IMAGE_KEY)
+    //            {
+    //                byte[] image = new byte[cmd.value];
+    //                image = ReadExact(_stream, (int)cmd.value);
+
+    //                if (_stream.ReadByte() != ConstantKeys.BYTE_STOP) return;
+
+    //                Bitmap bmp = ByteArrayToBitmap(image);
+    //                OnDataReceivedImage?.Invoke(image);
+
+    //            }
+    //            OnDataReceivedCommand?.Invoke(cmd);
+    //        }
+    //    }
+    //    private byte[] ReadExact(NetworkStream stream, int size)
+    //    {
+    //        byte[] buf = new byte[size];
+    //        int offset = 0;
+
+    //        while (offset < size)
+    //        {
+    //            int n = stream.Read(buf, offset, size - offset);
+    //            if (n <= 0) throw new Exception("Disconnected");
+    //            offset += n;
+    //        }
+    //        return buf;
+
+    //    }
+    //    public Bitmap ByteArrayToBitmap(byte[] bytes)
+    //    {
+    //        using (var ms = new MemoryStream(bytes))
+    //        {
+    //            return new Bitmap(ms);
+    //        }
+    //    }
+
+    //}
+    public class SocketHandlerAsync
     {
         private TcpClient _client;
         private NetworkStream _stream;
-        private Thread _receiveThread;
+        private CancellationTokenSource _cts;
+
         public string IPAddress { get; set; }
         public int IPPort { get; set; }
+        private bool Actioned = true;
+        public bool IsConnected =>
+            _client != null &&
+            _client.Connected;
+
+        // ================= EVENTS =================
         public event Action<Command> OnDataReceivedCommand;
         public event Action<byte[]> OnDataReceivedImage;
-
-
-        public bool IsConnected => _client != null && _client.Connected;
-
-        public bool IsAlive { get; private set; }
-        public DateTime LastAliveTime { get; private set; }
-
-        // Sự kiện đẩy dữ liệu ra Form
         public event Action<byte[], int> OnDataReceived;
         public event Action OnDisconnected;
 
+        // ================= TIMER =================
+        private readonly System.Windows.Forms.Timer _timerOnline;
+        private readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1, 1);
+
+
         // ================================================================
-        // KẾT NỐI
+        // CONSTRUCTOR
         // ================================================================
-        public bool Connect(string ip, int port)
+        public SocketHandlerAsync()
+        {
+            _timerOnline = new System.Windows.Forms.Timer();
+            _timerOnline.Interval = 1000; // 2s
+            _timerOnline.Tick += async (s, e) => await CheckOnlineAsync();
+        }
+
+        // ================================================================
+        // CONNECT (ASYNC)
+        // ================================================================
+        public async Task<bool> ConnectAsync(string ip, int port, int timeoutMs = 3000)
         {
             IPAddress = ip;
             IPPort = port;
+
             try
             {
-                if (_client == null)
-                {
-                    _client = new TcpClient();
-                }
-                if (!_client.Connected)
-                {
-                    _client.Connect(ip, port);
-                    if (_client.Connected)
-                    {
-                        _stream = _client.GetStream();
+                Disconnect();
 
-                        // Bắt đầu Thread nhận dữ liệu
-                        StartReceiveThread();
-                        //}
+                _client = new TcpClient();
+                _cts = new CancellationTokenSource();
 
-                        IsAlive = false;
-                        LastAliveTime = DateTime.MinValue;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
+                var connectTask = _client.ConnectAsync(ip, port);
+                var timeoutTask = Task.Delay(timeoutMs);
+
+                if (await Task.WhenAny(connectTask, timeoutTask) != connectTask)
                 {
-                    return true;
+                    _client.Close();
+                    return false;
                 }
 
+                _stream = _client.GetStream();
+                Actioned = false;
+
+                _timerOnline.Start();
+                _ = ReceiveLoopAsync(_cts.Token); // fire & forget
+
+                return true;
             }
-            catch (Exception)
+            catch
             {
+                Disconnect();
                 return false;
             }
         }
-        public async Task<bool> ConnectWithTimeout(string ip, int port, int timeoutMs = 5000)
+
+        // ================================================================
+        // DISCONNECT
+        // ================================================================
+        public void Disconnect()
         {
-            IPAddress = ip;
-            IPPort = port;
+            try { _timerOnline.Stop(); } catch { }
+
+            try { _cts?.Cancel(); } catch { }
+
+            try { _stream?.Close(); } catch { }
+            try { _client?.Close(); } catch { }
+
+            _stream = null;
+            _client = null;
+
+            if (!Actioned)
+            {
+                Actioned = true;
+                OnDisconnected?.Invoke();
+
+            }
+        }
+
+        // ================================================================
+        // ONLINE CHECK (PING)
+        // ================================================================
+        private async Task CheckOnlineAsync()
+        {
+            if (string.IsNullOrEmpty(IPAddress))
+                return;
+
+            bool pingOk = await PingAsync(IPAddress, 5000);
+
+            if (!pingOk && IsConnected)
+            {
+
+                //Disconnect();
+            }
+        }
+
+        private async Task<bool> PingAsync(string ip, int timeoutMs)
+        {
             try
             {
-                using (var cts = new CancellationTokenSource(timeoutMs))
+                using (var ping = new Ping())
                 {
-                    // TcpClient async
-                    _client = new TcpClient();
-
-                    var connectTask = _client.ConnectAsync(ip, port);
-
-                    // Chờ connect hoặc timeout
-                    var completed = await Task.WhenAny(connectTask, Task.Delay(timeoutMs, cts.Token));
-
-                    if (completed != connectTask)
-                    {
-                        // Timeout
-                        _client?.Close();
-                        return false;
-                    }
-
-                    // Connected
-                    await connectTask;  // đảm bảo throw đúng exception nếu có
-                    //_stream.ReadTimeout = 5000;
-                    _stream = _client.GetStream();
-                    StartReceiveThread();
-                    return true;
+                    var reply = await ping.SendPingAsync(ip, timeoutMs);
+                    return reply.Status == IPStatus.Success;
                 }
             }
             catch
             {
-                _client?.Close();
                 return false;
             }
         }
 
-        public bool Connect()
+        // ================================================================
+        // SEND
+        // ================================================================
+        public void SendBytesAsync(byte[] data)
         {
-            return Connect(IPAddress, IPPort);
+            // Fire-and-forget có kiểm soát
+            _ = SendCommandInternalAsync(data);
         }
-        // ================================================================
-        // NGẮT KẾT NỐI
-        // ================================================================
-        public void Disconnect()
+        private async Task SendCommandInternalAsync(byte[] data)
         {
+            if (!IsConnected) return;
 
             try
             {
-                _receiveThread?.Abort();
+                await _sendLock.WaitAsync();
+
+                await _stream.WriteAsync(data, 0, data.Length);
             }
-            catch { }
-
-            try { _stream?.Close(); } catch { }
-            try { _client?.Close(); } catch { }
-            IsAlive = false;
-            OnDisconnected?.Invoke();
-            //MessageBox.Show(" Mất kết nối tới: " + Convert.ToString(IPAddress));
-        }
-
-        // ================================================================
-        // GỬI DỮ LIỆU
-        // ================================================================
-        public void SendString(string msg)
-        {
-            if (!IsConnected) return;
-
-            byte[] data = Encoding.UTF8.GetBytes(msg);
-            _stream.Write(data, 0, data.Length);
-        }
-
-        public void SendBytes(byte[] data)
-        {
-            if (!IsConnected) return;
-
-            _stream.Write(data, 0, data.Length);
-        }
-
-        // ================================================================
-        // NHẬN DỮ LIỆU (THREAD)
-        // ================================================================
-        private void StartReceiveThread()
-        {
-            _receiveThread = new Thread(ReceiveLoop);
-            _receiveThread.IsBackground = true;
-            _receiveThread.Start();
-        }
-
-        private void ReceiveLoop()
-        {
-            byte[] buffer = new byte[1024];
-            Command cmd = new Command();
-
-
-
-            while (true)
+            catch
             {
-
-
-                try
-                {
-                    int data = _stream.ReadByte();
-
-                    if (data <= 0)
-                    {
-                        Disconnect();
-                        return;
-                    }
-                    if (data != ConstantKeys.BYTE_START) return;
-                    buffer = ReadExact(_stream, 9);
-                }
-                catch (IOException)
-                {
-                    // ReadTimeout hoặc socket lỗi
-                    Disconnect();
-                    return;
-                }
-
-
-                if (buffer[8] != ConstantKeys.BYTE_STOP && buffer[8] != ConstantKeys.BYTE_PAYLOAD) return;
-
-                cmd.key = buffer[0];
-                cmd.type = buffer[1];
-                cmd.value = (UInt32)buffer[3] << 24 | (UInt32)buffer[4] << 16 | (UInt32)buffer[5] << 8 | (UInt32)buffer[6];
-
-                if (buffer[8] == ConstantKeys.BYTE_PAYLOAD && buffer[0] == ConstantKeys.IMAGE_KEY)
-                {
-                    byte[] image = new byte[cmd.value];
-                    image = ReadExact(_stream, (int)cmd.value);
-
-                    if (_stream.ReadByte() != ConstantKeys.BYTE_STOP) return;
-
-                    Bitmap bmp = ByteArrayToBitmap(image);
-                    OnDataReceivedImage?.Invoke(image);
-
-                }
-                OnDataReceivedCommand?.Invoke(cmd);
-
-                LastAliveTime = DateTime.Now;
-                IsAlive = true;
+                Disconnect();
+            }
+            finally
+            {
+                _sendLock.Release();
             }
         }
-        private byte[] ReadExact(NetworkStream stream, int size)
+
+
+        // ================================================================
+        // RECEIVE LOOP (ASYNC – NO THREAD)
+        // ================================================================
+        private async Task ReceiveLoopAsync(CancellationToken token)
+        {
+            byte[] buffer;
+
+            try
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    int start = await ReadByteAsync(_stream, token);
+                    if (start <= 0) break;
+
+                    if (start != ConstantKeys.BYTE_START)
+                        continue;
+
+                    buffer = await ReadExactAsync(_stream, 9, token);
+
+                    if (buffer[8] != ConstantKeys.BYTE_STOP &&
+                        buffer[8] != ConstantKeys.BYTE_PAYLOAD)
+                        continue;
+
+                    Command cmd = new Command
+                    {
+                        key = buffer[0],
+                        type = buffer[1],
+                        value = (uint)(
+                            buffer[3] << 24 |
+                            buffer[4] << 16 |
+                            buffer[5] << 8 |
+                            buffer[6])
+                    };
+
+                    if (buffer[8] == ConstantKeys.BYTE_PAYLOAD &&
+                        buffer[0] == ConstantKeys.IMAGE_KEY)
+                    {
+                        byte[] image = await ReadExactAsync(_stream, (int)cmd.value, token);
+                        int stop = await ReadByteAsync(_stream, token);
+                        if (stop != ConstantKeys.BYTE_STOP)
+                            continue;
+
+                        OnDataReceivedImage?.Invoke(image);
+                    }
+
+                    OnDataReceivedCommand?.Invoke(cmd);
+                }
+            }
+            catch
+            {
+                // socket lỗi
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+        private async Task<int> ReadByteAsync(NetworkStream stream, CancellationToken token)
+        {
+            byte[] buf = new byte[1];
+            int n = await stream.ReadAsync(buf, 0, 1, token);
+            if (n == 0) return -1;
+            return buf[0];
+        }
+        private async Task<byte[]> ReadExactAsync(NetworkStream stream, int size, CancellationToken token)
         {
             byte[] buf = new byte[size];
             int offset = 0;
 
             while (offset < size)
             {
-                int n = stream.Read(buf, offset, size - offset);
-                if (n <= 0) throw new Exception("Disconnected");
+                int n = await stream.ReadAsync(buf, offset, size - offset, token);
+                if (n <= 0)
+                    throw new IOException("Disconnected");
+
                 offset += n;
             }
             return buf;
-
         }
+
         public Bitmap ByteArrayToBitmap(byte[] bytes)
         {
             using (var ms = new MemoryStream(bytes))
@@ -238,15 +520,6 @@ namespace THI_HANG_A1.Managers
                 return new Bitmap(ms);
             }
         }
-
-        public bool IsStillAlive(int timeoutMs = 3000)
-        {
-            if (!IsAlive) return false;
-
-            return (DateTime.Now - LastAliveTime)
-                .TotalMilliseconds < timeoutMs;
-        }
-
     }
     public struct Command
     {

@@ -49,5 +49,11 @@ namespace THI_HANG_A1.Forms
         {
 
         }
+
+        private void chỉnhSửaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form3 formQuanLy = new Form3();
+            formQuanLy.ShowDialog();
+        }
     }
 }

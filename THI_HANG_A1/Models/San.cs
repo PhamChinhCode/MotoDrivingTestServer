@@ -13,9 +13,7 @@ namespace THI_HANG_A1.Models
         public string IP { get; private set; }
         public int PORT { get; private set; }
 
-        public SocketHandler socketConn;
-
-        public bool IsAlive => socketConn?.IsStillAlive() ?? false;
+        public SocketHandlerAsync socketConn;
 
         public San(string name, string ip, int port)
         {
@@ -23,8 +21,7 @@ namespace THI_HANG_A1.Models
             IP = ip;
             PORT = port;
 
-            socketConn = new SocketHandler();
-            //socketConn.OnDataReceivedCommand += SocketDataHandler;
+            socketConn = new SocketHandlerAsync();
         }
 
         private void TriggerUI() => OnChanged?.Invoke();
@@ -39,34 +36,6 @@ namespace THI_HANG_A1.Models
         public bool Sensor6 { get; private set; }
         public bool Sensor7 { get; private set; }
         public bool Sensor8 { get; private set; }
-
-
-        //private bool _sensor1;
-        //public bool Sensor1 { get => _sensor1; set { _sensor1 = value; TriggerUI(); } }
-
-        //private bool _sensor2;
-        //public bool Sensor2 { get => _sensor2; set { _sensor2 = value; TriggerUI(); } }
-
-        //private bool _sensor3;
-        //public bool Sensor3 { get => _sensor3; set { _sensor3 = value; TriggerUI(); } }
-
-        //private bool _sensor4;
-        //public bool Sensor4 { get => _sensor4; set { _sensor4 = value; TriggerUI(); } }
-
-        //private bool _sensor5;
-        //public bool Sensor5 { get => _sensor5; set { _sensor5 = value; TriggerUI(); } }
-
-        //private bool _sensor6;
-        //public bool Sensor6 { get => _sensor6; set { _sensor6 = value; TriggerUI(); } }
-
-        //private bool _sensor7;
-        //public bool Sensor7 { get => _sensor7; set { _sensor7 = value; TriggerUI(); } }
-
-        //private bool _sensor8;
-        //public bool Sensor8 { get => _sensor8; set { _sensor8 = value; TriggerUI(); } }
-
-        //private bool _onghoi;
-        //public bool OngHoi { get => _onghoi; set { _onghoi = value; TriggerUI(); } }
 
         private string _mes;
         public string Mes { get => _mes; set { _mes = value; TriggerUI(); } }
@@ -84,23 +53,32 @@ namespace THI_HANG_A1.Models
             }
 
             // TẠO SOCKETHOÀN TOÀN MỚI
-            socketConn = new SocketHandler();
+            socketConn = new SocketHandlerAsync();
             //socketConn.OnDataReceivedBytes += SocketDataHandler;
             socketConn.OnDataReceivedCommand += commandHandler;
 
             //bool ok = socketConn.Connect(IP, PORT);
-            bool ok = await socketConn.ConnectWithTimeout(IP, PORT);
+            bool ok = await socketConn.ConnectAsync(IP, PORT);
             IsConnected = ok;
+            if (!ok) { MessageBox.Show("Không thể kết nối tới cảm biến ống hơi"); }
             TriggerUI();
+            socketConn.OnDisconnected -= disconnect;
             socketConn.OnDisconnected += disconnect;
         }
 
-        public void disconnect()
+        private void disconnect()
         {
-            MessageBox.Show("disconnect");
+            TriggerUI();
+            if (IsConnected) MessageBox.Show("Mất kết nối tới mạch sân");
+            IsConnected = false;
+
+
+
+
         }
         public void Disconnect()
         {
+            //IsConnected = false;
             if (socketConn != null)
             {
                 //socketConn.OnDataReceivedBytes += SocketDataHandler;
@@ -109,14 +87,14 @@ namespace THI_HANG_A1.Models
                 try
                 {
                     // GỬI 1 BYTE ĐỂ SERVER NHẬN BIẾT NGẮT KẾT NỐI
-                    socketConn.SendBytes(new byte[] { 0xFF });
+                    socketConn.SendBytesAsync(new byte[] { 0xFF });
                 }
                 catch { }
 
                 socketConn.Disconnect();
             }
 
-            IsConnected = false;
+
 
             // RESET UI ngay lập tức
             Sensor1 = Sensor2 = Sensor3 = Sensor4 = false;
