@@ -886,7 +886,7 @@ namespace THI_HANG_A1
             // ===========================================================
 
             // a. Event trạng thái bài thi
-            ts.XeChangedHandler = async () =>
+            ts.XeChangedHandler = () =>
             {
                 byte st = xeChon.Status;
                 byte errId = xeChon.ErrorId;
@@ -944,6 +944,7 @@ namespace THI_HANG_A1
                 }
 
                 // LỖI
+                //MessageBox.Show("error: " + Convert.ToString(errId, 16));
                 if (errId != 0 &&
                     errId != ts.LastError &&
                     FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var fault))
@@ -1812,7 +1813,7 @@ namespace THI_HANG_A1
         {
             LoadMotoFromDatabase();
             fxe = new QuanLyXe(xes);
-            fxe.ShowDialog();
+            fxe.Show();
         }
 
         private void kiemtraketnoisan_Click(object sender, EventArgs e)
@@ -2613,6 +2614,7 @@ namespace THI_HANG_A1
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message);
                     // log nếu cần
                 }
             };

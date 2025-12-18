@@ -107,11 +107,9 @@ namespace THI_HANG_A1.Models
             Connected = ok;
             socketConn.OnDataReceivedImage -= onRecvImage;
             socketConn.OnDataReceivedCommand -= onRecv;
-            socketConn.OnDataReceived -= SocketDataHandler;
             socketConn.OnDisconnected -= disConnectHandler;
             socketConn.OnDataReceivedImage += onRecvImage;
             socketConn.OnDataReceivedCommand += onRecv;
-            socketConn.OnDataReceived += SocketDataHandler;
             socketConn.OnDisconnected += disConnectHandler;
 
             // gửi thời gian xuống cho thiết bị
