@@ -16,6 +16,9 @@ namespace THI_HANG_A1.Forms
             moto.OnChanged += MotoOnChanged;
             moto.onImage += MotoOnChanged;
             moto.onRecvCommand += Moto_onRecvCommand;
+            pictureBox1.Dock = DockStyle.Fill;
+            textBox1.Dock = DockStyle.Fill;
+            this.Height = 250;
         }
 
         private void Moto_onRecvCommand()
@@ -205,6 +208,11 @@ namespace THI_HANG_A1.Forms
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }
