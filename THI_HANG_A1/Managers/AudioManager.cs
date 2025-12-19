@@ -19,7 +19,6 @@ namespace THI_HANG_A1.Managers
     {
         private static readonly string SOUND_PATH = Path.Combine(FindProjectRootWithResources(), "Resources", "Sounds");
         private readonly ConcurrentQueue<string> _soundQueue = new ConcurrentQueue<string>();
-        private readonly SemaphoreSlim _soundLock = new SemaphoreSlim(1, 1);
         /// <summary>
         /// Sự kiện này được dùng để gửi log về Form1
         /// </summary>
@@ -70,65 +69,24 @@ namespace THI_HANG_A1.Managers
 
             try
             {
-                while (_soundQueue.TryDequeue(out var path))
+                await Task.Run(() =>
                 {
-                    if (!File.Exists(path))
+                    while (_soundQueue.TryDequeue(out var path))
                     {
-                        OnLogMessage?.Invoke($"Không tìm thấy âm thanh: {path}");
-                        continue;
-                    }
+                        if (!File.Exists(path))
+                            continue;
 
-                    using (var player = new SoundPlayer(path))
-                    {
-                        player.PlaySync();
+                        using (var player = new SoundPlayer(path))
+                        {
+                            player.Load();
+                            player.PlaySync();
+                        }
                     }
-                }
+                });
             }
             finally
             {
                 _isProcessing = false;
-            }
-        }
-
-        /// <summary>
-        /// Phát âm thanh (Đồng bộ - CÓ CHỜ) và trả về Task
-        /// </summary>
-        public Task PhatAmThanhSyncTask(ThiSinh ts, string tenSuKien)
-        {
-            if (ts == null || string.IsNullOrEmpty(ts.MaXeDaChon))
-            {
-                return Task.CompletedTask;
-            }
-            return Task.Run(() => PhatAmThanhSync(ts, tenSuKien));
-        }
-
-        /// <summary>
-        /// Lõi phát âm thanh, luôn chạy đồng bộ (PlaySync)
-        /// </summary>
-        private void PhatAmThanhSync(ThiSinh ts, string tenSuKien)
-        {
-            if (ts == null || string.IsNullOrEmpty(ts.MaXeDaChon)) return;
-
-            string fileName = $"Xe{ts.MaXeDaChon}_{tenSuKien}.wav";
-            string fullPath = Path.Combine(SOUND_PATH, fileName);
-
-            if (File.Exists(fullPath))
-            {
-                try
-                {
-                    using (SoundPlayer soundPlayer = new SoundPlayer(fullPath))
-                    {
-                        soundPlayer.PlaySync();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    OnLogMessage?.Invoke($"LỖI PHÁT ÂM THANH {fileName}: {ex.Message}");
-                }
-            }
-            else
-            {
-                OnLogMessage?.Invoke($"LỖI ÂM THANH: Không tìm thấy file {fileName}");
             }
         }
 

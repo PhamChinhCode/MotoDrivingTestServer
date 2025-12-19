@@ -952,6 +952,9 @@ namespace THI_HANG_A1
                     if (errId == ConstantKeys.ERROR_KHONG_XI_NHAN_VAO && st != ConstantKeys.STATUS_CONTEST1)
                         return;
 
+                    if (errId == ConstantKeys.ERROR_QUA_THOI_GIAN_XP && st != ConstantKeys.STATUS_READY)
+                        return;
+
                     ts.LastError = errId;
 
                     string moTa = BaiThiHelper.GetName(st);
@@ -1664,6 +1667,8 @@ namespace THI_HANG_A1
             Moto moto = xes.FirstOrDefault(m => m.Id == ts.XeObj.Id);
 
             moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
+
+            moto.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET, 0);
 
             string cot = "Bắt đầu";
 
