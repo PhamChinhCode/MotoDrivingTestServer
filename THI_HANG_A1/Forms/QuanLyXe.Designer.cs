@@ -77,7 +77,6 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // menuStrip1
             // 
@@ -91,7 +90,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(726, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // thêmToolStripMenuItem
             // 
@@ -128,7 +126,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "QuanLyXe";
-            this.Text = "QuanLyXe";
+            this.Text = "Quản lý xe";
             this.Load += new System.EventHandler(this.QuanLyXe_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

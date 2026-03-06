@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace THI_HANG_A1
 {
-    public partial class Form3 : Form
+    public partial class fQuanLyXe : Form
     {
-        public Form3()
+        public fQuanLyXe()
         {
             InitializeComponent();
 
@@ -34,6 +34,8 @@ namespace THI_HANG_A1
 
                 adapter.Fill(table);
                 table.DefaultView.Sort = "Name ASC";
+
+                txtType.Text = "A";
 
                 dgvDevices.DataSource = table;
             }

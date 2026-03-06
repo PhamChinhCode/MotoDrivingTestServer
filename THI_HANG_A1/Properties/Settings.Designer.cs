@@ -26,8 +26,8 @@ namespace THI_HANG_A1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=BONG-PC\\SQLEXPRESS;Initial Catalog=MCDV2A1;User ID=sa;Password=Admadm" +
-            "123@;Encrypt=False;TrustServerCertificate=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=LAPTOP-NBLMGSNN\\SQLEXPRESS;Initial Catalog=MCDV2A1;User ID=sa;Passwor" +
+            "d=Admadm123@;Encrypt=False;TrustServerCertificate=True")]
         public string Conn {
             get {
                 return ((string)(this["Conn"]));

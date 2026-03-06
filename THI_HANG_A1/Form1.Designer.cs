@@ -62,6 +62,7 @@
             this.kếtNốiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kiểmTraKếtNốiXeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kiemtraketnoisan = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniConnectCam = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -370,7 +371,8 @@
             // 
             this.kếtNốiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.kiểmTraKếtNốiXeToolStripMenuItem,
-            this.kiemtraketnoisan});
+            this.kiemtraketnoisan,
+            this.mniConnectCam});
             this.kếtNốiToolStripMenuItem.Name = "kếtNốiToolStripMenuItem";
             this.kếtNốiToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.kếtNốiToolStripMenuItem.Text = "Kết nối";
@@ -378,16 +380,23 @@
             // kiểmTraKếtNốiXeToolStripMenuItem
             // 
             this.kiểmTraKếtNốiXeToolStripMenuItem.Name = "kiểmTraKếtNốiXeToolStripMenuItem";
-            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kiểmTraKếtNốiXeToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.kiểmTraKếtNốiXeToolStripMenuItem.Text = "Kiểm tra kết nối xe";
             this.kiểmTraKếtNốiXeToolStripMenuItem.Click += new System.EventHandler(this.kiểmTraKếtNốiXeToolStripMenuItem_Click);
             // 
             // kiemtraketnoisan
             // 
             this.kiemtraketnoisan.Name = "kiemtraketnoisan";
-            this.kiemtraketnoisan.Size = new System.Drawing.Size(180, 22);
+            this.kiemtraketnoisan.Size = new System.Drawing.Size(199, 22);
             this.kiemtraketnoisan.Text = "Kiểm tra kết nối sân";
             this.kiemtraketnoisan.Click += new System.EventHandler(this.kiemtraketnoisan_Click);
+            // 
+            // mniConnectCam
+            // 
+            this.mniConnectCam.Name = "mniConnectCam";
+            this.mniConnectCam.Size = new System.Drawing.Size(199, 22);
+            this.mniConnectCam.Text = "Kiểm tra kết nối camera";
+            this.mniConnectCam.Click += new System.EventHandler(this.mniConnectCam_Click);
             // 
             // toolStrip1
             // 
@@ -535,7 +544,7 @@
             this.xoathisinhToolStripMenuItem,
             this.capnhatketquaToolStripMenuItem});
             this.chuotphaichonxe.Name = "chuotphaichonxe";
-            this.chuotphaichonxe.Size = new System.Drawing.Size(198, 92);
+            this.chuotphaichonxe.Size = new System.Drawing.Size(198, 114);
             // 
             // capxeToolStripMenuItem
             // 
@@ -1440,5 +1449,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.ToolStripMenuItem mniConnectCam;
     }
 }

@@ -60,7 +60,7 @@ namespace THI_HANG_A1.Models
             //bool ok = socketConn.Connect(IP, PORT);
             bool ok = await socketConn.ConnectAsync(IP, PORT);
             IsConnected = ok;
-            if (!ok) { MessageBox.Show("Không thể kết nối tới cảm biến ống hơi"); }
+            //if (!ok) { MessageBox.Show("Không thể kết nối tới cảm biến ống hơi"); }
             TriggerUI();
             socketConn.OnDisconnected -= disconnect;
             socketConn.OnDisconnected += disconnect;
