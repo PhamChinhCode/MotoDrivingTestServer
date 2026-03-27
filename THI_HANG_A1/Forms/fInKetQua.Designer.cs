@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace THI_HANG_A1
 {
-    partial class FormInKetQua
+    partial class fInKetQua
     {
         private System.ComponentModel.IContainer components = null;
 

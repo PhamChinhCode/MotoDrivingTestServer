@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using THI_HANG_A1.Camera.Services;
 using THI_HANG_A1.Forms;
 using THI_HANG_A1.Helpers;
 using THI_HANG_A1.Managers;
@@ -55,7 +56,7 @@ namespace THI_HANG_A1
             Dictionary<byte, Moto> oldMap = xes.ToDictionary(x => x.Id, x => x);
             List<Moto> newList = new List<Moto>();
 
-            string sql = "SELECT ID, Name, IPAddress FROM Devices ORDER BY ID";
+            string sql = "SELECT ID, Name, IPAddress FROM Devices where type = 'A' ORDER BY ID";
 
             using (SqlConnection conn = new SqlConnection(cnn))
             {
@@ -74,7 +75,7 @@ namespace THI_HANG_A1
                             Moto existing = oldMap[id];
                             existing.Name = rd["Name"].ToString();
                             existing.Ip = rd["IPAddress"].ToString();
-                            //existing.Status = ConstantKeys.STATUS_FREE;
+                            existing.Status = ConstantKeys.STATUS_FREE;
                             newList.Add(existing);
                         }
                         else
@@ -335,7 +336,6 @@ namespace THI_HANG_A1
                 MessageBox.Show("Lỗi tải danh sách kỳ thi: " + ex.Message);
             }
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadInitData();
@@ -886,7 +886,7 @@ namespace THI_HANG_A1
             // ===========================================================
 
             // a. Event trạng thái bài thi
-            ts.XeChangedHandler = async () =>
+            ts.XeChangedHandler = () =>
             {
                 byte st = xeChon.Status;
                 byte errId = xeChon.ErrorId;
@@ -944,11 +944,15 @@ namespace THI_HANG_A1
                 }
 
                 // LỖI
+                //MessageBox.Show("error: " + Convert.ToString(errId, 16));
                 if (errId != 0 &&
                     errId != ts.LastError &&
                     FaultDefinitions.FaultByErrorId.TryGetValue(errId, out var fault))
                 {
                     if (errId == ConstantKeys.ERROR_KHONG_XI_NHAN_VAO && st != ConstantKeys.STATUS_CONTEST1)
+                        return;
+
+                    if (errId == ConstantKeys.ERROR_QUA_THOI_GIAN_XP && st != ConstantKeys.STATUS_READY)
                         return;
 
                     ts.LastError = errId;
@@ -1664,6 +1668,8 @@ namespace THI_HANG_A1
 
             moto.sendCommand(ConstantKeys.CONTROL_KEY, ConstantKeys.BYTE_SET, ConstantKeys.CONTROL_START);
 
+            moto.sendCommand(ConstantKeys.IMAGE_KEY, ConstantKeys.BYTE_GET, 0);
+
             string cot = "Bắt đầu";
 
             audioManager.PhatAmThanh(ts, "BatDau");
@@ -1812,7 +1818,7 @@ namespace THI_HANG_A1
         {
             LoadMotoFromDatabase();
             fxe = new QuanLyXe(xes);
-            fxe.ShowDialog();
+            fxe.Show();
         }
 
         private void kiemtraketnoisan_Click(object sender, EventArgs e)
@@ -2327,7 +2333,7 @@ namespace THI_HANG_A1
                                 "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            FormInKetQua f = new FormInKetQua(selectedSessionId);
+            fInKetQua f = new fInKetQua(selectedSessionId);
             f.ShowDialog();
         }
 
@@ -2575,15 +2581,12 @@ namespace THI_HANG_A1
             }
         }
 
-        private void toolStripProgressBar1_Click(object sender, EventArgs e)
+        private void mniConnectCam_Click(object sender, EventArgs e)
         {
-
+            fQuanLyCamera f = new fQuanLyCamera();
+            f.ShowDialog();
         }
 
-        private void toolStripLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void SafeUI(Action action)
         {
@@ -2596,7 +2599,7 @@ namespace THI_HANG_A1
         private void quảnLýXeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Tạo mới Form3
-            Form3 formQuanLy = new Form3();
+            fQuanLyXe formQuanLy = new fQuanLyXe();
             formQuanLy.ShowDialog();
         }
 
@@ -2613,6 +2616,7 @@ namespace THI_HANG_A1
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message);
                     // log nếu cần
                 }
             };

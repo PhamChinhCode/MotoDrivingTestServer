@@ -176,13 +176,6 @@ namespace THI_HANG_A1.Managers
             OnDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task KetThucLuotThiThuCong(ThiSinh ts)
-        {
-            string ketQuaAmThanh = (ts.DiemTongHop >= 80) ? "ThiDat" : "ThiTruot";
-            await _audioManager.PhatAmThanhSyncTask(ts, ketQuaAmThanh);
-            HoanThanhBaiThi(ts);
-        }
-
         /// <summary>
         /// Logic ghi nhận lỗi (cho cả tự động và thủ công)
         /// </summary>
@@ -219,24 +212,9 @@ namespace THI_HANG_A1.Managers
             GhiNhanLoi(ts, diemTru, chiTietLoi);
             ts.DiemTongHop = 0;
             DanhSachDangThi.ResetBindings();
-            await _audioManager.PhatAmThanhSyncTask(ts, amThanhLoi);
             await Task.Delay(1500);
-            await _audioManager.PhatAmThanhSyncTask(ts, "ThiTruot");
             await Task.Delay(1500);
             HoanThanhBaiThi(ts);
-        }
-        public void QuaVongSo8(ThiSinh ts)
-        {
-            Xe xeHienTai = DanhSachXe.FirstOrDefault(x => x.SBDThiSinhHienTai == ts.SBD);
-            if (xeHienTai != null && xeHienTai.GiaiDoan == 1)
-            {
-                xeHienTai.GiaiDoan = 2;
-                OnMessageBoxShow?.Invoke($"Thí sinh {ts.HoTen} (Xe {xeHienTai.MaXe}) đã qua Vòng số 8.", "Cập nhật trạng thái");
-            }
-            else
-            {
-                OnMessageBoxShow?.Invoke("Thí sinh này không ở trong giai đoạn thi Vòng số 8.", "Sai giai đoạn");
-            }
         }
         private void CapNhatDanhSachChuanBi()
         {

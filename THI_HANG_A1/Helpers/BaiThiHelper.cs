@@ -314,16 +314,13 @@ namespace THI_HANG_A1.Helpers
                     return "ChamVach";
 
                 case ConstantKeys.ERROR_CHAM_CHAN:         // 0xE3
-                    return "VuotTocDo";
-                    //return "ChamChan";                // chưa có file
+                    return "ChamChan";          
 
                 case ConstantKeys.ERROR_QUA_TG_THI:        // 0xE4
-                    return "VuotTocDo";
-                //return "QuaTGThi";                // chua co sound
+                    return "QuaTGThi";        
 
                 case ConstantKeys.ERROR_QUA_THOI_GIAN_XP:  // 0xEB
-                    return "VuotTocDo";
-                //return "QuaTGXuatPhat";            // chua co sound
+                    return "QuaTGXuatPhat";   
 
                 case ConstantKeys.ERROR_DI_SAI_DUONG:      // 0xE5
                 case ConstantKeys.ERROR_DI_RA_NGOAI:       // 0xE7

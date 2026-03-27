@@ -1,6 +1,6 @@
 ﻿namespace THI_HANG_A1
 {
-    partial class Form3
+    partial class fQuanLyXe
     {
         /// <summary>
         /// Required designer variable.
@@ -116,6 +116,7 @@
             this.txtType.Location = new System.Drawing.Point(91, 66);
             this.txtType.Margin = new System.Windows.Forms.Padding(2);
             this.txtType.Name = "txtType";
+            this.txtType.ReadOnly = true;
             this.txtType.Size = new System.Drawing.Size(131, 20);
             this.txtType.TabIndex = 19;
             // 

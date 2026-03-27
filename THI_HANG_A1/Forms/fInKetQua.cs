@@ -18,7 +18,7 @@ using Image = System.Drawing.Image;
 
 namespace THI_HANG_A1
 {
-    public partial class FormInKetQua : Form
+    public partial class fInKetQua : Form
     {
         private readonly string cnn = THI_HANG_A1.Properties.Settings.Default.Conn;
         private int _sessionId;
@@ -27,7 +27,7 @@ namespace THI_HANG_A1
         private List<Image> _imgs;
 
 
-        public FormInKetQua(int sessionId)
+        public fInKetQua(int sessionId)
         {
             InitializeComponent();
             _sessionId = sessionId;
